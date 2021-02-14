@@ -1,23 +1,31 @@
 #pragma once
+
 #include <SDL.h>
 
-class window
-{
+/**
+ * A window object (contains the renderer too)
+ */
+class Window {
 private:
-	SDL_Window* win = nullptr;
-	SDL_Renderer* renderer = nullptr;
+    // fields
+    SDL_Window *win = nullptr;
+    SDL_Renderer *renderer = nullptr;
+    SDL_Texture *backgroundTexture = nullptr;
 
-	int width = 640;
-	int height = 480;
-	bool closed = false;
-	bool init();
-	void printError();
+    // utils
+    static void raiseError();
+
 public:
-	window(int width, int height);
-	SDL_Renderer* getRenderer();
-	SDL_Window* getWindow();
-	bool poll_events();
-	void render();
-	void render2();
+    Window(int width, int height);
+
+    SDL_Renderer *getRenderer();
+
+    SDL_Window *getWindow();
+
+    void display();
+
+    void renderImage();
+
+    void renderBlack();
 };
 

@@ -1,72 +1,70 @@
 #include "window.h"
 #include <iostream>
 
-bool window::init()
-{
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) //initialize the SDL library
-	{
-		printError();
-		return false;
-	}
+/**
+ * Constructor
+ * @param width initial width of the window
+ * @param height initial height of the window
+ */
+Window::Window(int width, int height) {
 
-	win = SDL_CreateWindow("Practica1", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_RESIZABLE); //se crea la ventana
+    //initialize the SDL library
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) raiseError();
 
-	if (win == nullptr)
-	{
-		printError();
-		return false;
-	}
+    // create window
+    win = SDL_CreateWindow("Practica1", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_RESIZABLE);
+    if (win == nullptr) raiseError();
 
-	renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); //create a 2D rendering context for a window
+    //create alpha 2D rendering context for alpha window
+    renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (renderer == nullptr) raiseError();
 
-	if (renderer == nullptr)
-	{
-		printError();
-		return false;
-	}
-
-	return true;
+    // load bmpSurface
+    SDL_Surface *bmpSurface = SDL_LoadBMP("edu-homepage2007.bmp");
+    backgroundTexture = SDL_CreateTextureFromSurface(renderer, bmpSurface);
+    SDL_FreeSurface(bmpSurface);
 }
 
-window::window(int width, int height) : width(width), height(height), closed(!init()) { }
-
-SDL_Renderer* window::getRenderer()
-{
-	return renderer;
+/**
+ * To exit on error
+ */
+void Window::raiseError() {
+    std::cerr << SDL_GetError() << std::endl;
+    raise(-1);
 }
 
-SDL_Window* window::getWindow()
-{
-	return win;
+/**
+ * @return the window renderer
+ */
+SDL_Renderer *Window::getRenderer() {
+    return renderer;
 }
 
-
-bool window::poll_events()
-{
-	SDL_Event event;
-	return SDL_PollEvent(&event) && (event.type == SDL_QUIT);
+/**
+ * @return the window object
+ */
+SDL_Window *Window::getWindow() {
+    return win;
 }
 
-void window::render()
-{
-	SDL_RenderPresent(renderer);
-	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 255);
-	SDL_RenderClear(renderer); //si se comenta se convierte en un salvapantallas bonito
+/**
+ * Paints all the window black
+ */
+void Window::renderBlack() {
+    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 255);
+    SDL_RenderClear(renderer); //si se comenta se convierte en un salvapantallas bonito
 }
 
-void window::printError() 
-{
-	std::cerr << SDL_GetError() << std::endl;
+/**
+ * Paints the image to the window
+ */
+void Window::renderImage() {
+    SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
 }
 
-//background fuera
-void window::render2()
-{
-	SDL_RenderPresent(renderer);
-	SDL_Surface* background = SDL_LoadBMP("edu-homepage2007.bmp");
-	SDL_Texture* BlueShapes = SDL_CreateTextureFromSurface(renderer, background);
-	SDL_FreeSurface(background);
-	SDL_RenderCopy(renderer, BlueShapes, NULL, NULL);
-	SDL_RenderPresent(renderer);
-
+/**
+ * Updates the window with the current renderer
+ */
+void Window::display() {
+    SDL_RenderPresent(renderer);
 }
