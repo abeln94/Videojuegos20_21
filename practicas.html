@@ -1,0 +1,256 @@
+<html>
+<head>
+	<title>Practicas</title>
+	<style type="text/css">
+		body {
+			margin: 0px;
+			width: 100%;
+			height: 100%;
+			display: flex;
+		}
+		canvas {
+			margin: 1px;
+			border: 1px solid black;
+			background: white;
+			flex-grow: 1;
+			min-width: 0;
+			min-height: 0;
+		}
+		#settings {
+			overflow-y: auto;
+			flex-shrink: 0;
+		}
+		#settings > * {
+			display: block;
+		}
+	</style>
+</head>
+<body>
+  
+	<div id="settings">
+	<button onclick="reset()">reset</button>
+	</div>
+	<br>
+	<canvas id="main-canvas"></canvas>
+
+<script type="text/javascript">
+
+///////////// canvas ///////////////
+
+let canvas = document.getElementById('main-canvas');
+let cntx = canvas.getContext('2d');
+
+// match size
+function onResize(){
+	canvas.width = canvas.clientWidth;
+	canvas.height = canvas.clientHeight;
+}
+window.addEventListener('load', onResize);
+window.addEventListener('resize', onResize);
+
+
+
+////////// selector ////////////
+
+let p = localStorage.getItem('p') || 'P1';
+function setP(_p){ 
+	p=_p; 
+	localStorage.setItem('p',p); 
+}
+
+let e_settings = document.getElementById('settings');
+let animateFunctions = {};
+
+function registerP(name, animateFunction){
+	animateFunctions[name] = animateFunction;
+	
+	e_settings.insertAdjacentHTML( 'beforeend', `<hr><div><input type="radio" value="${name}" name='p' onchange="setP(this.value)" ${name==p?'checked':''}>Select ${name}</div>`);
+}
+
+function registerSetting(label, value, callback){
+	// load saved value
+	value = localStorage.getItem(label) || value;
+	
+	// call
+	callback(value);
+	
+	// add input
+	e_settings.insertAdjacentHTML( 'beforeend', `<span>${label}</span> <input id="temp" type="text" value="${value}"/>` );
+	
+	// set input callback
+	let temp = document.getElementById('temp');
+	temp.removeAttribute('id');
+	temp.onchange = e=>{
+		localStorage.setItem(label, e.target.value);
+		callback(e.target.value);
+	};
+	return temp;
+}
+
+function reset(){
+	localStorage.clear();
+	location.reload();
+}
+
+
+////////// game /////////////
+
+
+// loop
+let forceStop = false;
+function animate(){
+	if(!forceStop) requestAnimationFrame(animate);
+	
+	// clear
+	cntx.clearRect(0,0,canvas.width,canvas.height);
+	
+	// draw	
+	if(p in animateFunctions) animateFunctions[p]();
+}
+// start
+window.addEventListener('load', animate);
+
+
+/////////// common /////////////
+
+// sprite object
+let sprite = new Image;
+let spriteRadius;
+
+// sprite config
+let e_spriteUrl = registerSetting('Image url:', "https://webdiis.unizar.es/~mena/GRAPHICS/edu-homepage2007.jpg", configSpriteUrl);
+let e_spriteSize = registerSetting('Image scale (%):', "50", configSpriteSize);
+
+function configSpriteUrl(url=e_spriteUrl.value){
+	sprite.src = url;
+}
+function configSpriteSize(size=e_spriteSize.value){
+	if(!sprite.complete) return;
+	sprite.height = sprite.naturalHeight * size / 100;
+	sprite.width = sprite.naturalWidth * size / 100;
+	spriteRadius = Math.sqrt(Math.pow(sprite.width/2,2)+Math.pow(sprite.height/2,2));
+}
+sprite.addEventListener('load', ()=>{configSpriteSize()});
+
+
+
+/////////////// P1 ///////////////
+(()=>{
+
+registerP("P1", animateP1);
+
+// config
+let speedx = 4;
+let speedy = 4;
+
+registerSetting('X speed', 4, v=>{speedx = v});
+registerSetting('Y speed', 4, v=>{speedy = v});
+
+// variables
+let x = 0;
+let y = 0;
+let xdir = 1;
+let ydir = 1;
+
+function animateP1(){
+
+	// update
+	if (x + sprite.width >= canvas.width){
+		x = canvas.width - sprite.width - 1;
+		xdir = -1;
+	}else if (x < 0){
+		x = 0;
+		xdir = 1;
+	}else{
+		x += xdir * speedx;
+	}
+	if (y + sprite.height >= canvas.height){
+		y = canvas.height - sprite.height - 1;
+		ydir = -1;
+	}else if (y < 0){
+		y = 0;
+		ydir = 1;
+	}else{
+		y += ydir * speedy;
+	}
+
+	// draw
+	cntx.drawImage(sprite, x, y, sprite.width, sprite.height);
+}
+
+
+})();
+/////////////// P2 ///////////////
+(()=>{
+
+registerP("P2", animateP2);
+
+// config
+let spawnRate;
+let spawnRadius;
+let spawnScale;
+let maxVelocity;
+let maxRotation;
+let maxScaling;
+
+
+registerSetting('Spawn rate', 10, v=>{spawnRate = v});
+registerSetting('Spawn radius', 50, v=>{spawnRadius = v});
+registerSetting('Spawn scale', 0.1, v=>{spawnScale = v});
+registerSetting('Max velocity', 2, v=>{maxVelocity = v});
+registerSetting('Max rotation', 0.1, v=>{maxRotation = v});
+registerSetting('Max scaling', 0.005, v=>{maxScaling = v});
+
+// variables
+let spawnLast = 0;
+let points = [];
+
+function animateP2(){
+
+	// spawn
+	if(spawnLast-- <= 0){
+		spawnLast = 100/spawnRate;
+		
+		let dir = Math.random() * 2 * Math.PI;
+		points.push({
+			x: canvas.width/2 + Math.cos(dir)*spawnRadius, 
+			y: canvas.height/2 + Math.sin(dir)*spawnRadius,
+			scale: spawnScale,
+			scaleVel: Math.random() * maxScaling,
+			rot: Math.random() * 2 * Math.PI,
+			rotVel: (Math.random()*2-1) * maxRotation,
+			xVel: Math.cos(dir) * maxVelocity,
+			yVel: Math.sin(dir) * maxVelocity,
+		})
+	}
+	
+	// foreach
+	points = points.filter(p =>{
+	
+		// destroy
+		var radius = spriteRadius * p.scale;
+		if(p.x - radius >= canvas.width || p.x + radius < 0 || p.y - radius >= canvas.height || p.y + radius < 0) 
+			return false;
+	
+		// draw
+		cntx.save();
+			cntx.translate(p.x, p.y);
+			cntx.rotate(p.rot);
+			cntx.scale(p.scale, p.scale);
+			cntx.drawImage(sprite, -sprite.width/2, -sprite.height/2, sprite.width, sprite.height);
+		cntx.restore();
+		
+		// update
+		p.x += p.xVel;
+		p.y += p.yVel;
+		p.rot += p.rotVel;
+		p.scale += p.scaleVel;
+		
+		return true;
+	});
+}
+
+})();
+</script>
+</body>
+</html>
