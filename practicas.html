@@ -11,7 +11,7 @@
 		canvas {
 			margin: 1px;
 			border: 1px solid black;
-			background: white;
+			background: black;
 			flex-grow: 1;
 			min-width: 0;
 			min-height: 0;
@@ -29,6 +29,7 @@
   
 	<div id="settings">
 	<button onclick="reset()">reset</button>
+	<button id="toggleAudio" onclick="toggleAudio()">loading</button>
 	</div>
 	<br>
 	<canvas id="main-canvas"></canvas>
@@ -50,7 +51,7 @@ window.addEventListener('resize', onResize);
 
 
 
-////////// selector ////////////
+////////// selector/settings ////////////
 
 let p = localStorage.getItem('p') || 'P1';
 function setP(_p){ 
@@ -92,6 +93,38 @@ function reset(){
 	location.reload();
 }
 
+/////////// background audio /////////
+
+// sound config
+let e_audio = document.getElementById('toggleAudio');
+let audio = new Audio();
+audio.loop=true;
+audio.addEventListener('canplay', ()=>{toggleAudio(true)});
+
+registerSetting('Audio url:', 'Song.mp3', configAudioUrl);
+function configAudioUrl(url){
+	audio.src = url;
+	audio.load();
+	toggleAudio(true);
+}
+
+function toggleAudio(play=audio.paused){
+	if(audio.readyState==0) { 
+		// invalid
+		e_audio.innerHTML = 'Invalid audio'; 
+		return; 
+	}
+	
+	if(play){
+		audio.play();
+		if(audio.paused) { toggleAudio(false); return; } // no permission 
+		e_audio.innerHTML = 'Pause audio';
+	}else{
+		audio.pause();
+		e_audio.innerHTML = 'Play audio';
+	}
+}
+
 
 ////////// game /////////////
 
@@ -131,7 +164,6 @@ function configSpriteSize(size=e_spriteSize.value){
 	spriteRadius = Math.sqrt(Math.pow(sprite.width/2,2)+Math.pow(sprite.height/2,2));
 }
 sprite.addEventListener('load', ()=>{configSpriteSize()});
-
 
 
 /////////////// P1 ///////////////
