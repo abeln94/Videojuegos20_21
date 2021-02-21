@@ -101,7 +101,7 @@ let audio = new Audio();
 audio.loop=true;
 audio.addEventListener('canplay', ()=>{toggleAudio(true)});
 
-registerSetting('Audio url:', 'https://www.thesoundarchive.com/starwars/Star-Wars-Duel-of-the-Fates.mp3', configAudioUrl);
+registerSetting('Audio url:', 'https://abeln94.github.io/Videojuegos20_21/assets/Song.mp3', configAudioUrl);
 function configAudioUrl(url){
 	audio.src = url;
 	audio.load();
