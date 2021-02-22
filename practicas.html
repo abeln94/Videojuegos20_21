@@ -1,5 +1,6 @@
 <html>
 <head>
+	<meta charset="UTF-8">
 	<title>Practicas</title>
 	<style type="text/css">
 		body {
@@ -19,7 +20,7 @@
 		#bar {
 			overflow-y: auto;
 			flex-shrink: 0;
-			width: 200px;
+			width: 250px;
 		}
 		span , #settings input , #common input , button {
 			width: 100%;
@@ -66,13 +67,12 @@ window.addEventListener('resize', onResize);
 
 ////////// selector/settings ////////////
 
-let p = localStorage.getItem('p') || 'P1';
+let p = localStorage.getItem('p') || '';
 function setP(_p){
 	p=_p; 
 	localStorage.setItem('p',p); 
-	e_settings.childNodes.forEach(e=>{e.classList.toggle('hidden', !e.classList.contains(_p))});
+	e_settings.childNodes.forEach(e=>{e.classList[e.classList.contains(_p)?'remove':'add']('hidden')});
 }
-window.addEventListener('load', ()=>{setP(p)});
 
 let e_settings = document.getElementById('settings');
 let e_selectors = document.getElementById('selectors');
@@ -95,7 +95,7 @@ function registerSetting(label, value, callback){
 	
 	// add input
 	(registrationP==''?e_common:e_settings)
-		.insertAdjacentHTML( 'beforeend', `<div class="${registrationP}"><span>${label}</span><br><input id="temp" type="text" value="${value}"/></div>` );
+		.insertAdjacentHTML( 'beforeend', `<div class="${registrationP} ${registrationP==p || registrationP==''?'':'hidden'}"><span>${label}</span><br><input id="temp" type="text" value="${value}"/></div>` );
 	
 	// set input callback
 	let temp = document.getElementById('temp');
