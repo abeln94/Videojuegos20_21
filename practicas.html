@@ -19,17 +19,23 @@
 		#settings {
 			overflow-y: auto;
 			flex-shrink: 0;
+			width: 200px;
 		}
 		#settings > * {
 			display: block;
+		}
+		span, #settings>input, button {
+			width: 100%;
 		}
 	</style>
 </head>
 <body>
   
 	<div id="settings">
-	<button onclick="reset()">reset</button>
+	<span>Choose a demo by clicking the selector in each section.</span>
+	<button onclick="reset()">Reset all parameters</button>
 	<button id="toggleAudio" onclick="toggleAudio()">loading</button>
+	<hr>
 	</div>
 	<br>
 	<canvas id="main-canvas"></canvas>
@@ -65,7 +71,7 @@ let animateFunctions = {};
 function registerP(name, animateFunction){
 	animateFunctions[name] = animateFunction;
 	
-	e_settings.insertAdjacentHTML( 'beforeend', `<hr><div><input type="radio" value="${name}" name='p' onchange="setP(this.value)" ${name==p?'checked':''}>Select ${name}</div>`);
+	e_settings.insertAdjacentHTML( 'beforeend', `<hr><label><input type="radio" value="${name}" name='p' onchange="setP(this.value)" ${name==p?'checked':''}>Display demo: ${name}</label>`);
 }
 
 function registerSetting(label, value, callback){
@@ -76,7 +82,7 @@ function registerSetting(label, value, callback){
 	callback(value);
 	
 	// add input
-	e_settings.insertAdjacentHTML( 'beforeend', `<span>${label}</span> <input id="temp" type="text" value="${value}"/>` );
+	e_settings.insertAdjacentHTML( 'beforeend', `<span>${label}</span><br><input id="temp" type="text" value="${value}"/>` );
 	
 	// set input callback
 	let temp = document.getElementById('temp');
@@ -101,7 +107,7 @@ let audio = new Audio();
 audio.loop=true;
 audio.addEventListener('canplay', ()=>{toggleAudio(true)});
 
-registerSetting('Audio url:', 'https://abeln94.github.io/Videojuegos20_21/assets/Song.mp3', configAudioUrl);
+registerSetting('Audio url: link to the background audio', 'https://abeln94.github.io/Videojuegos20_21/assets/Song.mp3', configAudioUrl);
 function configAudioUrl(url){
 	audio.src = url;
 	audio.load();
@@ -151,8 +157,8 @@ let sprite = new Image;
 let spriteRadius;
 
 // sprite config
-let e_spriteUrl = registerSetting('Image url:', "https://webdiis.unizar.es/~mena/GRAPHICS/edu-homepage2007.jpg", configSpriteUrl);
-let e_spriteSize = registerSetting('Image scale (%):', "50", configSpriteSize);
+let e_spriteUrl = registerSetting('Image url: link to the sprite', "https://webdiis.unizar.es/~mena/GRAPHICS/edu-homepage2007.jpg", configSpriteUrl);
+let e_spriteSize = registerSetting('Image scale (%): scaling of the sprite', "50", configSpriteSize);
 
 function configSpriteUrl(url=e_spriteUrl.value){
 	sprite.src = url;
@@ -175,8 +181,8 @@ registerP("P1", animateP1);
 let speedx = 4;
 let speedy = 4;
 
-registerSetting('X speed', 4, v=>{speedx = v});
-registerSetting('Y speed', 4, v=>{speedy = v});
+registerSetting('X speed: horizontal velocity of the sprite', 4, v=>{speedx = v});
+registerSetting('Y speed: vertical velocity of the sprite', 4, v=>{speedy = v});
 
 // variables
 let x = 0;
@@ -226,12 +232,12 @@ let maxRotation;
 let maxScaling;
 
 
-registerSetting('Spawn rate', 10, v=>{spawnRate = v});
-registerSetting('Spawn radius', 50, v=>{spawnRadius = v});
-registerSetting('Spawn scale', 0.1, v=>{spawnScale = v});
-registerSetting('Max velocity', 2, v=>{maxVelocity = v});
-registerSetting('Max rotation', 0.1, v=>{maxRotation = v});
-registerSetting('Max scaling', 0.005, v=>{maxScaling = v});
+registerSetting('Spawn rate: how many sprites to spawn', 10, v=>{spawnRate = v});
+registerSetting('Spawn radius: radius of the circle where sprites will spawn', 50, v=>{spawnRadius = v});
+registerSetting('Spawn scale: initial spawn scale', 0.1, v=>{spawnScale = v});
+registerSetting('Max velocity: maximum linear velocity of the sprites', 2, v=>{maxVelocity = v});
+registerSetting('Max rotation: maximum rotation velocity of the sprites', 0.1, v=>{maxRotation = v});
+registerSetting('Max scaling: maximum scaling of sprites', 0.005, v=>{maxScaling = v});
 
 // variables
 let spawnLast = 0;
