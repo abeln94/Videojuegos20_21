@@ -16,26 +16,33 @@
 			min-width: 0;
 			min-height: 0;
 		}
-		#settings {
+		#bar {
 			overflow-y: auto;
 			flex-shrink: 0;
 			width: 200px;
 		}
-		#settings > * {
-			display: block;
-		}
-		span, #settings>input, button {
+		span , #settings input , #common input , button {
 			width: 100%;
+		}
+		.hidden {
+			display: none;
 		}
 	</style>
 </head>
 <body>
   
-	<div id="settings">
-	<span>Choose a demo by clicking the selector in each section.</span>
-	<button onclick="reset()">Reset all parameters</button>
-	<button id="toggleAudio" onclick="toggleAudio()">loading</button>
-	<hr>
+	<div id="bar">
+		<div id="common">
+			<button id="toggleAudio" onclick="toggleAudio()">loading</button>
+		</div>
+		<hr>
+		<div id="selectors">
+			<span>Choose a demo:</span>
+		</div>
+		<hr>
+		<div id="settings"></div>
+		<hr>
+		<button onclick="reset()">Reset all parameters</button>
 	</div>
 	<br>
 	<canvas id="main-canvas"></canvas>
@@ -60,18 +67,23 @@ window.addEventListener('resize', onResize);
 ////////// selector/settings ////////////
 
 let p = localStorage.getItem('p') || 'P1';
-function setP(_p){ 
+function setP(_p){
 	p=_p; 
 	localStorage.setItem('p',p); 
+	e_settings.childNodes.forEach(e=>{e.classList.toggle('hidden', !e.classList.contains(_p))});
 }
+window.addEventListener('load', ()=>{setP(p)});
 
 let e_settings = document.getElementById('settings');
+let e_selectors = document.getElementById('selectors');
+let e_common = document.getElementById('common');
 let animateFunctions = {};
+let registrationP = '';
 
 function registerP(name, animateFunction){
 	animateFunctions[name] = animateFunction;
-	
-	e_settings.insertAdjacentHTML( 'beforeend', `<hr><label><input type="radio" value="${name}" name='p' onchange="setP(this.value)" ${name==p?'checked':''}>Display demo: ${name}</label>`);
+	e_selectors.insertAdjacentHTML( 'beforeend', `<br><label><input type="radio" value="${name}" name='p' onchange="setP(this.value)" ${name==p?'checked':''}>Display demo: ${name}</label>`);
+	registrationP = name;
 }
 
 function registerSetting(label, value, callback){
@@ -82,7 +94,8 @@ function registerSetting(label, value, callback){
 	callback(value);
 	
 	// add input
-	e_settings.insertAdjacentHTML( 'beforeend', `<span>${label}</span><br><input id="temp" type="text" value="${value}"/>` );
+	(registrationP==''?e_common:e_settings)
+		.insertAdjacentHTML( 'beforeend', `<div class="${registrationP}"><span>${label}</span><br><input id="temp" type="text" value="${value}"/></div>` );
 	
 	// set input callback
 	let temp = document.getElementById('temp');
