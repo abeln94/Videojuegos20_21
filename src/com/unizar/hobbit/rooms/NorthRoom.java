@@ -6,17 +6,17 @@ import com.unizar.hobbit.Game;
 public class NorthRoom extends Room {
     @Override
     public void onEnter() {
-        Game.setImage("red");
-        Game.addDescription("A beautiful room");
+        Game.setImage("green");
+        Game.addDescription("El bosque con animalitos, puedes volver");
     }
 
     @Override
-    public boolean onCommand(String command) {
+    public String onCommand(String command) {
         switch (command){
-            case "go south":
-                Game.goToRoom(new InitialRoom());
-                return true;
+            case "volver":
+                Game.goToRoom("initial");
+                return "Vuelves a la habitación";
         }
-        return false;
+        return null;
     }
 }

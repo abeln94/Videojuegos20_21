@@ -1,12 +1,9 @@
 package com.unizar.game;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class Window {
 
@@ -63,12 +60,14 @@ public class Window {
 
         // image
         image = new JLabel();
+        image.setFocusable(false);
         frame.add(image);
 
         // command output
         commandOutput = new JTextArea(0, 0);
         commandOutput.setEditable(false);
         commandOutput.setLineWrap(true);
+        commandOutput.setFocusable(false);
         frame.add(new JScrollPane(commandOutput, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 
         // command input
@@ -78,7 +77,8 @@ public class Window {
         // description
         description = new JTextArea();
         description.setEditable(false);
-        commandOutput.setLineWrap(true);
+        description.setLineWrap(true);
+        description.setFocusable(false);
         frame.add(new JScrollPane(description, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 
         // show
@@ -90,6 +90,8 @@ public class Window {
         commandInput.grabFocus();
     }
 
+    ////////// command ///////////////
+
     public void setCommandListener(InputListener inputListener) {
         commandInput.addActionListener(e -> {
             inputListener.onText(commandInput.getText());
@@ -97,13 +99,17 @@ public class Window {
         });
     }
 
-    public void addDescription(String text) {
-        description.setText(description.getText() + (description.getText().isEmpty() ? "" : "\n") + text);
-    }
+    /////////// description /////////////
 
     public void clearDescription() {
         description.setText("");
     }
+
+    public void addDescription(String text) {
+        description.setText(description.getText() + (description.getText().isEmpty() ? "" : "\n") + text);
+    }
+
+    ////////// output //////////
 
     public void clearOutput() {
         commandOutput.setText("");
@@ -112,6 +118,8 @@ public class Window {
     public void addOutput(String text) {
         commandOutput.setText(commandOutput.getText() + (commandOutput.getText().isEmpty() ? "" : "\n") + text);
     }
+
+    /////////// image //////////
 
     private Image savedImg = null;
 
@@ -122,7 +130,7 @@ public class Window {
         if (img == null) return;
         image.setIcon(new ImageIcon(
                 img.getScaledInstance(image.getWidth(), image.getHeight(),
-                        Image.SCALE_REPLICATE)
+                        Image.SCALE_SMOOTH)
         ));
     }
 

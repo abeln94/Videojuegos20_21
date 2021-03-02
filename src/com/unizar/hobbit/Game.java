@@ -2,13 +2,12 @@ package com.unizar.hobbit;
 
 import com.unizar.game.Room;
 import com.unizar.game.Window;
-import com.unizar.hobbit.rooms.InitialRoom;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
 
 public class Game implements Window.InputListener {
-    static Window window = new Window("The hobbit");
+    static Window window = new Window("El hobbit");
     static Game game = new Game();
 
     static {
@@ -19,7 +18,7 @@ public class Game implements Window.InputListener {
 
     static public void start() {
         setImage("blue");
-        addDescription("Press enter to start the game");
+        addDescription("Pulsa enter para empezar");
     }
 
 
@@ -33,21 +32,20 @@ public class Game implements Window.InputListener {
             // start game
             window.clearOutput();
             window.clearDescription();
-            goToRoom(new InitialRoom());
+            goToRoom("initial");
             return;
         }
 
-        if (!current.onCommand(text)) {
-            window.addOutput("Unknown command");
-        }
+        String result = current.onCommand(text);
+        window.addOutput(result == null ? "No se como '" + text+"'" : result);
     }
 
 
     /////////////////
-    public static void goToRoom(Room room) {
-        current = room;
+    public static void goToRoom(String room) {
+        current = Elements.getRoom(room);
         window.clearDescription();
-        room.onEnter();
+        current.onEnter();
     }
 
     static public void setImage(String image) {
