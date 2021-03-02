@@ -4,6 +4,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,50 +32,72 @@ public class Window {
 
         // frame
         JFrame frame = new JFrame("The hobbit");
-        frame.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        frame.setLayout(null);
+        frame.addComponentListener(new ComponentAdapter() {
+
+            private int previousWidth = 0;
+            private int previousHeight = 0;
+
+            @Override
+            public void componentResized(ComponentEvent e) {
+                // manual position of elements
+
+                int width = frame.getContentPane().getWidth(); // will change with remaining space
+                int height = frame.getContentPane().getHeight(); // will change with remaining space
+
+                if(previousWidth == width && previousHeight == height) return;
+                previousWidth = width;
+                previousHeight = height;
+
+                // description, all right half of screen
+                width /= 2;
+                description.getParent().getParent().setBounds(width, 0, width, height);
+
+                // commandInput, bottom, keep original height
+                int inputHeight = commandInput.getPreferredSize().height;
+                height -= inputHeight;
+                commandInput.setBounds(0, height, width, inputHeight);
+
+                // image, keep ratio
+                int imageHeight = width * 152 / 320;
+                image.setBounds(0, 0, width, imageHeight);
+                paintImage();
+                height -= imageHeight;
+
+                // command output, remaining
+                commandOutput.getParent().getParent().setBounds(0, imageHeight, width, height);
+            }
+        });
 
         // image
         image = new JLabel();
-        gbc.gridx = gbc.gridy = 0;
-        gbc.gridwidth = gbc.gridheight = 1;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        image.setPreferredSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT));
-        frame.add(image, gbc);
+        frame.add(image);
 
         // command output
-        commandOutput = new JTextArea();
+        commandOutput = new JTextArea(0, 0);
         commandOutput.setEditable(false);
-        gbc.gridy = 1;
-        gbc.weighty = 1;
-        frame.add(commandOutput, gbc);
+        commandOutput.setLineWrap(true);
+        frame.add(new JScrollPane(commandOutput, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 
         // command input
         commandInput = new JTextField();
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weighty = 0;
-        frame.add(commandInput, gbc);
+        frame.add(commandInput);
 
         // description
         description = new JTextArea();
         description.setEditable(false);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.gridwidth = 1;
-        gbc.gridheight = 3;
-        gbc.fill = GridBagConstraints.BOTH;
+        commandOutput.setLineWrap(true);
         description.setPreferredSize(new Dimension(WINDOW_WIDTH - IMAGE_WIDTH, WINDOW_HEIGHT));
-        frame.add(description, gbc);
+        frame.add(new JScrollPane(description, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 
         // show
         frame.pack();
+        frame.setSize(640, 480);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
+//        frame.setResizable(false); // noooooo
         frame.setVisible(true);
+        commandInput.grabFocus();
     }
 
     public void setCommandListener(InputListener inputListener) {
@@ -94,13 +119,24 @@ public class Window {
         setOutput(commandOutput.getText() + (commandOutput.getText().isEmpty() ? "" : "\n") + text);
     }
 
+    private BufferedImage img = null;
+
     public void setImage(String name) {
         try {
-            image.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/images/" + name + ".png")).getScaledInstance(image.getWidth(), image.getHeight(),
-                    Image.SCALE_SMOOTH)));
+            img = ImageIO.read(getClass().getResource("/images/" + name + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        paintImage();
+    }
+
+    public void paintImage() {
+        if (img == null) return;
+
+        image.setIcon(new ImageIcon(
+                img.getScaledInstance(image.getWidth(), image.getHeight(),
+                        Image.SCALE_REPLICATE)
+        ));
     }
 
 }
