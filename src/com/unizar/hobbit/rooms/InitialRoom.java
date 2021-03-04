@@ -7,15 +7,15 @@ public class InitialRoom extends Room {
 
     @Override
     public void onEnter() {
-        Game.setImage("red");
-        Game.addDescription("La habitación inicial, puedes salir");
+        game.setImage("red");
+        game.addDescription("La habitación inicial, puedes salir");
     }
 
     @Override
     public String onCommand(String command) {
         switch (command){
             case "salir":
-                Game.goToRoom("north");
+                game.goToRoom("north");
                 return "Sales de la habitación";
         }
         return null;

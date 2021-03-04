@@ -2,8 +2,7 @@ package com.unizar.game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 
 public class Window {
 
@@ -97,6 +96,10 @@ public class Window {
             inputListener.onText(commandInput.getText());
             commandInput.setText("");
         });
+    }
+
+    public void setKeyListener(KeyAdapter listener){
+        commandInput.addKeyListener(listener);
     }
 
     /////////// description /////////////
