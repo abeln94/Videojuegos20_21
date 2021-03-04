@@ -3,10 +3,22 @@ package com.unizar.game;
 import java.io.*;
 import java.util.Base64;
 
+/**
+ * Can save and load a Data class.
+ * Only one save (currently)
+ */
 public class DataSaver {
 
-    private String savedData;
+    /**
+     * The saved data
+     */
+    private String savedData = null;
 
+    /**
+     * Saves the current data. Overrides existing ones.
+     *
+     * @param data data to save
+     */
     public final void saveData(Data data) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -19,7 +31,11 @@ public class DataSaver {
         }
     }
 
+    /**
+     * @return the saved data, or null if no data is saved
+     */
     public final Data loadData() {
+        if (savedData == null) return null;
         try {
             byte[] data = Base64.getDecoder().decode(savedData);
             ObjectInputStream ois = new ObjectInputStream(

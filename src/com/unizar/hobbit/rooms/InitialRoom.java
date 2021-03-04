@@ -1,6 +1,5 @@
 package com.unizar.hobbit.rooms;
 
-import com.unizar.hobbit.Game;
 import com.unizar.game.Room;
 
 public class InitialRoom extends Room {

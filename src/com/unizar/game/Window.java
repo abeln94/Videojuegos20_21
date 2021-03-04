@@ -2,15 +2,21 @@ package com.unizar.game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
 
+/**
+ * Manages the window of the game.
+ * A picture, an input text and two output texts
+ */
 public class Window {
 
     public interface InputListener {
         void onText(String text);
     }
 
-    // elements
+    // ------------------------- elements -------------------------
     private final JTextArea commandOutput;
     private final JTextField commandInput;
     private final JTextArea description;
@@ -49,7 +55,7 @@ public class Window {
                 // image, keep ratio
                 int imageHeight = width * 152 / 320;
                 image.setBounds(0, 0, width, imageHeight);
-                drawImage(null);
+                redrawImage();
                 height -= imageHeight;
 
                 // command output, remaining
@@ -66,6 +72,7 @@ public class Window {
         commandOutput = new JTextArea(0, 0);
         commandOutput.setEditable(false);
         commandOutput.setLineWrap(true);
+        commandOutput.setWrapStyleWord(true);
         commandOutput.setFocusable(false);
         frame.add(new JScrollPane(commandOutput, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 
@@ -77,20 +84,26 @@ public class Window {
         description = new JTextArea();
         description.setEditable(false);
         description.setLineWrap(true);
+        description.setWrapStyleWord(true);
         description.setFocusable(false);
         frame.add(new JScrollPane(description, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 
         // show
         frame.setSize(640, 480);
         frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 //        frame.setResizable(false); // noooooo
         frame.setVisible(true);
         commandInput.grabFocus();
     }
 
-    ////////// command ///////////////
+    // ------------------------- command -------------------------
 
+    /**
+     * Registers a listener for when commands are entered on the window
+     *
+     * @param inputListener will be called when the user enters a command
+     */
     public void setCommandListener(InputListener inputListener) {
         commandInput.addActionListener(e -> {
             inputListener.onText(commandInput.getText());
@@ -98,34 +111,58 @@ public class Window {
         });
     }
 
-    public void setKeyListener(KeyAdapter listener){
+    /**
+     * Registers a listener for any key pressed
+     *
+     * @param listener will be called when the user presses any key
+     */
+    public void setKeyListener(KeyAdapter listener) {
         commandInput.addKeyListener(listener);
     }
 
-    /////////// description /////////////
+    // ------------------------- description -------------------------
 
+    /**
+     * Clears the description output text
+     */
     public void clearDescription() {
         description.setText("");
     }
 
+    /**
+     * Adds a line to the description output text
+     *
+     * @param text line to add
+     */
     public void addDescription(String text) {
         description.setText(description.getText() + (description.getText().isEmpty() ? "" : "\n") + text);
     }
 
-    ////////// output //////////
+    // ------------------------- output -------------------------
 
+    /**
+     * Clears the command output text
+     */
     public void clearOutput() {
         commandOutput.setText("");
     }
 
+    /**
+     * Adds a line to the command output text
+     *
+     * @param text line to add
+     */
     public void addOutput(String text) {
         commandOutput.setText(commandOutput.getText() + (commandOutput.getText().isEmpty() ? "" : "\n") + text);
     }
 
-    /////////// image //////////
+    // ------------------------- image -------------------------
 
-    private Image savedImg = null;
-
+    /**
+     * Draws an image
+     *
+     * @param img image to draw
+     */
     public void drawImage(Image img) {
         if (img == null) img = savedImg;
         else savedImg = img;
@@ -135,6 +172,15 @@ public class Window {
                 img.getScaledInstance(image.getWidth(), image.getHeight(),
                         Image.SCALE_SMOOTH)
         ));
+    }
+
+    private Image savedImg = null;
+
+    /**
+     * Redraws the previous image. Internal use
+     */
+    private void redrawImage() {
+        drawImage(savedImg);
     }
 
 }

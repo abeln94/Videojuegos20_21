@@ -1,7 +1,6 @@
 package com.unizar.hobbit.rooms;
 
 import com.unizar.game.Room;
-import com.unizar.hobbit.Game;
 
 public class NorthRoom extends Room {
     @Override
