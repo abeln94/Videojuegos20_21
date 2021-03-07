@@ -13,6 +13,10 @@ public class HobbitData extends Data {
         return "El hobbit";
     }
 
+    public String getImagePath(String label) {
+        return "/128k/" + label + ".PNG";
+    }
+
     public HobbitData() {
         registerInitial(new StartScreen());
         register("initial", new InitialRoom());

@@ -6,6 +6,6 @@ import com.unizar.hobbit.HobbitData;
 public class Main {
     public static void main(String[] args) {
         // hobbit
-        new Game(new HobbitData()).start();
+        new Game(new HobbitData());
     }
 }

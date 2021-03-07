@@ -19,6 +19,14 @@ public abstract class Data implements Serializable {
      */
     abstract public String getTitle();
 
+    /**
+     * Return the path of an image
+     *
+     * @param label the label of the image
+     * @return the path of the image
+     */
+    abstract public String getImagePath(String label);
+
     // ------------------------- list of rooms -------------------------
 
     /**
@@ -76,7 +84,7 @@ public abstract class Data implements Serializable {
     private String current = null;
 
     /**
-     * @return the current kept room
+     * @return the current kept room (or the initial room if setCurrentRoom wasn't called)
      */
     public String getCurrentRoom() {
         return current == null ? INITIAL : current;

@@ -6,8 +6,8 @@ public class InitialRoom extends Room {
 
     @Override
     public void onEnter() {
-        game.setImage("red");
-        game.addDescription("La habitación inicial, puedes salir");
+        game.setImage("2");
+        game.addDescription("La habitación inicial, de momento solo puedes salir");
     }
 
     @Override

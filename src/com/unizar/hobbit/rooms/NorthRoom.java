@@ -5,8 +5,8 @@ import com.unizar.game.Room;
 public class NorthRoom extends Room {
     @Override
     public void onEnter() {
-        game.setImage("green");
-        game.addDescription("El bosque con animalitos, puedes volver");
+        game.setImage("3");
+        game.addDescription("Las afueras, de momento solo puedes volver");
     }
 
     @Override

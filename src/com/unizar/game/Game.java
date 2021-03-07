@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * The game main class.
@@ -24,19 +25,32 @@ public class Game extends KeyAdapter implements Window.InputListener {
      */
     public Game(Data data) {
         this.data = data;
-        data.register(this);
         window = new Window(data.getTitle());
         window.setCommandListener(this);
         window.setKeyListener(this);
+        reset();
     }
 
     /**
-     * Start the game
+     * Resets the game
      */
-    public void start() {
+    public void reset() {
+        // recreate the data object
+        try {
+            data = data.getClass().getConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            // should never happen
+            e.printStackTrace();
+            System.exit(-1);
+        }
+        data.register(this);
+
+        // restart
+        window.clearOutput();
+        window.clearDescription();
         goToRoom(data.getCurrentRoom());
         addOutput("Escribe aquí los comandos y pulsa enter para introducirlos.");
-        addOutput("También puedes pulsar F6/F9 para guardar/cargar la partida.");
+        addOutput("También puedes pulsar F6/F9 para guardar/cargar la partida. Y pulsar F2 para resetear.");
     }
 
     // ------------------------- listeners -------------------------
@@ -53,13 +67,15 @@ public class Game extends KeyAdapter implements Window.InputListener {
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
+
+            // press F6 to save
             case KeyEvent.VK_F6 -> {
-                // press F6 to save
                 window.addOutput("[guardado]");
                 saver.saveData(data);
             }
+
+            // Press F9 to load
             case KeyEvent.VK_F9 -> {
-                // Press F9 to load
                 Data newData = saver.loadData();
                 if (newData != null) {
                     window.clearOutput();
@@ -71,6 +87,9 @@ public class Game extends KeyAdapter implements Window.InputListener {
                     window.addOutput("[No hay datos guardados]");
                 }
             }
+
+            // Press F2 to reset
+            case KeyEvent.VK_F2 -> reset();
         }
     }
 
@@ -91,11 +110,11 @@ public class Game extends KeyAdapter implements Window.InputListener {
     /**
      * Sets an image
      *
-     * @param image name of the image (from the images folder)
+     * @param label name of the image (from the images folder)
      */
-    public void setImage(String image) {
+    public void setImage(String label) {
         try {
-            window.drawImage(ImageIO.read(Game.class.getResource("/images/" + image + ".png")));
+            window.drawImage(ImageIO.read(Game.class.getResource(data.getImagePath(label))));
         } catch (IOException e) {
             e.printStackTrace();
         }
