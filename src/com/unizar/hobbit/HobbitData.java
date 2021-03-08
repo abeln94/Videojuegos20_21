@@ -1,6 +1,7 @@
 package com.unizar.hobbit;
 
 import com.unizar.game.Data;
+import com.unizar.hobbit.npcs.Gandalf;
 import com.unizar.hobbit.rooms.InitialRoom;
 import com.unizar.hobbit.rooms.NorthRoom;
 import com.unizar.hobbit.rooms.StartScreen;
@@ -18,9 +19,13 @@ public class HobbitData extends Data {
     }
 
     public HobbitData() {
-        registerInitial(new StartScreen());
+        // rooms
+        register(START_SCREEN, new StartScreen());
         register("initial", new InitialRoom());
         register("north", new NorthRoom());
+
+        // npcs
+        register("gandalf", new Gandalf());
     }
 
 }

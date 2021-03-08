@@ -1,16 +1,9 @@
 package com.unizar.game;
 
-import java.io.Serializable;
-
 /**
  * A generic room
  */
-abstract public class Room implements Serializable {
-
-    /**
-     * The associated game
-     */
-    transient protected Game game;
+abstract public class Room extends Element {
 
     /**
      * Called when the player enters this room
@@ -25,14 +18,4 @@ abstract public class Room implements Serializable {
      */
     abstract public String onCommand(String command);
 
-    // ------------------------- internal -------------------------
-
-    /**
-     * Registers the active game on this room
-     *
-     * @param game the game to register
-     */
-    public final void register(Game game) {
-        this.game = game;
-    }
 }

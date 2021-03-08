@@ -59,9 +59,20 @@ public class Game extends KeyAdapter implements Window.InputListener {
     public void onText(String text) {
         if (!text.isEmpty()) window.addOutput("> " + text);
 
-
+        // perform command
+        // TODO: replace with a command manager
         String result = data.getRoom(data.getCurrentRoom()).onCommand(text);
-        window.addOutput(result == null ? "No se como '" + text + "'" : result);
+        if (result == null) {
+            // invalid command
+            window.addOutput("No se como '" + text + "'");
+            return;
+        }
+
+        // player action
+        window.addOutput(result);
+
+        // elements actions
+        data.act();
     }
 
     @Override
