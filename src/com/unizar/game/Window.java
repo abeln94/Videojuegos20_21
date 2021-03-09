@@ -38,28 +38,42 @@ public class Window {
 
                 int width = frame.getContentPane().getWidth(); // will change with remaining space
                 int height = frame.getContentPane().getHeight(); // will change with remaining space
+                int top = 0;
+                int left = 0;
 
+                // update only if the size changed
                 if (previousWidth == width && previousHeight == height) return;
                 previousWidth = width;
                 previousHeight = height;
 
+                // image, top of screen, keep ratio
+                int HEIGHT2WIDTH = 2;
+                int imageHeight = width / HEIGHT2WIDTH;
+                int imageWidth = width;
+                int imageLeft = 0;
+                if (imageHeight > height / 2) {
+                    // reduce size so that it doesn't cover more than half the height
+                    imageHeight = height / 2;
+                    imageWidth = imageHeight * HEIGHT2WIDTH;
+                    imageLeft = (width - imageWidth) / 2;
+                }
+                image.setBounds(left + imageLeft, top, imageWidth, imageHeight);
+                redrawImage();
+                height -= imageHeight;
+                top += imageHeight;
+
                 // description, all right half of screen
                 width /= 2;
-                description.getParent().getParent().setBounds(width, 0, width, height);
+                description.getParent().getParent().setBounds(left + width, top, width, height);
 
                 // commandInput, bottom, keep original height
                 int inputHeight = commandInput.getPreferredSize().height;
                 height -= inputHeight;
-                commandInput.setBounds(0, height, width, inputHeight);
+                commandInput.setBounds(left, top + height, width, inputHeight);
 
-                // image, keep ratio
-                int imageHeight = width * 152 / 320;
-                image.setBounds(0, 0, width, imageHeight);
-                redrawImage();
-                height -= imageHeight;
 
                 // command output, remaining
-                commandOutput.getParent().getParent().setBounds(0, imageHeight, width, height);
+                commandOutput.getParent().getParent().setBounds(left, top, width, height);
             }
         });
 
