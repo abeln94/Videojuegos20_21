@@ -20,12 +20,22 @@ public abstract class Data implements Serializable {
     abstract public String getTitle();
 
     /**
+     * @return the ratio of the images (WIDTH / HEIGHT)
+     */
+    public abstract int getImageRatio();
+
+    /**
      * Return the path of an image
      *
      * @param label the label of the image
      * @return the path of the image
      */
     abstract public String getImagePath(String label);
+
+    /**
+     * @return the font to use
+     */
+    public abstract String getFontName();
 
     // ------------------------- list of rooms -------------------------
 

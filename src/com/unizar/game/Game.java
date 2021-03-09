@@ -25,7 +25,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
      */
     public Game(Data data) {
         this.data = data;
-        window = new Window(data.getTitle());
+        window = new Window(data.getTitle(), data.getImageRatio(), data.getFontName());
         window.setCommandListener(this);
         window.setKeyListener(this);
         reset();

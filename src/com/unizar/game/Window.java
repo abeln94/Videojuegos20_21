@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Manages the window of the game.
@@ -22,7 +24,7 @@ public class Window {
     private final JTextArea description;
     private final JLabel image;
 
-    public Window(String title) {
+    public Window(String title, int imageRatio, String fontName) {
 
         // frame
         JFrame frame = new JFrame(title);
@@ -47,14 +49,13 @@ public class Window {
                 previousHeight = height;
 
                 // image, top of screen, keep ratio
-                int HEIGHT2WIDTH = 2;
-                int imageHeight = width / HEIGHT2WIDTH;
+                int imageHeight = width / imageRatio;
                 int imageWidth = width;
                 int imageLeft = 0;
                 if (imageHeight > height / 2) {
                     // reduce size so that it doesn't cover more than half the height
                     imageHeight = height / 2;
-                    imageWidth = imageHeight * HEIGHT2WIDTH;
+                    imageWidth = imageHeight * imageRatio;
                     imageLeft = (width - imageWidth) / 2;
                 }
                 image.setBounds(left + imageLeft, top, imageWidth, imageHeight);
@@ -71,11 +72,19 @@ public class Window {
                 height -= inputHeight;
                 commandInput.setBounds(left, top + height, width, inputHeight);
 
-
                 // command output, remaining
                 commandOutput.getParent().getParent().setBounds(left, top, width, height);
             }
         });
+
+        // load font
+        Font font = null;
+        try {
+            InputStream is = this.getClass().getResourceAsStream(fontName);
+            font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(20f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
 
         // image
         image = new JLabel();
@@ -88,10 +97,12 @@ public class Window {
         commandOutput.setLineWrap(true);
         commandOutput.setWrapStyleWord(true);
         commandOutput.setFocusable(false);
+        commandOutput.setFont(font);
         frame.add(new JScrollPane(commandOutput, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 
         // command input
         commandInput = new JTextField();
+        commandInput.setFont(font);
         frame.add(commandInput);
 
         // description
@@ -100,6 +111,7 @@ public class Window {
         description.setLineWrap(true);
         description.setWrapStyleWord(true);
         description.setFocusable(false);
+        description.setFont(font);
         frame.add(new JScrollPane(description, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 
         // show
