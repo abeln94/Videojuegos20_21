@@ -10,9 +10,9 @@ import java.util.Map;
  * A list of rooms (includes the current one) + a list of players
  */
 public abstract class Data implements Serializable {
-    public static final String START_SCREEN = "__start_screen__";
 
     // ------------------------- abstract properties -------------------------
+    // TODO: move to another class
 
     /**
      * @return the title of the game (window's title)
@@ -37,6 +37,10 @@ public abstract class Data implements Serializable {
      */
     public abstract String getFontName();
 
+    public abstract String getStartScreen();
+
+    public abstract String getDescription();
+
     // ------------------------- list of rooms -------------------------
 
     /**
@@ -48,7 +52,7 @@ public abstract class Data implements Serializable {
      * Registers a room.
      * Use in the constructor of the specific game data
      *
-     * @param name identifier of the room. Use {@link #START_SCREEN} for the starting screen
+     * @param name identifier of the room.
      * @param room the room
      */
     protected final void register(String name, Room room) {
@@ -68,6 +72,18 @@ public abstract class Data implements Serializable {
             throw new RuntimeException("Unknown room: " + name);
         }
         return room;
+    }
+
+    // ------------------------- player -------------------------
+
+    private Player player;
+
+    protected void register(Player player) {
+        this.player = player;
+    }
+
+    public final Player getPlayer() {
+        return player;
     }
 
     // ------------------------- list of npcs -------------------------
@@ -106,11 +122,12 @@ public abstract class Data implements Serializable {
     // ------------------------- game registration -------------------------
 
     /**
-     * Registers the current game on all the rooms
+     * Registers the current game on all the elements
      *
      * @param game current game
      */
     public final void register(Game game) {
+        player.register(game);
         rooms.values().forEach(e -> e.register(game));
         npcs.values().forEach(e -> e.register(game));
     }
@@ -123,22 +140,5 @@ public abstract class Data implements Serializable {
         npcs.values().forEach(Element::act);
     }
 
-    // ------------------------- current room -------------------------
-
-    private String current = null;
-
-    /**
-     * @return the current kept room (or the start screen if setCurrentRoom wasn't called)
-     */
-    public String getCurrentRoom() {
-        return current == null ? START_SCREEN : current;
-    }
-
-    /**
-     * @param current the room to keep
-     */
-    public void setCurrentRoom(String current) {
-        this.current = current;
-    }
 
 }

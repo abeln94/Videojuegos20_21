@@ -16,6 +16,8 @@ public class Game extends KeyAdapter implements Window.InputListener {
     private final Window window;
     private final DataSaver saver = new DataSaver();
 
+    private boolean onStartScreen = true;
+
     // ------------------------- initializers -------------------------
 
     /**
@@ -46,22 +48,33 @@ public class Game extends KeyAdapter implements Window.InputListener {
         data.register(this);
 
         // restart
+        onStartScreen = true;
+        setImage(data.getStartScreen());
         window.clearOutput();
-        window.clearDescription();
-        goToRoom(data.getCurrentRoom());
         addOutput("Escribe aquí los comandos y pulsa enter para introducirlos.");
         addOutput("También puedes pulsar F6/F9 para guardar/cargar la partida. Y pulsar F2 para resetear.");
+        window.clearDescription();
+        addDescription(data.getDescription());
+        addDescription("Pulsa Enter para empezar.");
     }
 
     // ------------------------- listeners -------------------------
 
     @Override
     public void onText(String text) {
+        if (onStartScreen) {
+            // enter while on the start screen
+            onStartScreen = false;
+            goToRoom(data.getPlayer().getCurrentRoom());
+            return;
+        }
+
+
         if (!text.isEmpty()) window.addOutput("> " + text);
 
         // perform command
         // TODO: replace with a command manager
-        String result = data.getRoom(data.getCurrentRoom()).onCommand(text);
+        String result = data.getRoom(data.getPlayer().getCurrentRoom()).onCommand(text);
         if (result == null) {
             // invalid command
             window.addOutput("No se como '" + text + "'");
@@ -93,7 +106,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
                     window.addOutput("[cargado]");
                     data = newData;
                     data.register(this);
-                    goToRoom(data.getCurrentRoom());
+                    goToRoom(data.getPlayer().getCurrentRoom());
                 } else {
                     window.addOutput("[No hay datos guardados]");
                 }
@@ -113,7 +126,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
      */
     public void goToRoom(String room) {
         Room current = data.getRoom(room);
-        data.setCurrentRoom(room);
+        data.getPlayer().setCurrentRoom(room);
         window.clearDescription();
         current.onEnter();
     }
@@ -147,6 +160,12 @@ public class Game extends KeyAdapter implements Window.InputListener {
      */
     public void addOutput(String output) {
         window.addOutput(output);
+    }
+
+    // ------------------------- game properties -------------------------
+
+    public Data getData() {
+        return data;
     }
 
 }

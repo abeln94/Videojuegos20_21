@@ -5,15 +5,28 @@ import com.unizar.game.NPC;
 import java.util.Random;
 
 public class Gandalf extends NPC {
+
+    private boolean hasMap = true;
+
+    public Gandalf() {
+        setCurrentRoom("initial");
+    }
+
     @Override
     public void act() {
-        String[] actions = new String[]{
-                "da una voltereta",
-                "hace una pirueta",
-                "te mira fijamente"
-        };
+
         Random random = new Random();
-        if (random.nextBoolean())
-            game.addDescription("\nGandalf " + actions[random.nextInt(actions.length)]);
+        if (getCurrentRoom().equals(game.getData().getPlayer().getCurrentRoom()) && random.nextBoolean()) {
+            // exchange map
+            if (hasMap) {
+                game.addDescription("Gandalf te da el mapa peculiar.");
+                hasMap = false;
+                ((Bilbo_Player) game.getData().getPlayer()).hasMap = false;
+            } else {
+                game.addDescription("Gandalf te coge el mapa peculiar.");
+                hasMap = true;
+                ((Bilbo_Player) game.getData().getPlayer()).hasMap = true;
+            }
+        }
     }
 }

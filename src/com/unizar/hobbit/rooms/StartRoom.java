@@ -2,12 +2,15 @@ package com.unizar.hobbit.rooms;
 
 import com.unizar.game.Room;
 
-public class InitialRoom extends Room {
+public class StartRoom extends Room {
+
+    private boolean doorOpen = false;
 
     @Override
     public void onEnter() {
         game.setImage("2");
-        game.addDescription("La habitación inicial, de momento solo puedes salir");
+        game.addDescription("Te encuentras en una sala alargada confortable. Puedes ver:");
+        game.addDescription("\tEl cofre de madera.");
     }
 
     @Override
