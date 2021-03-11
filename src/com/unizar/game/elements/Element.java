@@ -1,33 +1,23 @@
 package com.unizar.game.elements;
 
 import com.unizar.game.Game;
-import com.unizar.game.commands.Command;
 
 import java.io.Serializable;
-import java.util.function.Supplier;
 
 /**
  * A generic element of the game
  */
 abstract public class Element implements Serializable {
 
-    // ------------------------- game actions -------------------------
+    public final String name;
 
-    /**
-     * This element turn. Do something (by default does nothing)
-     */
-    public void act() {
+    public Element(String name) {
+        this.name = name;
     }
 
-    /**
-     * Describe the current element
-     */
-    abstract public void describe();
-
-    public Supplier<String> doCommand(Command command, NPC npc) {
-        return null;
+    public String getDescription() {
+        return name;
     }
-
 
     // ------------------------- game management -------------------------
 
@@ -41,7 +31,7 @@ abstract public class Element implements Serializable {
      *
      * @param game the game to register
      */
-    public final void register(Game game) {
+    public void register(Game game) {
         this.game = game;
     }
 }

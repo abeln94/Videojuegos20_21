@@ -194,14 +194,15 @@ public class Window {
      * @param img image to draw
      */
     public void drawImage(Image img) {
-        if (img == null) img = savedImg;
-        else savedImg = img;
-
-        if (img == null) return;
-        image.setIcon(new ImageIcon(
-                img.getScaledInstance(image.getWidth(), image.getHeight(),
-                        Image.SCALE_SMOOTH)
-        ));
+        savedImg = img;
+        if (img == null) {
+            image.setIcon(null);
+        } else {
+            image.setIcon(new ImageIcon(
+                    img.getScaledInstance(image.getWidth(), image.getHeight(),
+                            Image.SCALE_SMOOTH)
+            ));
+        }
     }
 
     private Image savedImg = null;

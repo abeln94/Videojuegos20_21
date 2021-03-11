@@ -2,8 +2,8 @@ package com.unizar.game;
 
 import com.unizar.game.commands.CommandAnalyzer;
 import com.unizar.game.elements.Element;
-import com.unizar.game.elements.Holdable;
-import com.unizar.game.elements.Room;
+import com.unizar.game.elements.Location;
+import com.unizar.game.elements.Player;
 
 import javax.imageio.ImageIO;
 import java.awt.event.KeyAdapter;
@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The game main class.
@@ -123,18 +124,9 @@ public class Game extends KeyAdapter implements Window.InputListener {
         window.clearDescription();
 
         // describe current room
-        Room currentRoom = data.getElement(data.getPlayer().getRoom());
-        setImage(currentRoom.image);
-        currentRoom.describe();
-
-        // describe visible elements
-        addDescription("Puedes ver:");
-        List<Holdable> elements = data.getPlayerVisible();
-        if (elements.isEmpty()) {
-            addDescription("- nada");
-        } else {
-            elements.forEach(Element::describe);
-        }
+        Element location = getElement(getElement(Player.class).location);
+        setImage(location instanceof Location ? ((Location) location).image : null);
+        addDescription("Te encuentras en " + location.getDescription() + ".");
     }
 
     /**
@@ -166,6 +158,19 @@ public class Game extends KeyAdapter implements Window.InputListener {
      */
     public void addOutput(String output) {
         window.addOutput(output);
+    }
+
+    public final <T> List<T> getElements(Class<T> name) {
+        return (List<T>) data.elements.stream()
+                .filter(name::isInstance)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns the first element associated with the given class
+     */
+    public final <T> T getElement(Class<T> name) {
+        return getElements(name).stream().findFirst().orElseThrow();
     }
 
 }

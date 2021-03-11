@@ -1,16 +1,10 @@
 package com.unizar.game;
 
 import com.unizar.game.elements.Element;
-import com.unizar.game.elements.Holdable;
-import com.unizar.game.elements.NPC;
-import com.unizar.game.elements.Player;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * A game data.
@@ -49,50 +43,7 @@ public abstract class Data implements Serializable {
 //        return elements.stream().filter(match).collect(Collectors.toList());
 //    }
 
-    public final List<Element> getInteractables(NPC npc) {
-        Class<? extends Element> holder = npc.getHolder();
-        if (holder == null) return Collections.emptyList();
 
-        return getElements(Element.class).stream()
-                .filter(e -> {
-                    if (e.getClass() == holder) return true;
-                    if (!(e instanceof Holdable)) return false;
-                    return ((Holdable) e).getHolder() == holder || ((Holdable) e).getHolder() == npc.getClass();
-                })
-                .collect(Collectors.toList());
-    }
-
-    public final <T> List<T> getElements(Class<T> name) {
-        return (List<T>) elements.stream()
-                .filter(name::isInstance)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Returns the first element associated with the given class
-     */
-    public final <T> T getElement(Class<T> name) {
-        return getElements(name).stream().findFirst().orElseThrow();
-    }
-
-    public Player getPlayer() {
-        return getElement(Player.class);
-    }
-
-    public List<Holdable> getPlayerVisible() {
-        return elements.stream()
-                .filter(e -> e instanceof Holdable)
-                .map(e -> (Holdable) e)
-                .filter(e -> e.getHolder() == getPlayer().getHolder() && e != getPlayer())
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Make the rooms and npcs act
-     */
-    public void nonPlayerAct() {
-        elements.stream().filter(e -> !(e instanceof Player)).forEach(Element::act);
-    }
 
     // ------------------------- game registration -------------------------
 
