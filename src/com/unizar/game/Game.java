@@ -1,20 +1,28 @@
 package com.unizar.game;
 
+import com.unizar.game.commands.CommandAnalyzer;
+import com.unizar.game.elements.Element;
+import com.unizar.game.elements.Holdable;
+import com.unizar.game.elements.Room;
+
 import javax.imageio.ImageIO;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * The game main class.
  */
 public class Game extends KeyAdapter implements Window.InputListener {
 
-    // ------------------------- variables -------------------------
-    private Data data;
-    private final Window window;
+    // ------------------------- global -------------------------
+    public Data data;
+
     private final DataSaver saver = new DataSaver();
+    private final CommandAnalyzer analyzer = new CommandAnalyzer(this);
+    private final Window window;
 
     private boolean onStartScreen = true;
 
@@ -27,7 +35,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
      */
     public Game(Data data) {
         this.data = data;
-        window = new Window(data.getTitle(), data.getImageRatio(), data.getFontName());
+        window = new Window(data.properties.getTitle(), data.properties.getImageRatio(), data.properties.getFontName());
         window.setCommandListener(this);
         window.setKeyListener(this);
         reset();
@@ -49,47 +57,39 @@ public class Game extends KeyAdapter implements Window.InputListener {
 
         // restart
         onStartScreen = true;
-        setImage(data.getStartScreen());
+        setImage(data.properties.getStartScreen());
         window.clearOutput();
         addOutput("Escribe aquí los comandos y pulsa enter para introducirlos.");
         addOutput("También puedes pulsar F6/F9 para guardar/cargar la partida. Y pulsar F2 para resetear.");
         window.clearDescription();
-        addDescription(data.getDescription());
-        addDescription("Pulsa Enter para empezar.");
+        addDescription(data.properties.getDescription());
+        addDescription("Pulsa cualquier tecla para empezar.");
     }
 
     // ------------------------- listeners -------------------------
 
     @Override
     public void onText(String text) {
+        // analyze command
+        analyzer.onText(text);
+
+        update();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
         if (onStartScreen) {
-            // enter while on the start screen
+            // any key while on the start screen
             onStartScreen = false;
-            goToRoom(data.getPlayer().getCurrentRoom());
-            return;
+            window.clearCommand();
+            update();
         }
-
-
-        if (!text.isEmpty()) window.addOutput("> " + text);
-
-        // perform command
-        // TODO: replace with a command manager
-        String result = data.getRoom(data.getPlayer().getCurrentRoom()).onCommand(text);
-        if (result == null) {
-            // invalid command
-            window.addOutput("No se como '" + text + "'");
-            return;
-        }
-
-        // player action
-        window.addOutput(result);
-
-        // elements actions
-        data.act();
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (onStartScreen) return;
+
         switch (e.getKeyCode()) {
 
             // press F6 to save
@@ -106,7 +106,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
                     window.addOutput("[cargado]");
                     data = newData;
                     data.register(this);
-                    goToRoom(data.getPlayer().getCurrentRoom());
+                    update();
                 } else {
                     window.addOutput("[No hay datos guardados]");
                 }
@@ -119,16 +119,22 @@ public class Game extends KeyAdapter implements Window.InputListener {
 
     // ------------------------- game commands -------------------------
 
-    /**
-     * Goes to another room
-     *
-     * @param room which room to go to
-     */
-    public void goToRoom(String room) {
-        Room current = data.getRoom(room);
-        data.getPlayer().setCurrentRoom(room);
+    public void update() {
         window.clearDescription();
-        current.onEnter();
+
+        // describe current room
+        Room currentRoom = data.getElement(data.getPlayer().getRoom());
+        setImage(currentRoom.image);
+        currentRoom.describe();
+
+        // describe visible elements
+        addDescription("Puedes ver:");
+        List<Holdable> elements = data.getPlayerVisible();
+        if (elements.isEmpty()) {
+            addDescription("- nada");
+        } else {
+            elements.forEach(Element::describe);
+        }
     }
 
     /**
@@ -138,7 +144,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
      */
     public void setImage(String label) {
         try {
-            window.drawImage(ImageIO.read(Game.class.getResource(data.getImagePath(label))));
+            window.drawImage(ImageIO.read(Game.class.getResource(data.properties.getImagePath(label))));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -160,12 +166,6 @@ public class Game extends KeyAdapter implements Window.InputListener {
      */
     public void addOutput(String output) {
         window.addOutput(output);
-    }
-
-    // ------------------------- game properties -------------------------
-
-    public Data getData() {
-        return data;
     }
 
 }

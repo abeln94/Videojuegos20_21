@@ -1,0 +1,42 @@
+package com.unizar.game;
+
+import java.io.Serializable;
+
+/**
+ * Specific properties of a game
+ */
+abstract public class Properties implements Serializable {
+
+    /**
+     * @return the title of the game (window's title)
+     */
+    abstract public String getTitle();
+
+    /**
+     * @return the ratio of the images (WIDTH / HEIGHT)
+     */
+    public abstract int getImageRatio();
+
+    /**
+     * Return the path of an image
+     *
+     * @param label the label of the image
+     * @return the path of the image
+     */
+    abstract public String getImagePath(String label);
+
+    /**
+     * @return the font to use
+     */
+    public abstract String getFontName();
+
+    /**
+     * @return the start screen (image name)
+     */
+    public abstract String getStartScreen();
+
+    /**
+     * @return the description of the game
+     */
+    public abstract String getDescription();
+}

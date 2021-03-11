@@ -1,123 +1,98 @@
 package com.unizar.game;
 
+import com.unizar.game.elements.Element;
+import com.unizar.game.elements.Holdable;
+import com.unizar.game.elements.NPC;
+import com.unizar.game.elements.Player;
+
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A game data.
  * Extend your game's data class
- * A list of rooms (includes the current one) + a list of players
+ * A list of rooms (includes the current one) + a list of npcs
  */
 public abstract class Data implements Serializable {
 
-    // ------------------------- abstract properties -------------------------
-    // TODO: move to another class
+    // ------------------------- properties -------------------------
+
+    public Properties properties;
+
+    protected void register(Properties properties) {
+        this.properties = properties;
+    }
+
+
+    // ------------------------- elements -------------------------
 
     /**
-     * @return the title of the game (window's title)
+     * List of available elements
      */
-    abstract public String getTitle();
+    public final Set<Element> elements = new HashSet<>();
 
     /**
-     * @return the ratio of the images (WIDTH / HEIGHT)
-     */
-    public abstract int getImageRatio();
-
-    /**
-     * Return the path of an image
-     *
-     * @param label the label of the image
-     * @return the path of the image
-     */
-    abstract public String getImagePath(String label);
-
-    /**
-     * @return the font to use
-     */
-    public abstract String getFontName();
-
-    public abstract String getStartScreen();
-
-    public abstract String getDescription();
-
-    // ------------------------- list of rooms -------------------------
-
-    /**
-     * List of available rooms
-     */
-    private final Map<String, Room> rooms = new HashMap<>();
-
-    /**
-     * Registers a room.
+     * Registers an element.
      * Use in the constructor of the specific game data
      *
-     * @param name identifier of the room.
-     * @param room the room
+     * @param element the element
      */
-    protected final void register(String name, Room room) {
-        rooms.put(name, room);
+    protected final void register(Element element) {
+        elements.add(element);
+    }
+
+//    public final List<Element> getElementsMatching(Predicate<? super Element> match) {
+//        return elements.stream().filter(match).collect(Collectors.toList());
+//    }
+
+    public final List<Element> getInteractables(NPC npc) {
+        Class<? extends Element> holder = npc.getHolder();
+        if (holder == null) return Collections.emptyList();
+
+        return getElements(Element.class).stream()
+                .filter(e -> {
+                    if (e.getClass() == holder) return true;
+                    if (!(e instanceof Holdable)) return false;
+                    return ((Holdable) e).getHolder() == holder || ((Holdable) e).getHolder() == npc.getClass();
+                })
+                .collect(Collectors.toList());
+    }
+
+    public final <T> List<T> getElements(Class<T> name) {
+        return (List<T>) elements.stream()
+                .filter(name::isInstance)
+                .collect(Collectors.toList());
     }
 
     /**
-     * Returns the room associated with the given name
-     *
-     * @param name name of the room to retrieve
-     * @return the room
-     * @throws RuntimeException if there is no room with that name
+     * Returns the first element associated with the given class
      */
-    public final Room getRoom(String name) {
-        Room room = rooms.get(name);
-        if (room == null) {
-            throw new RuntimeException("Unknown room: " + name);
-        }
-        return room;
+    public final <T> T getElement(Class<T> name) {
+        return getElements(name).stream().findFirst().orElseThrow();
     }
 
-    // ------------------------- player -------------------------
-
-    private Player player;
-
-    protected void register(Player player) {
-        this.player = player;
+    public Player getPlayer() {
+        return getElement(Player.class);
     }
 
-    public final Player getPlayer() {
-        return player;
-    }
-
-    // ------------------------- list of npcs -------------------------
-
-    /**
-     * List of available npcs
-     */
-    private final Map<String, NPC> npcs = new HashMap<>();
-
-    /**
-     * Register a new NPC
-     *
-     * @param name name of the npc
-     * @param npc  the npc
-     * @throws RuntimeException if there is no npc with that name
-     */
-    protected final void register(String name, NPC npc) {
-        npcs.put(name, npc);
+    public List<Holdable> getPlayerVisible() {
+        return elements.stream()
+                .filter(e -> e instanceof Holdable)
+                .map(e -> (Holdable) e)
+                .filter(e -> e.getHolder() == getPlayer().getHolder() && e != getPlayer())
+                .collect(Collectors.toList());
     }
 
     /**
-     * Returns a NPC by name
-     *
-     * @param name name of the npc
-     * @return that npc
+     * Make the rooms and npcs act
      */
-    public final NPC getNPC(String name) {
-        NPC npc = npcs.get(name);
-        if (npc == null) {
-            throw new RuntimeException("Unknown npc: " + name);
-        }
-        return npc;
+    public void nonPlayerAct() {
+        elements.stream().filter(e -> !(e instanceof Player)).forEach(Element::act);
     }
-
 
     // ------------------------- game registration -------------------------
 
@@ -127,18 +102,6 @@ public abstract class Data implements Serializable {
      * @param game current game
      */
     public final void register(Game game) {
-        player.register(game);
-        rooms.values().forEach(e -> e.register(game));
-        npcs.values().forEach(e -> e.register(game));
+        elements.forEach(e -> e.register(game));
     }
-
-    /**
-     * Make the rooms and npcs act
-     */
-    public void act() {
-        rooms.values().forEach(Element::act);
-        npcs.values().forEach(Element::act);
-    }
-
-
 }

@@ -6,28 +6,26 @@ import com.unizar.game.elements.Room;
 
 import java.util.function.Supplier;
 
-public class StartRoom extends Room {
+public class EastRoom extends Room {
 
-    public boolean doorOpen = false;
-
-    public StartRoom() {
-        super("2");
+    public EastRoom() {
+        super("3");
     }
 
     @Override
     public void describe() {
-        game.addDescription("Te encuentras en una sala alargada confortable.");
-        game.addDescription("Al este está la puerta verde redonda, " + (doorOpen ? "abierta" : "cerrada") + ".");
+        game.addDescription("Estás en un terreno vacío y sombrío con colinas lúgubres a lo lejos.");
+        game.addDescription("Al oeste está la puerta verde redonda. Las salidas visibles son: este, norte y noreste.");
     }
 
     @Override
     public Supplier<String> doCommand(Command command, NPC npc) {
         switch (command) {
-            case GoEast -> {
+            case GoWest -> {
                 return () -> {
-                    if (doorOpen) {
-                        npc.setHolder(EastRoom.class);
-                        return "Sales de la habitación";
+                    if (game.data.getElement(StartRoom.class).doorOpen) {
+                        npc.setHolder(StartRoom.class);
+                        return "Regresas a la habitación";
                     } else {
                         return "La puerta está cerrada";
                     }

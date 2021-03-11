@@ -1,6 +1,10 @@
-package com.unizar.game;
+package com.unizar.game.elements;
+
+import com.unizar.game.Game;
+import com.unizar.game.commands.Command;
 
 import java.io.Serializable;
+import java.util.function.Supplier;
 
 /**
  * A generic element of the game
@@ -14,6 +18,16 @@ abstract public class Element implements Serializable {
      */
     public void act() {
     }
+
+    /**
+     * Describe the current element
+     */
+    abstract public void describe();
+
+    public Supplier<String> doCommand(Command command, NPC npc) {
+        return null;
+    }
+
 
     // ------------------------- game management -------------------------
 

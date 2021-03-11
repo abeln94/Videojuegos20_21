@@ -146,6 +146,10 @@ public class Window {
         commandInput.addKeyListener(listener);
     }
 
+    public void clearCommand() {
+        commandInput.setText("");
+    }
+
     // ------------------------- description -------------------------
 
     /**
