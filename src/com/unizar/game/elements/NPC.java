@@ -19,10 +19,16 @@ abstract public class NPC extends Element {
         super(name);
     }
 
+    public void changeLocation(Class<? extends Element> newLocation) {
+        game.getElement(location).elements.remove(this.getClass());
+        location = newLocation;
+        game.getElement(location).elements.add(this.getClass());
+    }
+
     @Override
-    public String getDescription() {
+    public String getDescription(Class<? extends NPC> npc) {
         String prefix = ": " + super.name + " lleva ";
 
-        return super.getDescription() + Utils.generateList("", prefix, prefix, elements.stream().map(e -> game.getElement(e).getDescription()).collect(Collectors.toList()));
+        return super.getDescription(npc) + Utils.generateList("", prefix, prefix, elements.stream().map(e -> game.getElement(e).getDescription(npc)).collect(Collectors.toList()));
     }
 }

@@ -1,5 +1,6 @@
 package com.unizar.hobbit.npcs;
 
+import com.unizar.game.elements.NPC;
 import com.unizar.game.elements.Player;
 
 public class Bilbo_Player extends Player {
@@ -9,7 +10,7 @@ public class Bilbo_Player extends Player {
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription(Class<? extends NPC> npc) {
         return null;
     }
 }

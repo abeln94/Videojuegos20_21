@@ -14,4 +14,14 @@ public class Utils {
         int last = list.size() - 1;
         return prefixMultiple + String.join(" y ", String.join(", ", list.subList(0, last)), list.get(last));
     }
+
+    static public class Pair<A, B> {
+        public A first;
+        public B second;
+
+        public Pair(A first, B second) {
+            this.first = first;
+            this.second = second;
+        }
+    }
 }

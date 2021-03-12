@@ -3,6 +3,8 @@ package com.unizar.game.elements;
 import com.unizar.game.Game;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A generic element of the game
@@ -11,12 +13,18 @@ abstract public class Element implements Serializable {
 
     public final String name;
 
+    public final List<Class<? extends Element>> elements = new ArrayList<>();
+
     public Element(String name) {
         this.name = name;
     }
 
-    public String getDescription() {
+    public String getDescription(Class<? extends NPC> npc) {
         return name;
+    }
+
+    public List<Class<? extends Element>> getInteractable() {
+        return elements;
     }
 
     // ------------------------- game management -------------------------

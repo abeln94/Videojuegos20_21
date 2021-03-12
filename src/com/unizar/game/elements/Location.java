@@ -2,9 +2,12 @@ package com.unizar.game.elements;
 
 import com.unizar.game.Game;
 import com.unizar.game.Utils;
-import com.unizar.game.commands.Direction;
+import com.unizar.game.commands.Word;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -14,9 +17,7 @@ abstract public class Location extends Element {
 
     public final String image;
 
-    public Map<Direction, Class<? extends Element>> exits = new HashMap<>();
-
-    public final Set<Class<? extends Element>> elements = new HashSet<>();
+    public Map<Word.Direction, Utils.Pair<Class<? extends Location>, Class<? extends Item>>> exits = new HashMap<>();
 
     public Location(String name, String image) {
         super(name);
@@ -24,12 +25,21 @@ abstract public class Location extends Element {
     }
 
     @Override
-    public String getDescription() {
-        StringBuilder description = new StringBuilder(super.getDescription());
+    public List<Class<? extends Element>> getInteractable() {
+        List<Class<? extends Element>> exitItems = exits.values().stream().map(le -> le.second).filter(Objects::nonNull).collect(Collectors.toList());
+
+        exitItems.addAll(super.getInteractable());
+
+        return exitItems;
+    }
+
+    @Override
+    public String getDescription(Class<? extends NPC> npc) {
+        StringBuilder description = new StringBuilder(super.getDescription(npc) + ".");
 
         List<String> visibleExits = exits.entrySet().stream().filter(e -> {
-            if (!(game.getElement(e.getValue()) instanceof Location)) {
-                description.append(". Al " + e.getKey().name + " está " + game.getElement(e.getValue()).name);
+            if (e.getValue().second != null) {
+                description.append(". Al " + e.getKey().name + " está " + game.getElement(e.getValue().second).name);
                 return false;
             }
             return true;
@@ -37,12 +47,13 @@ abstract public class Location extends Element {
         description.append(Utils.generateList("", ". Hay una salida al ", ". Hay salidas visibles al ", visibleExits));
 
         description.append(" Puedes ver:");
-        if (elements.isEmpty()) {
-            description.append(" - Nada");
+        List<Class<? extends Element>> visible = elements.stream().filter(e -> e != npc).collect(Collectors.toList());
+        if (visible.isEmpty()) {
+            description.append("\n - Nada");
         } else {
             boolean dot = false;
-            for (Class<? extends Element> e : elements) {
-                String d = game.getElement(e).getDescription();
+            for (Class<? extends Element> e : visible) {
+                String d = game.getElement(e).getDescription(npc);
                 if (d != null) {
                     description.append((dot ? "." : "") + "\n - " + d);
                     dot = true;
