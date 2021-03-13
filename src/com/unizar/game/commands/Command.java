@@ -1,21 +1,44 @@
 package com.unizar.game.commands;
 
-public enum Command {
-    Wait("esperar"),
+import com.unizar.game.elements.Element;
 
-    GoNorth("norte"),
-    GoSouth("sur"),
-    GoEast("este"),
-    GoWest("oeste"),
+public class Command {
+    public Word.Adverbs adverb = null;
+    public Word.Action action = null;
+    public Word.Preposition preposition = null;
+    public Word.Direction direction = null;
+    public Element element = null;
 
-    READ("leer"),
-    OPEN("abrir");
-
-    Command(String name) {
-        this.name = name;
+    public Command() {
     }
 
-    // ------------------------- identifier -------------------------
+    public Command(Word.Adverbs adverb, Word.Action action, Word.Preposition preposition, Word.Direction direction, Element element) {
+        this.adverb = adverb;
+        this.action = action;
+        this.preposition = preposition;
+        this.direction = direction;
+        this.element = element;
+    }
 
-    public final String name;
+    public static Command simple(Word.Action action) {
+        Command command = new Command();
+        command.action = action;
+        return command;
+    }
+
+    public static Command go(Word.Direction direction) {
+        Command command = new Command();
+        command.action = Word.Action.GO;
+        command.direction = direction;
+        return command;
+    }
+
+    @Override
+    public String toString() {
+        return (adverb == null ? "" : adverb + " - ")
+                + action
+                + (preposition == null ? "" : " - " + preposition)
+                + (direction == null ? "" : " - " + direction)
+                + (element == null ? "" : " - " + element);
+    }
 }

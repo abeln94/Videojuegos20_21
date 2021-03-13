@@ -1,6 +1,8 @@
 package com.unizar.game.elements;
 
 import com.unizar.Utils;
+import com.unizar.game.commands.Command;
+import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 
 import java.util.HashSet;
@@ -33,7 +35,8 @@ abstract public class NPC extends Element {
 
     @Override
     public void act() {
-        game.engine.applyCommand(this, null, Word.Action.WAIT, null, null, null);
+        Result result = game.engine.applyCommand(this, Command.simple(Word.Action.WAIT));
+        System.out.println(this + ": " + result);
     }
 
 }

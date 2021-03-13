@@ -1,5 +1,6 @@
 package com.unizar.game;
 
+import com.unizar.game.commands.Engine;
 import com.unizar.game.commands.Parser;
 import com.unizar.game.elements.Element;
 import com.unizar.game.elements.Location;
@@ -118,6 +119,11 @@ public class Game extends KeyAdapter implements Window.InputListener {
         }
     }
 
+    public void afterPlayer() {
+        // act each element
+        data.elements.forEach(Element::act);
+    }
+
     // ------------------------- game commands -------------------------
 
     public void update() {
@@ -174,11 +180,6 @@ public class Game extends KeyAdapter implements Window.InputListener {
 
     public Player getPlayer() {
         return findElementByClassName(Player.class);
-    }
-
-    public void afterPlayer() {
-        // act each element
-        data.elements.forEach(Element::act);
     }
 
 }

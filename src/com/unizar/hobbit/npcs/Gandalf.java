@@ -1,6 +1,7 @@
 package com.unizar.hobbit.npcs;
 
-import com.unizar.game.Engine;
+import com.unizar.game.commands.Command;
+import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.NPC;
 import com.unizar.hobbit.items.Map;
@@ -24,7 +25,7 @@ public class Gandalf extends NPC {
 
         // try going in a random direction
         Word.Direction dir = Word.Direction.values()[random.nextInt(Word.Direction.values().length)];
-        Engine.Result result = game.engine.applyCommand(this, null, Word.Action.GO, null, dir, null);
+        Result result = game.engine.applyCommand(this, Command.go(dir));
         if (result.done) {
             onHear(result.output);
             return;

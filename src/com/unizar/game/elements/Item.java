@@ -1,6 +1,6 @@
 package com.unizar.game.elements;
 
-public class Item extends Element {
+public abstract class Item extends Element {
 
     public Boolean opened = null;
 

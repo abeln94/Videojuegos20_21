@@ -1,6 +1,5 @@
 package com.unizar.game.commands;
 
-import com.unizar.game.Engine;
 import com.unizar.game.Game;
 import com.unizar.game.Window;
 import com.unizar.game.elements.Element;
@@ -16,8 +15,8 @@ public class Parser implements Window.InputListener {
         this.game = game;
     }
 
-
     private String appendableCommand = "";
+
 
     @Override
     public void onText(String rawText) {
@@ -36,7 +35,7 @@ public class Parser implements Window.InputListener {
                         .filter(e -> words.stream().anyMatch(Arrays.asList(e.name.split(" +"))::contains)).collect(Collectors.toList())
         );
 
-        Engine.Result result = game.engine.applyCommand(game.getPlayer(), firstOrNull(matches.adverbs), firstOrNull(matches.actions), firstOrNull(matches.prepositions), firstOrNull(matches.directions), element);
+        Result result = game.engine.applyCommand(game.getPlayer(), new Command(firstOrNull(matches.adverbs), firstOrNull(matches.actions), firstOrNull(matches.prepositions), firstOrNull(matches.directions), element));
 
         game.addOutput(result.output);
 

@@ -31,6 +31,7 @@ abstract public class Element implements Serializable {
         // do nothing
     }
 
+
     public void say(NPC npc, String message) {
         elements.stream()
                 .filter(e -> e instanceof NPC)
