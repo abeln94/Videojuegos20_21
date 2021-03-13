@@ -26,6 +26,13 @@ public class Command {
         return command;
     }
 
+    public static Command act(Word.Action action, Element element) {
+        Command command = new Command();
+        command.action = action;
+        command.element = element;
+        return command;
+    }
+
     public static Command go(Word.Direction direction) {
         Command command = new Command();
         command.action = Word.Action.GO;

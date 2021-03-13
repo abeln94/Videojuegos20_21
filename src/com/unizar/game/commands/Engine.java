@@ -5,6 +5,8 @@ import com.unizar.game.elements.Item;
 import com.unizar.game.elements.Location;
 import com.unizar.game.elements.NPC;
 
+import java.util.Map;
+
 public class Engine {
 
     public Result applyCommand(NPC npc, Command command) {
@@ -27,9 +29,6 @@ public class Engine {
             }
             case LOAD -> {
                 return Result.error("[obsoleto: pulsa F9 para cargar]");
-            }
-            case SAY -> {
-
             }
             case OPEN -> {
                 if (command.element == null) return Result.moreNeeded("Que quieres que abra?");
@@ -83,7 +82,7 @@ public class Engine {
                 }
 
                 // notify old npc
-                npc.location.say(npc, npc + " va hacia el " + command.direction.name + ".");
+                npc.location.say(npc, npc + " va hacia el " + command.direction.name);
 
                 // move
                 npc.location.elements.remove(npc);
@@ -91,9 +90,28 @@ public class Engine {
                 npc.location.elements.add(npc);
 
                 // notify new npc
-                npc.location.say(npc, npc + " entra.");
+                npc.location.say(npc, npc + " entra");
 
                 return Result.done("Te diriges al " + command.direction.name);
+            }
+            case FOLLOW -> {
+                if (command.element == null) return Result.moreNeeded("A quien quieres seguir?");
+
+                if (!(command.element instanceof NPC)) return Result.error("No puedo seguir a " + command.element);
+
+                if (!(npc.location instanceof Location)) return Result.error("No puedes seguir a nadie desde aquí");
+
+                for (Map.Entry<Word.Direction, Utils.Pair<Location, Item>> entry : ((Location) npc.location).exits.entrySet()) {
+                    if (entry.getValue().first.elements.contains(command.element)) {
+                        Result result = applyCommand(npc, Command.go(entry.getKey()));
+                        if (result.done) {
+                            return Result.done("Sigues a " + command.element);
+                        } else {
+                            return Result.error("No puedes seguir a " + command.element + " desde aquí");
+                        }
+                    }
+                }
+                return Result.error("No puedes seguir a " + command.element + " desde aquí");
             }
         }
 

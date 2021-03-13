@@ -3,10 +3,7 @@ package com.unizar.game.elements;
 import com.unizar.Utils;
 import com.unizar.game.commands.Word;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -25,15 +22,15 @@ abstract public class Location extends Element {
 
     @Override
     public List<Element> getInteractable() {
-        List<Element> exitItems = exits.values().stream().map(le -> le.second).filter(Objects::nonNull).collect(Collectors.toList());
+        List<Element> interactable = new ArrayList<>();
 
-        exitItems.addAll(super.getInteractable());
+        interactable.addAll(super.getInteractable());
 
-        return exitItems;
-    }
+        interactable.addAll(exits.values().stream().map(le -> le.second).filter(Objects::nonNull).collect(Collectors.toList()));
 
-    public List<Element> getOtherNPC(NPC npc) {
-        return elements.stream().filter(e -> e instanceof NPC).filter(e -> e != npc).collect(Collectors.toList());
+        interactable.addAll(game.data.getGlobalElements());
+
+        return interactable;
     }
 
     @Override
@@ -65,15 +62,5 @@ abstract public class Location extends Element {
         }
 
         return description.toString();
-    }
-
-
-    @Override
-    public void init() {
-        // register all the NPC on this room so that their location is this room
-        elements.stream()
-                .filter(e -> e instanceof NPC)
-                .forEach(npc -> ((NPC) npc).location = this);
-        super.init();
     }
 }

@@ -25,14 +25,13 @@ public class Parser implements Window.InputListener {
 
         // write command
         game.addOutput("> " + rawText);
-        rawText = rawText.toLowerCase();
-        List<String> words = Arrays.asList((appendableCommand + " " + rawText).split(" +"));
+        List<String> words = Arrays.asList((appendableCommand + " " + rawText).toLowerCase().split(" +"));
         appendableCommand = "";
 
         Word.Matches matches = Word.getWords(words);
         Element element = firstOrNull(
                 game.getPlayer().location.getInteractable().stream()
-                        .filter(e -> words.stream().anyMatch(Arrays.asList(e.name.split(" +"))::contains)).collect(Collectors.toList())
+                        .filter(e -> words.stream().anyMatch(Arrays.asList(e.name.toLowerCase().split(" +"))::contains)).collect(Collectors.toList())
         );
 
         Result result = game.engine.applyCommand(game.getPlayer(), new Command(firstOrNull(matches.adverbs), firstOrNull(matches.actions), firstOrNull(matches.prepositions), firstOrNull(matches.directions), element));

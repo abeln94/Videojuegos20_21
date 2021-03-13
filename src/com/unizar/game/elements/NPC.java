@@ -39,4 +39,11 @@ abstract public class NPC extends Element {
         System.out.println(this + ": " + result);
     }
 
+    @Override
+    public void init() {
+        super.init();
+
+        // register this NPC in the location room
+        location.elements.add(this);
+    }
 }

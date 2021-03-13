@@ -6,6 +6,7 @@ import com.unizar.hobbit.items.Map;
 import com.unizar.hobbit.items.StartChest;
 import com.unizar.hobbit.npcs.Bilbo_Player;
 import com.unizar.hobbit.npcs.Gandalf;
+import com.unizar.hobbit.npcs.Thorin;
 import com.unizar.hobbit.rooms.EastLocation;
 import com.unizar.hobbit.rooms.StartLocation;
 
@@ -32,6 +33,7 @@ public class HobbitData extends Data {
 
         // npcs
         register(new Gandalf());
+        register(new Thorin());
 
     }
 

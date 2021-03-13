@@ -4,7 +4,9 @@ import com.unizar.game.elements.Element;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A game data.
@@ -39,9 +41,10 @@ public abstract class Data implements Serializable {
         elements.add(element);
     }
 
-//    public final List<Element> getElementsMatching(Predicate<? super Element> match) {
-//        return elements.stream().filter(match).collect(Collectors.toList());
-//    }
+
+    public List<Element> getGlobalElements() {
+        return elements.stream().filter(e -> e.global).collect(Collectors.toList());
+    }
 
 
     // ------------------------- game registration -------------------------
@@ -58,4 +61,5 @@ public abstract class Data implements Serializable {
     public void init() {
         elements.forEach(Element::init);
     }
+
 }

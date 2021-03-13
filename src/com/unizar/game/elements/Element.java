@@ -13,6 +13,8 @@ abstract public class Element implements Serializable {
 
     public final String name;
 
+    public boolean global;
+
     public final List<Element> elements = new ArrayList<>();
 
     public Element(String name) {
