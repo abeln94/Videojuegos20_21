@@ -1,6 +1,6 @@
 package com.unizar.hobbit.rooms;
 
-import com.unizar.game.Utils;
+import com.unizar.Utils;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Location;
 import com.unizar.hobbit.items.GreenDoor;
@@ -12,9 +12,14 @@ public class StartLocation extends Location {
 
     public StartLocation() {
         super("una sala alargada confortable", "2");
-        elements.add(StartChest.class);
-        elements.add(Bilbo_Player.class);
-        elements.add(Gandalf.class);
-        exits.put(Word.Direction.EAST, new Utils.Pair<>(EastLocation.class, GreenDoor.class));
+    }
+
+    @Override
+    public void init() {
+        elements.add(game.findElementByClassName(StartChest.class));
+        elements.add(game.findElementByClassName(Bilbo_Player.class));
+        elements.add(game.findElementByClassName(Gandalf.class));
+        exits.put(Word.Direction.EAST, new Utils.Pair<>(game.findElementByClassName(EastLocation.class), game.findElementByClassName(GreenDoor.class)));
+        super.init();
     }
 }

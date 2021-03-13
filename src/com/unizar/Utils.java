@@ -1,5 +1,6 @@
-package com.unizar.game;
+package com.unizar;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class Utils {
@@ -15,7 +16,7 @@ public class Utils {
         return prefixMultiple + String.join(" y ", String.join(", ", list.subList(0, last)), list.get(last));
     }
 
-    static public class Pair<A, B> {
+    static public class Pair<A, B> implements Serializable {
         public A first;
         public B second;
 

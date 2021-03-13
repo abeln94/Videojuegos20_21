@@ -10,7 +10,7 @@ public class Bilbo_Player extends Player {
     }
 
     @Override
-    public String getDescription(Class<? extends NPC> npc) {
+    public String getDescription(NPC npc) {
         return null;
     }
 }

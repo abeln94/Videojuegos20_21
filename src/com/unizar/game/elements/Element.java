@@ -13,18 +13,34 @@ abstract public class Element implements Serializable {
 
     public final String name;
 
-    public final List<Class<? extends Element>> elements = new ArrayList<>();
+    public final List<Element> elements = new ArrayList<>();
 
     public Element(String name) {
         this.name = name;
     }
 
-    public String getDescription(Class<? extends NPC> npc) {
+    public String getDescription(NPC npc) {
         return name;
     }
 
-    public List<Class<? extends Element>> getInteractable() {
+    public List<Element> getInteractable() {
         return elements;
+    }
+
+    public void act() {
+        // do nothing
+    }
+
+    public void say(NPC npc, String message) {
+        elements.stream()
+                .filter(e -> e instanceof NPC)
+                .filter(e -> e != npc)
+                .forEach(e -> ((NPC) e).onHear(message));
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
     // ------------------------- game management -------------------------
@@ -41,5 +57,8 @@ abstract public class Element implements Serializable {
      */
     public void register(Game game) {
         this.game = game;
+    }
+
+    public void init() {
     }
 }

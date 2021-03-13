@@ -27,7 +27,7 @@ public abstract class Data implements Serializable {
     /**
      * List of available elements
      */
-    public final Set<Element> elements = new HashSet<>();
+    public Set<Element> elements = new HashSet<>();
 
     /**
      * Registers an element.
@@ -35,14 +35,13 @@ public abstract class Data implements Serializable {
      *
      * @param element the element
      */
-    protected final void register(Element element) {
+    protected void register(Element element) {
         elements.add(element);
     }
 
 //    public final List<Element> getElementsMatching(Predicate<? super Element> match) {
 //        return elements.stream().filter(match).collect(Collectors.toList());
 //    }
-
 
 
     // ------------------------- game registration -------------------------
@@ -52,7 +51,11 @@ public abstract class Data implements Serializable {
      *
      * @param game current game
      */
-    public final void register(Game game) {
+    public void register(Game game) {
         elements.forEach(e -> e.register(game));
+    }
+
+    public void init() {
+        elements.forEach(Element::init);
     }
 }

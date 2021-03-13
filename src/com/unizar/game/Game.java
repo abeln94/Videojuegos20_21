@@ -1,16 +1,15 @@
 package com.unizar.game;
 
 import com.unizar.game.commands.Parser;
-import com.unizar.game.commands.Word;
-import com.unizar.game.elements.*;
+import com.unizar.game.elements.Element;
+import com.unizar.game.elements.Location;
+import com.unizar.game.elements.Player;
 
 import javax.imageio.ImageIO;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The game main class.
@@ -19,10 +18,11 @@ public class Game extends KeyAdapter implements Window.InputListener {
 
     // ------------------------- global -------------------------
     public Data data;
+    public Engine engine = new Engine();
 
     private final DataSaver saver = new DataSaver();
     private final Parser analyzer = new Parser(this);
-    private final Window window;
+    public final Window window;
 
     private boolean onStartScreen = true;
 
@@ -54,6 +54,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
             System.exit(-1);
         }
         data.register(this);
+        data.init();
 
         // restart
         onStartScreen = true;
@@ -123,9 +124,9 @@ public class Game extends KeyAdapter implements Window.InputListener {
         window.clearDescription();
 
         // describe current room
-        Element location = getElement(getPlayer().location);
+        Element location = getPlayer().location;
         setImage(location instanceof Location ? ((Location) location).image : null);
-        addDescription("Te encuentras en " + location.getDescription(getPlayer().getClass()) + ".");
+        addDescription("Te encuentras en " + location.getDescription(getPlayer()) + ".");
     }
 
     /**
@@ -134,10 +135,14 @@ public class Game extends KeyAdapter implements Window.InputListener {
      * @param label name of the image (from the images folder)
      */
     public void setImage(String label) {
-        try {
-            window.drawImage(ImageIO.read(Game.class.getResource(data.properties.getImagePath(label))));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (label == null) {
+            window.drawImage(null);
+        } else {
+            try {
+                window.drawImage(ImageIO.read(Game.class.getResource(data.properties.getImagePath(label))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -159,126 +164,21 @@ public class Game extends KeyAdapter implements Window.InputListener {
         window.addOutput(output);
     }
 
-    public <T> List<T> getElements(Class<T> name) {
-        return (List<T>) data.elements.stream()
-                .filter(name::isInstance)
-                .collect(Collectors.toList());
-    }
-
     /**
-     * Returns the first element associated with the given class
+     * Returns the element associated with the given class (should be unique)
      */
-    public <T> T getElement(Class<T> name) {
-        return getElements(name).stream().findFirst().orElseThrow();
+    public <T> T findElementByClassName(Class<T> name) {
+        return (T) data.elements.stream()
+                .filter(name::isInstance).findFirst().orElseThrow();
     }
 
     public Player getPlayer() {
-        return getElement(Player.class);
+        return findElementByClassName(Player.class);
     }
 
     public void afterPlayer() {
-        // foreach NPC, npc.act
-    }
-
-
-    // ------------------------- Engine -------------------------
-
-    public static class Result {
-        public boolean done = false;
-        public boolean requiresMore = false;
-        public String output = null;
-
-        static Result done(String output) {
-            Result result = new Result();
-            result.done = true;
-            result.output = output;
-            return result;
-        }
-
-        static Result moreNeeded(String output) {
-            Result result = new Result();
-            result.requiresMore = true;
-            result.output = output;
-            return result;
-        }
-
-        static Result error(String output) {
-            Result result = new Result();
-            result.output = output;
-            return result;
-        }
-    }
-
-    public Result applyCommand(Class<? extends NPC> npc, Word.Adverbs adverb, Word.Action action, Word.Preposition preposition, Word.Direction direction, Class<? extends Element> element) {
-        System.out.println(npc + " - " + adverb + "  - " + action + " - " + preposition + " - " + direction + " - " + element);
-
-        if (action == null) {
-            return Result.error("Como dices?");
-        }
-
-
-        switch (action) {
-            case OPEN -> {
-                if (element == null) return Result.moreNeeded("Que quieres que abra?");
-
-                Element el = getElement(element);
-
-                if (!(el instanceof Item) || ((Item) el).opened == null) {
-                    return Result.error("No puedo abrir " + el.name);
-                } else if (((Item) el).opened) {
-                    return Result.error(el.name + " ya está abierto/a");
-                } else {
-                    ((Item) el).opened = true;
-                    return Result.done("Abres " + el.name);
-                }
-            }
-            case CLOSE -> {
-                if (element == null) return Result.moreNeeded("Que quieres que cierre?");
-
-                Element el = getElement(element);
-
-                if (!(el instanceof Item) || ((Item) el).opened == null) {
-                    return Result.error("No puedo cerrar " + el.name);
-                } else if (!((Item) el).opened) {
-                    return Result.error(el.name + " ya está cerrado/a");
-                } else {
-                    ((Item) el).opened = false;
-                    return Result.done("Cierras " + el.name);
-                }
-            }
-            case GO -> {
-                if (direction == null) {
-                    // original game makes instead a 'go through'
-                    return Result.moreNeeded("Hacia donde quieres que vaya?");
-                }
-
-                Element location = getElement(getElement(npc).location);
-
-                if (!(location instanceof Location)) {
-                    return Result.error("No puedes moverte mientras estás en " + location.name);
-                }
-
-                Utils.Pair<Class<? extends Location>, Class<? extends Item>> le = ((Location) location).exits.get(direction);
-
-                if (le == null) {
-                    return Result.error("No puedes ir hacia el " + direction.name);
-                }
-
-                Class<? extends Location> newLocation = le.first;
-                Class<? extends Item> throughItem = le.second;
-
-                if (throughItem != null && !getElement(throughItem).opened) {
-                    return Result.error(getElement(throughItem).name + " está cerrado/a");
-                }
-
-                getElement(npc).changeLocation(newLocation);
-                return Result.done("Te diriges al " + direction.name);
-
-            }
-        }
-
-
-        return Result.error("Aún no se hacer eso!");
+        // act each element
+        data.elements.forEach(Element::act);
     }
 
 }
