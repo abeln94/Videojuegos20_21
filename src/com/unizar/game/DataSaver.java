@@ -17,13 +17,13 @@ public class DataSaver {
     /**
      * Saves the current data. Overrides existing ones.
      *
-     * @param data data to save
+     * @param world data to save
      */
-    public final void saveData(Data data) {
+    public final void saveData(World world) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(data);
+            oos.writeObject(world);
             oos.close();
             savedData = Base64.getEncoder().encodeToString(baos.toByteArray());
         } catch (IOException e) {
@@ -34,7 +34,7 @@ public class DataSaver {
     /**
      * @return the saved data, or null if no data is saved
      */
-    public final Data loadData() {
+    public final World loadData() {
         if (savedData == null) return null;
         try {
             byte[] data = Base64.getDecoder().decode(savedData);
@@ -42,7 +42,7 @@ public class DataSaver {
                     new ByteArrayInputStream(data));
             Object o = ois.readObject();
             ois.close();
-            return (Data) o;
+            return (World) o;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

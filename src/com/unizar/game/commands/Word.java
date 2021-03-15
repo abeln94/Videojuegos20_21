@@ -5,9 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Container for all the engine words
+ */
 public class Word {
 
-
+    /**
+     * A direction where you can navigate to
+     */
     public enum Direction {
         NORTH("norte"),
         NORTHEAST("noreste"),
@@ -28,6 +33,9 @@ public class Word {
         public final String name;
     }
 
+    /**
+     * An possible action
+     */
     public enum Action {
         BREAK("romper"),
         CLIMB("saltar"),
@@ -82,6 +90,9 @@ public class Word {
         public final String name;
     }
 
+    /**
+     * A modifier
+     */
     public enum Preposition {
         ACROSS("cruzando"),
         AT("a"),
@@ -105,6 +116,9 @@ public class Word {
     }
 
 
+    /**
+     * A modifier
+     */
     public enum Adverbs {
         CAREFULLY("cuidadosamente"),
         SOFTLY("suavemente"),
@@ -121,6 +135,9 @@ public class Word {
 
     // ------------------------- find -------------------------
 
+    /**
+     * Container for matching words
+     */
     public static class Matches {
         List<Action> actions = new ArrayList<>();
         List<Adverbs> adverbs = new ArrayList<>();
@@ -128,6 +145,12 @@ public class Word {
         List<Preposition> prepositions = new ArrayList<>();
     }
 
+    /**
+     * Returns all the matching words found in a sentence
+     *
+     * @param words list of words of a sentence
+     * @return all the matching words (per block)
+     */
     static public Matches getWords(List<String> words) {
         Matches matches = new Matches();
         matches.actions = Arrays.stream(Action.values()).filter(a -> words.contains(a.name)).collect(Collectors.toList());

@@ -1,6 +1,6 @@
 package com.unizar.hobbit;
 
-import com.unizar.game.Data;
+import com.unizar.game.World;
 import com.unizar.hobbit.items.GreenDoor;
 import com.unizar.hobbit.items.Map;
 import com.unizar.hobbit.items.StartChest;
@@ -13,27 +13,27 @@ import com.unizar.hobbit.rooms.StartLocation;
 /**
  * This should be better with annotations, but from now lets use it explicitly
  */
-public class HobbitData extends Data {
+public class HobbitWorld extends World {
 
-    public HobbitData() {
+    public HobbitWorld() {
         // properties
-        register(new HobbitProperties());
+        properties = new HobbitProperties();
 
         // player
-        register(new Bilbo_Player());
+        elements.add(new Bilbo_Player());
 
         // rooms
-        register(new StartLocation());
-        register(new EastLocation());
+        elements.add(new StartLocation());
+        elements.add(new EastLocation());
 
         // items
-        register(new Map());
-        register(new StartChest());
-        register(new GreenDoor());
+        elements.add(new Map());
+        elements.add(new StartChest());
+        elements.add(new GreenDoor());
 
         // npcs
-        register(new Gandalf());
-        register(new Thorin());
+        elements.add(new Gandalf());
+        elements.add(new Thorin());
 
     }
 

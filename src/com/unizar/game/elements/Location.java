@@ -11,8 +11,16 @@ import java.util.stream.Collectors;
  */
 abstract public class Location extends Element {
 
+    /**
+     * The image of this location (from the game's data image folder)
+     */
     public final String image;
 
+    /**
+     * List of exits from this location. A map of
+     * key -> the direction
+     * value -> the new location + null, if you can travel freely, or the new location + an item that you need to traverse
+     */
     public Map<Word.Direction, Utils.Pair<Location, Item>> exits = new HashMap<>();
 
     public Location(String name, String image) {
@@ -28,8 +36,6 @@ abstract public class Location extends Element {
 
         interactable.addAll(exits.values().stream().map(le -> le.second).filter(Objects::nonNull).collect(Collectors.toList()));
 
-        interactable.addAll(game.data.getGlobalElements());
-
         return interactable;
     }
 
@@ -44,7 +50,7 @@ abstract public class Location extends Element {
             }
             return true;
         }).map(e -> e.getKey().name).collect(Collectors.toList());
-        description.append(Utils.generateList("", ". Hay una salida al ", ". Hay salidas visibles al ", visibleExits));
+        description.append(Utils.joinList("", ". Hay una salida al", ". Hay salidas visibles al", visibleExits));
 
         description.append(" Puedes ver:");
         List<Element> visible = elements.stream().filter(e -> e != npc).collect(Collectors.toList());

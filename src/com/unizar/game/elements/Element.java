@@ -11,29 +11,55 @@ import java.util.List;
  */
 abstract public class Element implements Serializable {
 
+    /**
+     * This element's name
+     */
     public final String name;
 
+    /**
+     * Whether this element can be interacted from anywhere
+     */
     public boolean global;
 
+    /**
+     * List of elements inside this element
+     */
     public final List<Element> elements = new ArrayList<>();
 
     public Element(String name) {
         this.name = name;
     }
 
+    /**
+     * Returns the description of this element from the perspective of a given npc
+     *
+     * @param npc npc looking for a description of this element
+     * @return the description as string
+     */
     public String getDescription(NPC npc) {
         return name;
     }
 
+    /**
+     * @return all the interactable elements from this one
+     */
     public List<Element> getInteractable() {
         return elements;
     }
 
+    /**
+     * This element's turn
+     */
     public void act() {
         // do nothing
     }
 
-
+    /**
+     * Makes an npc say something to this element
+     *
+     * @param npc     who said the message
+     * @param message what was said
+     */
     public void say(NPC npc, String message) {
         elements.stream()
                 .filter(e -> e instanceof NPC)
@@ -62,6 +88,10 @@ abstract public class Element implements Serializable {
         this.game = game;
     }
 
+    /**
+     * Initializes this element.
+     * Make sure to call super.init() AFTER your data
+     */
     public void init() {
     }
 }

@@ -18,7 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 public class Game extends KeyAdapter implements Window.InputListener {
 
     // ------------------------- global -------------------------
-    public Data data;
+    public World world;
     public Engine engine = new Engine();
 
     private final DataSaver saver = new DataSaver();
@@ -32,11 +32,11 @@ public class Game extends KeyAdapter implements Window.InputListener {
     /**
      * Initializer
      *
-     * @param data data of the game to create
+     * @param world data of the game to create
      */
-    public Game(Data data) {
-        this.data = data;
-        window = new Window(data.properties.getTitle(), data.properties.getImageRatio(), data.properties.getFontName());
+    public Game(World world) {
+        this.world = world;
+        window = new Window(world.properties.getTitle(), world.properties.getImageRatio(), world.properties.getFontName());
         window.setCommandListener(this);
         window.setKeyListener(this);
         reset();
@@ -48,23 +48,23 @@ public class Game extends KeyAdapter implements Window.InputListener {
     public void reset() {
         // recreate the data object
         try {
-            data = data.getClass().getConstructor().newInstance();
+            world = world.getClass().getConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             // should never happen
             e.printStackTrace();
             System.exit(-1);
         }
-        data.register(this);
-        data.init();
+        world.register(this);
+        world.init();
 
         // restart
         onStartScreen = true;
-        setImage(data.properties.getStartScreen());
+        setImage(world.properties.getStartScreen());
         window.clearOutput();
         addOutput("Escribe aquí los comandos y pulsa enter para introducirlos.");
         addOutput("También puedes pulsar F6/F9 para guardar/cargar la partida. Y pulsar F2 para resetear.");
         window.clearDescription();
-        addDescription(data.properties.getDescription());
+        addDescription(world.properties.getDescription());
         addDescription("Pulsa cualquier tecla para empezar.");
     }
 
@@ -97,17 +97,17 @@ public class Game extends KeyAdapter implements Window.InputListener {
             // press F6 to save
             case KeyEvent.VK_F6 -> {
                 window.addOutput("[guardado]");
-                saver.saveData(data);
+                saver.saveData(world);
             }
 
             // Press F9 to load
             case KeyEvent.VK_F9 -> {
-                Data newData = saver.loadData();
-                if (newData != null) {
+                World newWorld = saver.loadData();
+                if (newWorld != null) {
                     window.clearOutput();
                     window.addOutput("[cargado]");
-                    data = newData;
-                    data.register(this);
+                    world = newWorld;
+                    world.register(this);
                     update();
                 } else {
                     window.addOutput("[No hay datos guardados]");
@@ -121,7 +121,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
 
     public void afterPlayer() {
         // act each element
-        data.elements.forEach(Element::act);
+        world.elements.forEach(Element::act);
     }
 
     // ------------------------- game commands -------------------------
@@ -145,7 +145,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
             window.drawImage(null);
         } else {
             try {
-                window.drawImage(ImageIO.read(Game.class.getResource(data.properties.getImagePath(label))));
+                window.drawImage(ImageIO.read(Game.class.getResource(world.properties.getImagePath(label))));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -174,7 +174,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
      * Returns the element associated with the given class (should be unique)
      */
     public <T> T findElementByClassName(Class<T> name) {
-        return (T) data.elements.stream()
+        return (T) world.elements.stream()
                 .filter(name::isInstance).findFirst().orElseThrow();
     }
 

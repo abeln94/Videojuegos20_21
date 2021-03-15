@@ -26,7 +26,7 @@ public class Gandalf extends NPC {
         Result result;
 
         // try going in a random direction
-        result = game.engine.applyCommand(this, Command.go(Utils.pickRandom(Word.Direction.values())));
+        result = game.engine.execute(this, Command.go(Utils.pickRandom(Word.Direction.values())));
         if (result.done) {
             onHear(result.output);
             return;

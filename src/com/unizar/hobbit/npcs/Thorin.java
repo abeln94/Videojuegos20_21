@@ -24,14 +24,14 @@ public class Thorin extends NPC {
         Result result;
 
         // try following the player
-        result = game.engine.applyCommand(this, Command.act(Word.Action.FOLLOW, game.getPlayer()));
+        result = game.engine.execute(this, Command.act(Word.Action.FOLLOW, game.getPlayer()));
         if (result.done) {
             onHear(result.output);
             return;
         }
 
         // try going in a random direction
-        result = game.engine.applyCommand(this, Command.go(Utils.pickRandom(Word.Direction.values())));
+        result = game.engine.execute(this, Command.go(Utils.pickRandom(Word.Direction.values())));
         if (result.done) {
             onHear(result.output);
             return;

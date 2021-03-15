@@ -7,9 +7,19 @@ import com.unizar.game.elements.NPC;
 
 import java.util.Map;
 
+/**
+ * Executes a command from an npc.
+ */
 public class Engine {
 
-    public Result applyCommand(NPC npc, Command command) {
+    /**
+     * Tries to execute the command from a specific npc
+     *
+     * @param npc     npc who initiated the command
+     * @param command which command to process
+     * @return A Result whether the command was applied, needs more info, or is wrong
+     */
+    public Result execute(NPC npc, Command command) {
         System.out.println(npc + " " + command);
 
         if (command.action == null) {
@@ -103,7 +113,7 @@ public class Engine {
 
                 for (Map.Entry<Word.Direction, Utils.Pair<Location, Item>> entry : ((Location) npc.location).exits.entrySet()) {
                     if (entry.getValue().first.elements.contains(command.element)) {
-                        Result result = applyCommand(npc, Command.go(entry.getKey()));
+                        Result result = execute(npc, Command.go(entry.getKey()));
                         if (result.done) {
                             return Result.done("Sigues a " + command.element);
                         } else {

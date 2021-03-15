@@ -2,15 +2,16 @@ package com.unizar.game.commands;
 
 import com.unizar.game.elements.Element;
 
+/**
+ * A command to process.
+ * Currently consist of an adverb + action + preposition + direction + element (any can be null)
+ */
 public class Command {
-    public Word.Adverbs adverb = null;
-    public Word.Action action = null;
-    public Word.Preposition preposition = null;
-    public Word.Direction direction = null;
-    public Element element = null;
-
-    public Command() {
-    }
+    public Word.Adverbs adverb;
+    public Word.Action action;
+    public Word.Preposition preposition;
+    public Word.Direction direction;
+    public Element element;
 
     public Command(Word.Adverbs adverb, Word.Action action, Word.Preposition preposition, Word.Direction direction, Element element) {
         this.adverb = adverb;
@@ -21,23 +22,15 @@ public class Command {
     }
 
     public static Command simple(Word.Action action) {
-        Command command = new Command();
-        command.action = action;
-        return command;
+        return new Command(null, action, null, null, null);
     }
 
     public static Command act(Word.Action action, Element element) {
-        Command command = new Command();
-        command.action = action;
-        command.element = element;
-        return command;
+        return new Command(null, action, null, null, element);
     }
 
     public static Command go(Word.Direction direction) {
-        Command command = new Command();
-        command.action = Word.Action.GO;
-        command.direction = direction;
-        return command;
+        return new Command(null, Word.Action.GO, null, direction, null);
     }
 
     @Override

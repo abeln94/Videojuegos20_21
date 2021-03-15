@@ -9,39 +9,29 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A game data.
- * Extend your game's data class
- * A list of rooms (includes the current one) + a list of npcs
+ * A game world.
+ * Extend your game's world class, then in the constructor set the properties and add the elements
  */
-public abstract class Data implements Serializable {
+public abstract class World implements Serializable {
 
     // ------------------------- properties -------------------------
 
+    /**
+     * Properties of this world.
+     */
     public Properties properties;
-
-    protected void register(Properties properties) {
-        this.properties = properties;
-    }
 
 
     // ------------------------- elements -------------------------
 
     /**
-     * List of available elements
+     * List of available elements.
      */
     public Set<Element> elements = new HashSet<>();
 
     /**
-     * Registers an element.
-     * Use in the constructor of the specific game data
-     *
-     * @param element the element
+     * @return the global elements (those marked with the global flag)
      */
-    protected void register(Element element) {
-        elements.add(element);
-    }
-
-
     public List<Element> getGlobalElements() {
         return elements.stream().filter(e -> e.global).collect(Collectors.toList());
     }
@@ -58,6 +48,9 @@ public abstract class Data implements Serializable {
         elements.forEach(e -> e.register(game));
     }
 
+    /**
+     * Initializes this world
+     */
     public void init() {
         elements.forEach(Element::init);
     }
