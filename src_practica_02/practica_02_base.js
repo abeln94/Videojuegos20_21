@@ -169,6 +169,34 @@ const objectsToDraw = [
     },
 ];
 
+const CUBES = 20;
+
+for (let i = 0; i < CUBES; ++i) {
+    objectsToDraw.push({
+        programInfo: programInfo,
+        pointsArray: pointsCube,
+        colorsArray: uniformColorsCube([Math.random(), Math.random(), Math.random(), 1.0]),
+        uniforms: {
+            u_colorMult: [1.0, 1.0, 1.0, 1.0],
+            u_model: new mat4(),
+        },
+        initialPosition: translate(...randomVectorInSphere(Math.random() * 6)),
+        localRotationAxis: randomVectorInSphere(),
+        globalRotationAxis: randomVectorInSphere(),
+        localInitialAngle: Math.random() * Math.PI * 2,
+        globalInitialAngle: Math.random() * Math.PI * 2,
+        primType: "triangles",
+    })
+}
+
+function randomVectorInSphere(r = 1) {
+    return vec3(r * (Math.random() * 2 - 1), r * (Math.random() * 2 - 1), r * (Math.random() * 2 - 1));
+}
+
+function uniformColorsCube(color) {
+    return Array(36).fill(color)
+}
+
 //----------------------------------------------------------------------------
 // Initialization function
 //----------------------------------------------------------------------------
@@ -245,6 +273,15 @@ function render() {
 
     objectsToDraw[3].uniforms.u_model = translate(1.0, 0.0, 3.0);
     objectsToDraw[3].uniforms.u_model = mult(R, objectsToDraw[3].uniforms.u_model);
+
+    for (let i = 4; i < 4 + CUBES; ++i) {
+        let obj = objectsToDraw[i];
+        obj.uniforms.u_model = mult(mult(
+            rotate(obj.globalInitialAngle + rotAngle, obj.globalRotationAxis),
+            obj.initialPosition),
+            rotate(obj.localInitialAngle + rotAngle, obj.localRotationAxis
+            ));
+    }
 
     //----------------------------------------------------------------------------
     // DRAW
