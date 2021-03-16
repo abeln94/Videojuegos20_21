@@ -108,11 +108,18 @@ const colorsCube = [
 //----------------------------------------------------------------------------
 
 const model = new mat4();   		// create a model matrix and set it to the identity matrix
-let view = new mat4();   		// create a view matrix and set it to the identity matrix
-let projection = new mat4();	// create a projection matrix and set it to the identity matrix
 
-let eye, target, up;			// for view matrix
+// camera
+const camera = {
+    translate: vec3(0, 0, -10),
+    pitch: 0,
+    yaw: 0,
+    ortho: false,
+    fieldOfView: 45.0,
+    P: mat4(),
+};
 
+// animation
 let rotAngle = 0.0;
 const rotChange = 0.5;
 
@@ -172,6 +179,9 @@ const objectsToDraw = [
 const CUBES = 20;
 
 for (let i = 0; i < CUBES; ++i) {
+
+    const initialPosition = randomVectorInSphere(5);
+
     objectsToDraw.push({
         programInfo: programInfo,
         pointsArray: pointsCube,
@@ -180,9 +190,9 @@ for (let i = 0; i < CUBES; ++i) {
             u_colorMult: [1.0, 1.0, 1.0, 1.0],
             u_model: new mat4(),
         },
-        initialPosition: translate(...randomVectorInSphere(Math.random() * 6)),
+        initialPosition: translate(...initialPosition),
         localRotationAxis: randomVectorInSphere(),
-        globalRotationAxis: randomVectorInSphere(),
+        globalRotationAxis: cross(randomVectorInSphere(), normalize(initialPosition)),
         localInitialAngle: Math.random() * Math.PI * 2,
         globalInitialAngle: Math.random() * Math.PI * 2,
         primType: "triangles",
@@ -190,12 +200,17 @@ for (let i = 0; i < CUBES; ++i) {
 }
 
 function randomVectorInSphere(r = 1) {
-    return vec3(r * (Math.random() * 2 - 1), r * (Math.random() * 2 - 1), r * (Math.random() * 2 - 1));
+    return vec3([...normalize(vec3(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1))].map(i => i * r));
 }
 
 function uniformColorsCube(color) {
     return Array(36).fill(color)
 }
+
+function multiMult(/*arguments*/) {
+    return [...arguments].reduce(mult);
+}
+
 
 //----------------------------------------------------------------------------
 // Initialization function
@@ -239,19 +254,101 @@ window.onload = () => {
     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
     // Set up camera
-    // Projection matrix
-    projection = perspective(45.0, canvas.width / canvas.height, 0.1, 100.0);
-    gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection); // copy projection to uniform value in shader
-    // View matrix (static cam)
-    eye = vec3(-5.0, 5.0, 10.0);
-    target = vec3(0.0, 0.0, 0.0);
-    up = vec3(0.0, 1.0, 0.0);
-    view = lookAt(eye, target, up);
-    gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, view); // copy view to uniform value in shader
+    updateCamera();
 
     requestAnimFrame(render);
 
 };
+
+
+//----------------------------------------------------------------------------
+// Events
+//----------------------------------------------------------------------------
+
+const translationChange = 0.1;
+const fieldOfViewChange = 1;
+
+function clamp(min, val, max) {
+    return Math.max(min, Math.min(val, max));
+}
+
+window.addEventListener('keydown', e => {
+    console.log(e.code)
+
+    switch (e.code) {
+        case 'KeyO':
+            // set as ortho
+            camera.ortho = true;
+            break;
+        case 'KeyP':
+            // set as projection
+            camera.ortho = false;
+            break;
+
+        case 'ArrowUp':
+            camera.translate[2] += translationChange;
+            break;
+        case 'ArrowDown':
+            camera.translate[2] -= translationChange;
+            break;
+        case 'ArrowLeft':
+            camera.translate[0] += translationChange;
+            break;
+        case 'ArrowRight':
+            camera.translate[0] -= translationChange;
+            break;
+
+        case 'BracketRight': // +
+            camera.fieldOfView = clamp(0, camera.fieldOfView + fieldOfViewChange, 180);
+            break;
+        case 'Slash': // -
+            camera.fieldOfView = clamp(0, camera.fieldOfView - fieldOfViewChange, 180);
+            break;
+
+    }
+
+    updateCamera();
+});
+
+document.addEventListener('mousemove', e => {
+    if (e.buttons === 1) {
+        camera.pitch += e.movementX;
+        camera.yaw = clamp(-90, camera.yaw + e.movementY, 90);
+        updateCamera();
+    }
+});
+
+function updateCamera() {
+    const aspect = gl.canvas.width / gl.canvas.height;
+    const near = 0.1;
+    const far = 100.0;
+    const orthoSize = 10;
+
+    // Projection matrix
+    let projection = camera.ortho
+        ? ortho(-orthoSize, orthoSize, -orthoSize / aspect, orthoSize / aspect, near, far)
+        : perspective(camera.fieldOfView, aspect, near, far);
+    gl.uniformMatrix4fv(programInfo.uniformLocations.projection, false, projection); // copy projection to uniform value in shader
+
+    // let eye = vec3(-5.0, 5.0, 10.0);
+    // let target = vec3(0.0, 0.0, 0.0);
+    // let up = vec3(0.0, 1.0, 0.0);
+    // let view = lookAt(eye, target, up);
+    let R = mult(
+        rotate(camera.yaw, vec3(1, 0, 0)),
+        rotate(camera.pitch, vec3(0, 1, 0)),
+    );
+
+    let T = translate(...camera.translate);
+    camera.translate = vec3();
+    camera.P = multiMult(transpose(R), T, R, camera.P);
+
+    let view = multiMult(
+        R,
+        camera.P,
+    );
+    gl.uniformMatrix4fv(programInfo.uniformLocations.view, false, view); // copy view to uniform value in shader
+}
 
 //----------------------------------------------------------------------------
 // Rendering Event Function
@@ -276,11 +373,11 @@ function render() {
 
     for (let i = 4; i < 4 + CUBES; ++i) {
         let obj = objectsToDraw[i];
-        obj.uniforms.u_model = mult(mult(
+        obj.uniforms.u_model = multiMult(
             rotate(obj.globalInitialAngle + rotAngle, obj.globalRotationAxis),
-            obj.initialPosition),
-            rotate(obj.localInitialAngle + rotAngle, obj.localRotationAxis
-            ));
+            obj.initialPosition,
+            rotate(obj.localInitialAngle + rotAngle, obj.localRotationAxis),
+        );
     }
 
     //----------------------------------------------------------------------------
