@@ -107,16 +107,16 @@ const colorsCube = [
 // OTHER DATA 
 //----------------------------------------------------------------------------
 
-const model = new mat4();   		// create a model matrix and set it to the identity matrix
+const model = new mat4(); // create a model matrix and set it to the identity matrix
 
-// camera
+// create a camera object
 const camera = {
-    translate: vec3(0, 0, -10),
-    pitch: 0,
-    yaw: 0,
-    ortho: false,
-    fieldOfView: 45.0,
-    P: mat4(),
+    pitch: 0, // current pitch
+    yaw: 0, // current yaw
+    ortho: false, // type of camera (ortho/perspective)
+    fieldOfView: 45.0, // current field of view (perspective only)
+    translate: vec3(0, 0, -10), // vector for local translation (will be applied on next update)
+    P: mat4(), // the current global position (as translation matrix)
 };
 
 // animation
@@ -176,41 +176,40 @@ const objectsToDraw = [
     },
 ];
 
-const CUBES = 20;
+// cube generation
+const CUBES = 20; // how many cubes to generate
 
 for (let i = 0; i < CUBES; ++i) {
 
+    // get a random initial position
     const initialPosition = randomVectorInSphere(5);
 
     objectsToDraw.push({
         programInfo: programInfo,
         pointsArray: pointsCube,
-        colorsArray: uniformColorsCube([Math.random(), Math.random(), Math.random(), 1.0]),
+        colorsArray: Array(36).fill([Math.random(), Math.random(), Math.random(), 1.0]), // a random color, same for each side
         uniforms: {
             u_colorMult: [1.0, 1.0, 1.0, 1.0],
             u_model: new mat4(),
         },
-        initialPosition: translate(...initialPosition),
-        localRotationAxis: randomVectorInSphere(),
-        globalRotationAxis: cross(randomVectorInSphere(), normalize(initialPosition)),
-        localInitialAngle: Math.random() * Math.PI * 2,
-        globalInitialAngle: Math.random() * Math.PI * 2,
         primType: "triangles",
+
+        initialPosition: translate(...initialPosition), // the initial position as a translation matrix
+        localRotationAxis: randomVectorInSphere(), // a random axis for local translation
+        globalRotationAxis: cross(randomVectorInSphere(), normalize(initialPosition)), // the axis for global rotation must be perpendicular with the initial position (so the orbit is maximal)
+        localInitialAngle: Math.random() * Math.PI * 2, // a random initial angle for local rotation
+        globalInitialAngle: Math.random() * Math.PI * 2, // a random initial angle for global rotation
     })
 }
 
+/**
+ * Returns a random vector pointing to the surface of a sphere with radius r
+ * @param r radius of the sphere
+ * @returns a random vector of length r
+ */
 function randomVectorInSphere(r = 1) {
     return vec3([...normalize(vec3(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1))].map(i => i * r));
 }
-
-function uniformColorsCube(color) {
-    return Array(36).fill(color)
-}
-
-function multiMult(/*arguments*/) {
-    return [...arguments].reduce(mult);
-}
-
 
 //----------------------------------------------------------------------------
 // Initialization function
@@ -265,15 +264,23 @@ window.onload = () => {
 // Events
 //----------------------------------------------------------------------------
 
-const translationChange = 0.1;
-const fieldOfViewChange = 1;
+// animation constants
+const translationChange = 0.1; // distance to translate each time an arrow is pressed
+const fieldOfViewChange = 1; // degrees to change the field of view each time the +/- keys are pressed
 
+/**
+ * Clamps 'val' between 'min' and 'max'
+ * val < min => return min
+ * val > max => return max
+ * else      => return val
+ */
 function clamp(min, val, max) {
     return Math.max(min, Math.min(val, max));
 }
 
+// react to a pressed key
 window.addEventListener('keydown', e => {
-    console.log(e.code)
+    console.log(e)
 
     switch (e.code) {
         case 'KeyO':
@@ -286,66 +293,82 @@ window.addEventListener('keydown', e => {
             break;
 
         case 'ArrowUp':
+            // move up locally
             camera.translate[2] += translationChange;
             break;
         case 'ArrowDown':
+            // move down locally
             camera.translate[2] -= translationChange;
             break;
         case 'ArrowLeft':
+            // move left locally
             camera.translate[0] += translationChange;
             break;
         case 'ArrowRight':
+            // move right locally
             camera.translate[0] -= translationChange;
             break;
 
         case 'BracketRight': // +
+            // increase field of view
             camera.fieldOfView = clamp(0, camera.fieldOfView + fieldOfViewChange, 180);
             break;
         case 'Slash': // -
+            // decrease field of view
             camera.fieldOfView = clamp(0, camera.fieldOfView - fieldOfViewChange, 180);
             break;
 
+        default:
+            return;
     }
 
+    e.preventDefault();
     updateCamera();
 });
 
+// react to mouse move
 document.addEventListener('mousemove', e => {
     if (e.buttons === 1) {
-        camera.pitch += e.movementX;
-        camera.yaw = clamp(-90, camera.yaw + e.movementY, 90);
+        // only if the left button is pressed
+        camera.pitch += e.movementX; // modify pitch
+        camera.yaw = clamp(-90, camera.yaw + e.movementY, 90); // modify yaw
         updateCamera();
     }
 });
 
+// camera constants
+const near = 0.1;
+const far = 100.0;
+const orthoSize = 10;
+
+/**
+ * Update the camera view matrix
+ */
 function updateCamera() {
     const aspect = gl.canvas.width / gl.canvas.height;
-    const near = 0.1;
-    const far = 100.0;
-    const orthoSize = 10;
 
     // Projection matrix
     let projection = camera.ortho
-        ? ortho(-orthoSize, orthoSize, -orthoSize / aspect, orthoSize / aspect, near, far)
-        : perspective(camera.fieldOfView, aspect, near, far);
-    gl.uniformMatrix4fv(programInfo.uniformLocations.projection, false, projection); // copy projection to uniform value in shader
+        ? ortho(-orthoSize, orthoSize, -orthoSize / aspect, orthoSize / aspect, near, far) // create an ortho matrix
+        : perspective(camera.fieldOfView, aspect, near, far); // create a perspective matrix
+    gl.uniformMatrix4fv(programInfo.uniformLocations.projection, false, projection); // copy view to uniform value in shader
 
-    // let eye = vec3(-5.0, 5.0, 10.0);
-    // let target = vec3(0.0, 0.0, 0.0);
-    // let up = vec3(0.0, 1.0, 0.0);
-    // let view = lookAt(eye, target, up);
-    let R = mult(
-        rotate(camera.yaw, vec3(1, 0, 0)),
-        rotate(camera.pitch, vec3(0, 1, 0)),
+    // view matrix (order from left to right)
+    let R = mult( // the rotation matrix
+        rotate(camera.yaw, vec3(1, 0, 0)), // first rotate vertically
+        rotate(camera.pitch, vec3(0, 1, 0)), // then rotate horizontally
     );
 
-    let T = translate(...camera.translate);
-    camera.translate = vec3();
-    camera.P = multiMult(transpose(R), T, R, camera.P);
+    let T = translate(...camera.translate); // get the local translation matrix
+    camera.translate = vec3(); // reset
+    camera.P = [ // the position matrix
+        transpose(R), T, R, // first translate in local coordinates
+        camera.P // then apply old global position
+    ].reduce(mult);
 
-    let view = multiMult(
-        R,
-        camera.P,
+    let view = mult( // the final view matrix
+        R, // first rotate
+        camera.P // then translate
     );
     gl.uniformMatrix4fv(programInfo.uniformLocations.view, false, view); // copy view to uniform value in shader
 }
@@ -371,13 +394,13 @@ function render() {
     objectsToDraw[3].uniforms.u_model = translate(1.0, 0.0, 3.0);
     objectsToDraw[3].uniforms.u_model = mult(R, objectsToDraw[3].uniforms.u_model);
 
-    for (let i = 4; i < 4 + CUBES; ++i) {
-        let obj = objectsToDraw[i];
-        obj.uniforms.u_model = multiMult(
-            rotate(obj.globalInitialAngle + rotAngle, obj.globalRotationAxis),
-            obj.initialPosition,
-            rotate(obj.localInitialAngle + rotAngle, obj.localRotationAxis),
-        );
+    // render all the extra cubes
+    for (let obj of objectsToDraw.slice(4, 4 + CUBES)) {
+        obj.uniforms.u_model = [ // model matrix (order from right to left)
+            rotate(obj.globalInitialAngle + rotAngle, obj.globalRotationAxis), // finally rotate globally
+            obj.initialPosition, // then move
+            rotate(obj.localInitialAngle + rotAngle, obj.localRotationAxis), // first rotate locally
+        ].reduce(mult);
     }
 
     //----------------------------------------------------------------------------
@@ -430,7 +453,7 @@ function setPrimitive(objectsToDraw) {
 function setUniforms(pInfo, uniforms) {
     // Copy uniform model values to corresponding values in shaders
     gl.uniform4f(pInfo.uniformLocations.colorMult, uniforms.u_colorMult[0], uniforms.u_colorMult[1], uniforms.u_colorMult[2], uniforms.u_colorMult[3]);
-    gl.uniformMatrix4fv(pInfo.uniformLocations.model, gl.FALSE, uniforms.u_model);
+    gl.uniformMatrix4fv(pInfo.uniformLocations.model, false, uniforms.u_model);
 }
 
 function setBuffersAndAttributes(pInfo, ptsArray, colArray) {
@@ -439,7 +462,7 @@ function setBuffersAndAttributes(pInfo, ptsArray, colArray) {
         const buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, flatten(array), gl.STATIC_DRAW);
-        gl.vertexAttribPointer(index, 4, gl.FLOAT, gl.FALSE, 0, 0);
+        gl.vertexAttribPointer(index, 4, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(index);
     }
 }
