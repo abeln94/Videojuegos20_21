@@ -15,7 +15,7 @@ public class StartLocation extends Location {
     @Override
     public void init() {
         elements.add(game.findElementByClassName(StartChest.class));
-        exits.put(Word.Direction.EAST, new Utils.Pair<>(game.findElementByClassName(EastLocation.class), game.findElementByClassName(GreenDoor.class)));
+        exits.put(Word.Direction.EAST, Utils.Pair.of(game.findElementByClassName(EastLocation.class), game.findElementByClassName(GreenDoor.class)));
         super.init();
     }
 }

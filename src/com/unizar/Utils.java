@@ -50,9 +50,11 @@ public class Utils {
         public A first;
         public B second;
 
-        public Pair(A first, B second) {
-            this.first = first;
-            this.second = second;
+        static public <A, B> Pair<A, B> of(A a, B b) {
+            Pair<A, B> p = new Pair<>();
+            p.first = a;
+            p.second = b;
+            return p;
         }
     }
 }

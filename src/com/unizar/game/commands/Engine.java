@@ -1,11 +1,13 @@
 package com.unizar.game.commands;
 
 import com.unizar.Utils;
+import com.unizar.game.elements.Element;
 import com.unizar.game.elements.Item;
 import com.unizar.game.elements.Location;
 import com.unizar.game.elements.NPC;
 
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Executes a command from an npc.
@@ -22,8 +24,16 @@ public class Engine {
     public Result execute(NPC npc, Command command) {
         System.out.println(npc + " " + command);
 
+        if (command.parseError) {
+            if (command.invalidToken != null) {
+                return Result.error("No entiendo '" + command.invalidToken + "'");
+            } else {
+                return Result.error("Como dices?");
+            }
+        }
+
         if (command.action == null) {
-            return Result.error("Como dices?");
+            return Result.error("Que quieres que haga?");
         }
 
 
@@ -41,9 +51,15 @@ public class Engine {
                 return Result.error("[obsoleto: pulsa F9 para cargar]");
             }
             case OPEN -> {
-                if (command.element == null) return Result.moreNeeded("Que quieres que abra?");
+                Predicate<Element> predicate = e -> e instanceof Item && ((Item) e).opened == Boolean.FALSE;
+                command.filterElement(npc.location.getInteractable(), predicate);
 
-                if (!(command.element instanceof Item) || ((Item) command.element).opened == null) {
+                if (command.element == null) {
+                    if (command.elementDescription.isEmpty()) return Result.moreNeeded("Que quieres que abra?");
+                    else return Result.error("No veo '" + String.join(" ", command.elementDescription) + "'");
+                }
+
+                if (!predicate.test(command.element)) {
                     return Result.error("No puedo abrir " + command.element);
                 } else if (((Item) command.element).opened) {
                     return Result.error(command.element + " ya está abierto/a");
@@ -53,9 +69,15 @@ public class Engine {
                 }
             }
             case CLOSE -> {
-                if (command.element == null) return Result.moreNeeded("Que quieres que cierre?");
+                Predicate<Element> predicate = e -> e instanceof Item && ((Item) e).opened == Boolean.TRUE;
+                command.filterElement(npc.location.getInteractable(), predicate);
 
-                if (!(command.element instanceof Item) || ((Item) command.element).opened == null) {
+                if (command.element == null) {
+                    if (command.elementDescription.isEmpty()) return Result.moreNeeded("Que quieres que cierre?");
+                    else return Result.error("No veo '" + String.join(" ", command.elementDescription) + "'");
+                }
+
+                if (!predicate.test(command.element)) {
                     return Result.error("No puedo cerrar " + command.element);
                 } else if (!((Item) command.element).opened) {
                     return Result.error(command.element + " ya está cerrado/a");
@@ -80,7 +102,7 @@ public class Engine {
 
                 if (le == null) {
                     // no exit
-                    return Result.error("No puedes ir hacia el " + command.direction.name);
+                    return Result.error("No puedes ir hacia " + command.direction.name);
                 }
 
                 Location newLocation = le.first;
@@ -92,7 +114,7 @@ public class Engine {
                 }
 
                 // notify old npc
-                npc.location.say(npc, npc + " va hacia el " + command.direction.name);
+                npc.location.say(npc, npc + " va hacia " + command.direction.name);
 
                 // move
                 npc.location.elements.remove(npc);
@@ -102,7 +124,7 @@ public class Engine {
                 // notify new npc
                 npc.location.say(npc, npc + " entra");
 
-                return Result.done("Te diriges al " + command.direction.name);
+                return Result.done("Te diriges hacia " + command.direction.name);
             }
             case FOLLOW -> {
                 if (command.element == null) return Result.moreNeeded("A quien quieres seguir?");

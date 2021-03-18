@@ -44,7 +44,9 @@ abstract public class Element implements Serializable {
      * @return all the interactable elements from this one
      */
     public List<Element> getInteractable() {
-        return elements;
+        List<Element> interactable = new ArrayList<>(elements);
+        elements.forEach(i -> interactable.addAll(i.getInteractable()));
+        return interactable;
     }
 
     /**

@@ -13,7 +13,7 @@ public class EastLocation extends Location {
 
     @Override
     public void init() {
-        exits.put(Word.Direction.WEST, new Utils.Pair<>(game.findElementByClassName(StartLocation.class), game.findElementByClassName(GreenDoor.class)));
+        exits.put(Word.Direction.WEST, Utils.Pair.of(game.findElementByClassName(StartLocation.class), game.findElementByClassName(GreenDoor.class)));
         super.init();
     }
 }

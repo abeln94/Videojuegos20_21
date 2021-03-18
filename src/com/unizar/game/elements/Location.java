@@ -45,12 +45,12 @@ abstract public class Location extends Element {
 
         List<String> visibleExits = exits.entrySet().stream().filter(e -> {
             if (e.getValue().second != null) {
-                description.append(". Al " + e.getKey().name + " está " + e.getValue().second);
+                description.append(". Hacia " + e.getKey().name + " está " + e.getValue().second);
                 return false;
             }
             return true;
         }).map(e -> e.getKey().name).collect(Collectors.toList());
-        description.append(Utils.joinList("", ". Hay una salida al", ". Hay salidas visibles al", visibleExits));
+        description.append(Utils.joinList("", ". Hay una salida hacia", ". Hay salidas visibles hacia", visibleExits));
 
         description.append(" Puedes ver:");
         List<Element> visible = elements.stream().filter(e -> e != npc).collect(Collectors.toList());
