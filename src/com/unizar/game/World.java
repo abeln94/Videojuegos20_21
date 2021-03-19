@@ -4,9 +4,7 @@ import com.unizar.game.elements.Element;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * A game world.
@@ -28,13 +26,6 @@ public abstract class World implements Serializable {
      * List of available elements.
      */
     public Set<Element> elements = new HashSet<>();
-
-    /**
-     * @return the global elements (those marked with the global flag)
-     */
-    public List<Element> getGlobalElements() {
-        return elements.stream().filter(e -> e.global).collect(Collectors.toList());
-    }
 
 
     // ------------------------- game registration -------------------------

@@ -17,11 +17,6 @@ abstract public class Element implements Serializable {
     public final String name;
 
     /**
-     * Whether this element can be interacted from anywhere
-     */
-    public boolean global;
-
-    /**
      * List of elements inside this element
      */
     public final List<Element> elements = new ArrayList<>();
