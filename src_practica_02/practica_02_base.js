@@ -115,8 +115,7 @@ const camera = {
     yaw: 0, // current yaw
     ortho: false, // type of camera (ortho/perspective)
     fieldOfView: 45.0, // current field of view (perspective only)
-    translate: vec3(0, 0, -10), // vector for local translation (will be applied on next update)
-    P: mat4(), // the current global position (as translation matrix)
+    P: translate(0, 0, -10), // the current global position (as translation matrix)
 };
 
 // animation
@@ -202,15 +201,6 @@ for (let i = 0; i < CUBES; ++i) {
     })
 }
 
-/**
- * Returns a random vector pointing to the surface of a sphere with radius r
- * @param r radius of the sphere
- * @returns a random vector of length r
- */
-function randomVectorInSphere(r = 1) {
-    return vec3([...normalize(vec3(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1))].map(i => i * r));
-}
-
 //----------------------------------------------------------------------------
 // Initialization function
 //----------------------------------------------------------------------------
@@ -252,9 +242,6 @@ window.onload = () => {
     // Set up viewport
     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
-    // Set up camera
-    updateCamera();
-
     requestAnimFrame(render);
 
 };
@@ -264,77 +251,73 @@ window.onload = () => {
 // Events
 //----------------------------------------------------------------------------
 
+
 // animation constants
 const translationChange = 0.1; // distance to translate each time an arrow is pressed
 const fieldOfViewChange = 1; // degrees to change the field of view each time the +/- keys are pressed
+const mouseSensitivity = 0.4; // sensitivity of the mouse
 
-/**
- * Clamps 'val' between 'min' and 'max'
- * val < min => return min
- * val > max => return max
- * else      => return val
- */
-function clamp(min, val, max) {
-    return Math.max(min, Math.min(val, max));
-}
+// events state
+const mapping = { // map each event to a key
+    ArrowUp: 'moveUp',
+    ArrowDown: 'moveDown',
+    ArrowLeft: 'moveLeft',
+    ArrowRight: 'moveRight',
+    KeyW: 'moveUp',
+    KeyS: 'moveDown',
+    KeyA: 'moveLeft',
+    KeyD: 'moveRight',
+
+    BracketRight: 'zoomOut',
+    Slash: 'zoomIn',
+
+    KeyO: 'setOrtho',
+    KeyP: 'setPerspective',
+};
+const activeEvents = {}; // state of each event
+Object.keys(mapping).forEach(k => activeEvents[mapping[k]] = 0); // init all to 0
 
 // react to a pressed key
 window.addEventListener('keydown', e => {
-    console.log(e)
-
-    switch (e.code) {
-        case 'KeyO':
-            // set as ortho
-            camera.ortho = true;
-            break;
-        case 'KeyP':
-            // set as projection
-            camera.ortho = false;
-            break;
-
-        case 'ArrowUp':
-            // move up locally
-            camera.translate[2] += translationChange;
-            break;
-        case 'ArrowDown':
-            // move down locally
-            camera.translate[2] -= translationChange;
-            break;
-        case 'ArrowLeft':
-            // move left locally
-            camera.translate[0] += translationChange;
-            break;
-        case 'ArrowRight':
-            // move right locally
-            camera.translate[0] -= translationChange;
-            break;
-
-        case 'BracketRight': // +
-            // increase field of view
-            camera.fieldOfView = clamp(0, camera.fieldOfView + fieldOfViewChange, 180);
-            break;
-        case 'Slash': // -
-            // decrease field of view
-            camera.fieldOfView = clamp(0, camera.fieldOfView - fieldOfViewChange, 180);
-            break;
-
-        default:
-            return;
+    if (e.code in mapping) {
+        // corresponds to an event
+        e.preventDefault();
+        if (activeEvents[mapping[e.code]] === 0) {
+            // activate event
+            console.log("pressed: " + e.code);
+            activeEvents[mapping[e.code]] = 1;
+        }
     }
+});
 
-    e.preventDefault();
-    updateCamera();
+// react to a released key
+window.addEventListener('keyup', e => {
+    if (e.code in mapping) {
+        // corresponds to an event
+        e.preventDefault();
+        if (activeEvents[mapping[e.code]] === 1) {
+            // deactivate event
+            console.log("released: " + e.code);
+            activeEvents[mapping[e.code]] = 0;
+        }
+    }
 });
 
 // react to mouse move
 document.addEventListener('mousemove', e => {
     if (e.buttons === 1) {
         // only if the left button is pressed
-        camera.pitch += e.movementX; // modify pitch
-        camera.yaw = clamp(-90, camera.yaw + e.movementY, 90); // modify yaw
-        updateCamera();
+        console.log("Rotated: " + e.movementX + ", " + e.movementY)
+        camera.pitch += e.movementX * mouseSensitivity; // modify pitch
+        camera.yaw = clamp(-90, camera.yaw + e.movementY * mouseSensitivity, 90); // modify yaw
     }
 });
+
+
+//----------------------------------------------------------------------------
+// Camera
+//----------------------------------------------------------------------------
+
 
 // camera constants
 const near = 0.1;
@@ -347,7 +330,12 @@ const orthoSize = 10;
 function updateCamera() {
     const aspect = gl.canvas.width / gl.canvas.height;
 
-    // Projection matrix
+    // update camera properties
+    if (activeEvents.setOrtho && !activeEvents.setPerspective) camera.ortho = true;
+    if (!activeEvents.setOrtho && activeEvents.setPerspective) camera.ortho = false;
+    camera.fieldOfView = clamp(0, camera.fieldOfView + fieldOfViewChange * (activeEvents.zoomOut - activeEvents.zoomIn), 180);
+
+    // update projection matrix
     let projection = camera.ortho
         ? ortho(-orthoSize, orthoSize, -orthoSize / aspect, orthoSize / aspect, near, far) // create an ortho matrix
         : perspective(camera.fieldOfView, aspect, near, far); // create a perspective matrix
@@ -359,18 +347,24 @@ function updateCamera() {
         rotate(camera.pitch, vec3(0, 1, 0)), // then rotate horizontally
     );
 
-    let T = translate(...camera.translate); // get the local translation matrix
-    camera.translate = vec3(); // reset
+    // update position matrix
+    let T = translate(
+        (activeEvents.moveLeft - activeEvents.moveRight) * translationChange,
+        0,
+        (activeEvents.moveUp - activeEvents.moveDown) * translationChange
+    ); // get the local translation matrix
     camera.P = [ // the position matrix
         transpose(R), T, R, // first translate in local coordinates
         camera.P // then apply old global position
     ].reduce(mult);
 
+    // update view matrix
     let view = mult( // the final view matrix
         R, // first rotate
         camera.P // then translate
     );
     gl.uniformMatrix4fv(programInfo.uniformLocations.view, false, view); // copy view to uniform value in shader
+
 }
 
 //----------------------------------------------------------------------------
@@ -378,6 +372,7 @@ function updateCamera() {
 //----------------------------------------------------------------------------
 
 function render() {
+    requestAnimationFrame(render);
 
     gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
@@ -403,6 +398,9 @@ function render() {
         ].reduce(mult);
     }
 
+    // update camera
+    updateCamera();
+
     //----------------------------------------------------------------------------
     // DRAW
     //----------------------------------------------------------------------------
@@ -422,8 +420,6 @@ function render() {
     });
 
     rotAngle += rotChange;
-
-    requestAnimationFrame(render);
 
 }
 
@@ -465,4 +461,23 @@ function setBuffersAndAttributes(pInfo, ptsArray, colArray) {
         gl.vertexAttribPointer(index, 4, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(index);
     }
+}
+
+/**
+ * Returns a random vector pointing to the surface of a sphere with radius r
+ * @param r radius of the sphere
+ * @returns a random vector of length r
+ */
+function randomVectorInSphere(r = 1) {
+    return vec3([...normalize(vec3(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1))].map(i => i * r));
+}
+
+/**
+ * Clamps 'val' between 'min' and 'max'
+ * val < min => return min
+ * val > max => return max
+ * else      => return val
+ */
+function clamp(min, val, max) {
+    return Math.max(min, Math.min(val, max));
 }
