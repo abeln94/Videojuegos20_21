@@ -263,13 +263,21 @@ const mapping = { // map each event to a key
     ArrowDown: 'moveDown',
     ArrowLeft: 'moveLeft',
     ArrowRight: 'moveRight',
+
     KeyW: 'moveUp',
     KeyS: 'moveDown',
     KeyA: 'moveLeft',
     KeyD: 'moveRight',
 
+    Numpad8: 'moveUp',
+    Numpad2: 'moveDown',
+    Numpad4: 'moveLeft',
+    Numpad6: 'moveRight',
+
     BracketRight: 'zoomOut',
     Slash: 'zoomIn',
+    NumpadSubtract: 'zoomOut',
+    NumpadAdd: 'zoomIn',
 
     KeyO: 'setOrtho',
     KeyP: 'setPerspective',
