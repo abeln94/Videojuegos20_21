@@ -258,42 +258,36 @@ const fieldOfViewChange = 1; // degrees to change the field of view each time th
 const mouseSensitivity = 0.4; // sensitivity of the mouse
 
 // events state
-const mapping = { // map each event to a key
-    ArrowUp: 'moveUp',
-    ArrowDown: 'moveDown',
-    ArrowLeft: 'moveLeft',
-    ArrowRight: 'moveRight',
+const events = {/*init*/}; // state of each event, as 0/1
+const mapping = {/*init*/}; // map each event to a key, generated from the events object
+// init
+[
+    ["moveUp", ["ArrowUp", "KeyW", "Numpad8"]],
+    ["moveDown", ["ArrowDown", "KeyS", "Numpad2"]],
+    ["moveLeft", ["ArrowLeft", "KeyA", "Numpad4"]],
+    ["moveRight", ["ArrowRight", "KeyD", "Numpad6"]],
 
-    KeyW: 'moveUp',
-    KeyS: 'moveDown',
-    KeyA: 'moveLeft',
-    KeyD: 'moveRight',
+    ["zoomOut", ["BracketRight", "NumpadAdd"]],
+    ["zoomIn", ["Slash", "NumpadSubtract"]],
 
-    Numpad8: 'moveUp',
-    Numpad2: 'moveDown',
-    Numpad4: 'moveLeft',
-    Numpad6: 'moveRight',
+    ["setOrtho", ["KeyO"]],
+    ["setPerspective", ["KeyP"]],
+].forEach(param => {
+    let [event, keys] = param;
+    events[event] = 0; // init to 0
+    keys.forEach(key=>mapping[key]=event); // register mapping
+})
 
-    BracketRight: 'zoomOut',
-    Slash: 'zoomIn',
-    NumpadSubtract: 'zoomOut',
-    NumpadAdd: 'zoomIn',
-
-    KeyO: 'setOrtho',
-    KeyP: 'setPerspective',
-};
-const activeEvents = {}; // state of each event
-Object.keys(mapping).forEach(k => activeEvents[mapping[k]] = 0); // init all to 0
 
 // react to a pressed key
 window.addEventListener('keydown', e => {
     if (e.code in mapping) {
         // corresponds to an event
         e.preventDefault();
-        if (activeEvents[mapping[e.code]] === 0) {
+        if (events[mapping[e.code]] === 0) {
             // activate event
             console.log("pressed: " + e.code);
-            activeEvents[mapping[e.code]] = 1;
+            events[mapping[e.code]] = 1;
         }
     }
 });
@@ -303,10 +297,10 @@ window.addEventListener('keyup', e => {
     if (e.code in mapping) {
         // corresponds to an event
         e.preventDefault();
-        if (activeEvents[mapping[e.code]] === 1) {
+        if (events[mapping[e.code]] === 1) {
             // deactivate event
             console.log("released: " + e.code);
-            activeEvents[mapping[e.code]] = 0;
+            events[mapping[e.code]] = 0;
         }
     }
 });
@@ -339,9 +333,9 @@ function updateCamera() {
     const aspect = gl.canvas.width / gl.canvas.height;
 
     // update camera properties
-    if (activeEvents.setOrtho && !activeEvents.setPerspective) camera.ortho = true;
-    if (!activeEvents.setOrtho && activeEvents.setPerspective) camera.ortho = false;
-    camera.fieldOfView = clamp(0, camera.fieldOfView + fieldOfViewChange * (activeEvents.zoomOut - activeEvents.zoomIn), 180);
+    if (events.setOrtho && !events.setPerspective) camera.ortho = true;
+    if (!events.setOrtho && events.setPerspective) camera.ortho = false;
+    camera.fieldOfView = clamp(0, camera.fieldOfView + fieldOfViewChange * (events.zoomOut - events.zoomIn), 180);
 
     // update projection matrix
     let projection = camera.ortho
@@ -356,12 +350,12 @@ function updateCamera() {
     );
 
     // update position matrix
-    let T = translate(
-        (activeEvents.moveLeft - activeEvents.moveRight) * translationChange,
+    let T = translate( // get the local translation matrix
+        (events.moveLeft - events.moveRight) * translationChange,
         0,
-        (activeEvents.moveUp - activeEvents.moveDown) * translationChange
-    ); // get the local translation matrix
-    camera.P = [ // the position matrix
+        (events.moveUp - events.moveDown) * translationChange
+    );
+    camera.P = [ // create the new position matrix
         transpose(R), T, R, // first translate in local coordinates
         camera.P // then apply old global position
     ].reduce(mult);
