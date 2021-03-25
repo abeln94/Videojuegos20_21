@@ -30,7 +30,7 @@ public class Word {
     }
 
     /**
-     * An action
+     * A distinguishable action
      */
     public enum Action implements Token {
         BREAK("romper"),
@@ -92,7 +92,7 @@ public class Word {
     }
 
     /**
-     * A direction where you can navigate to
+     * A specific direction where you can navigate to
      */
     public enum Direction implements Token {
         NORTH("norte"),
@@ -191,39 +191,44 @@ public class Word {
 
     // ------------------------- parsing -------------------------
 
-    static public Utils.Pair<Type, Object> parse(String word, Token[] elementWords) {
-        for (Utils.Pair<Type, Token[]> tokens : new Utils.Pair[]{
+    static public Utils.Pair<Type, Token> parse(String word, Token[] elementWords) {
+        List<Utils.Pair<Type, Token>> all = new ArrayList<>();
+        for (Utils.Pair<Type, ? extends Token[]> tokens : List.of(
                 Utils.Pair.of(Type.ACTION, Word.Action.values()),
                 Utils.Pair.of(Type.DIRECTION, Word.Direction.values()),
                 Utils.Pair.of(Type.PREPOSITION, Word.Preposition.values()),
                 Utils.Pair.of(Type.MODIFIER, Modifier.values()),
-                Utils.Pair.of(Type.ELEMENT, elementWords),
-        }) {
-            List<Token> list = Arrays.stream(tokens.second).filter(w -> Word.match(word, w.getName())).collect(Collectors.toList());
-            switch (list.size()) {
-                case 0:
-                    // nothing, continue
-                    break;
-                case 1:
-                    // found, return
-                    return Utils.Pair.of(tokens.first, list.get(0));
-                default:
-                    // multiple
-                    return Utils.Pair.of(Type.MULTIPLE, null);
-            }
+                Utils.Pair.of(Type.ELEMENT, elementWords)
+        )) {
+            all.addAll(Arrays.stream(tokens.second).map(t -> Utils.Pair.of(tokens.first, t)).collect(Collectors.toList()));
+        }
+
+        List<Utils.Pair<Type, Token>> filtered = all.stream().filter(p -> Word.matchWords(word, p.second.getName())).collect(Collectors.toList());
+
+        switch (filtered.size()) {
+            case 0:
+                // nothing, continue
+                break;
+            case 1:
+                // found, return
+                return filtered.get(0);
+            default:
+                // multiple
+                return Utils.Pair.of(Type.MULTIPLE, null);
         }
 
         return Utils.Pair.of(Type.UNKNOWN, null);
     }
 
-    static public boolean match(String description, String word) {
-        return word.startsWith(description);
+    static public boolean matchWords(String baseWord, String testWord) {
+        return testWord.equals(baseWord);
     }
 
-    static public boolean match(List<String> descriptions, String sentence) {
-        List<String> words = Word.separateWords(sentence);
+    static public boolean matchSentences(String baseSentence, String testSentence) {
+        List<String> testWords = Word.separateWords(testSentence);
+        List<String> baseWords = Word.separateWords(baseSentence);
 
-        return descriptions.stream().allMatch(description -> words.stream().anyMatch(word -> Word.match(description, word)));
+        return testWords.stream().allMatch(testWord -> baseWords.stream().anyMatch(baseWord -> Word.matchWords(baseWord, testWord)));
     }
 
     // ------------------------- find -------------------------

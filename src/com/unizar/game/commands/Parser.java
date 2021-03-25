@@ -36,8 +36,12 @@ public class Parser implements Window.InputListener {
 
         // write command
         game.addOutput("> " + rawText);
-        Word.Token[] elementTokens = game.world.elements.stream().flatMap(e -> Word.separateWords(e.name).stream().map(Word.ElementToken::new)).distinct().toArray(Word.Token[]::new);
-        Command command = new Command(appendableCommand + " " + rawText, elementTokens);
+        Word.Token[] elementTokens = game.world.elements.stream()
+                .flatMap(e -> Word.separateWords(e.name).stream())
+                .distinct()
+                .map(Word.ElementToken::new)
+                .toArray(Word.Token[]::new); // TODO: move as constant after game initialization
+        Command command = new Command(appendableCommand + " " + rawText, elementTokens, game.world.elements);
         appendableCommand = "";
 
         // execute

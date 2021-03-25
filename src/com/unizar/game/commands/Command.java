@@ -3,8 +3,9 @@ package com.unizar.game.commands;
 import com.unizar.Utils;
 import com.unizar.game.elements.Element;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -17,10 +18,11 @@ public class Command {
     public Word.Action action;
     public Word.Direction direction;
 
-    public Element element;
-    public Element secondElement;
-    public List<String> elementDescription = new ArrayList<>();
-    private List<String> secondElementDescription = new ArrayList<>();
+    public Set<Element> mainElement;
+    public Set<Element> secondaryElement;
+
+    public String mainElementDescription;
+    private String secondaryElementDescription;
 
 
     public String invalidToken = null;
@@ -28,12 +30,14 @@ public class Command {
 
     // ------------------------- constructors -------------------------
 
-    public Command(Word.Modifier modifier, Word.Action action, Word.Direction direction, Element elementDescription, Element secondElementDescription) {
+    public Command(Word.Modifier modifier, Word.Action action, Word.Direction direction, Element mainElement, Element secondaryElement) {
         this.modifier = modifier;
         this.action = action;
         this.direction = direction;
-        this.elementDescription = elementDescription == null ? null : Word.separateWords(elementDescription.name);
-        this.secondElementDescription = secondElementDescription == null ? null : Word.separateWords(secondElementDescription.name);
+        this.mainElement = mainElement == null ? Collections.emptySet() : Set.of(mainElement);
+        this.secondaryElement = secondaryElement == null ? Collections.emptySet() : Set.of(secondaryElement);
+        this.mainElementDescription = mainElement == null ? "" : mainElement.name;
+        this.secondaryElementDescription = secondaryElement == null ? "" : secondaryElement.name;
     }
 
     public static Command simple(Word.Action action) {
@@ -48,14 +52,16 @@ public class Command {
         return new Command(null, Word.Action.GO, direction, null, null);
     }
 
-    public Command(String sentence, Word.Token[] elements) {
+    public Command(String sentence, Word.Token[] elementTokens, Set<Element> elements) {
         List<String> words = Word.separateWords(sentence);
 
-        boolean isSecondElement = false;
+        mainElement = elements;
+        secondaryElement = elements;
 
+        boolean isSecondElement = false;
         for (String word : words) {
             if (word.isEmpty()) continue;
-            Utils.Pair<Word.Type, Object> parsing = Word.parse(word, elements);
+            Utils.Pair<Word.Type, Word.Token> parsing = Word.parse(word, elementTokens);
             switch (parsing.first) {
                 case ACTION -> {
                     if (action != null) {
@@ -83,8 +89,13 @@ public class Command {
                     isSecondElement = true;
                 }
                 case ELEMENT -> {
-                    if (isSecondElement) secondElementDescription.add(word);
-                    else elementDescription.add(word);
+                    if (isSecondElement) {
+                        secondaryElementDescription = secondaryElementDescription == null ? word : secondaryElementDescription + word;
+                        filterSecondaryElement(e -> Word.matchSentences(e.name, word));
+                    } else {
+                        mainElementDescription = mainElementDescription == null ? word : mainElementDescription + word;
+                        filterMainElement(e -> Word.matchSentences(e.name, word));
+                    }
                 }
                 case MULTIPLE -> {
                     parseError = true;
@@ -101,33 +112,32 @@ public class Command {
 
     // ------------------------- filters -------------------------
 
-    public void filterElement(List<Element> interactable, Predicate<Element> valid) {
-        element = filter(interactable, valid, elementDescription);
+    public void reFilterMainElement(List<Predicate<Element>> filters) {
+        mainElement = reFilter(filters, mainElement);
     }
 
-    public void filterSecondaryElement(List<Element> interactable, Predicate<Element> valid) {
-        secondElement = filter(interactable, valid, secondElementDescription);
+    public void reFilterSecondaryElement(List<Predicate<Element>> filter) {
+        secondaryElement = reFilter(filter, secondaryElement);
     }
 
-    private Element filter(List<Element> interactable, Predicate<Element> valid, List<String> descriptions) {
+    public void filterMainElement(Predicate<Element> filter) {
+        mainElement = filter(filter, mainElement);
+    }
 
-        // try first to find a valid elements
-        List<Element> filteredElements = interactable.stream().filter(element -> valid.test(element) && Word.match(descriptions, element.name)
-        ).collect(Collectors.toList());
+    public void filterSecondaryElement(Predicate<Element> filter) {
+        secondaryElement = filter(filter, secondaryElement);
+    }
 
-        if (filteredElements.size() == 1) {
-            return filteredElements.get(0);
+    private Set<Element> reFilter(List<Predicate<Element>> filters, Set<Element> elements) {
+        for (Predicate<Element> filter : filters) {
+            if (elements.size() <= 1) break;
+            elements = filter(filter, elements);
         }
+        return elements;
+    }
 
-        // if not, try to find an interactable one
-        filteredElements = interactable.stream().filter(element -> Word.match(descriptions, element.name)
-        ).collect(Collectors.toList());
-
-        if (filteredElements.size() == 1) {
-            return filteredElements.get(0);
-        }
-
-        return null;
+    private Set<Element> filter(Predicate<Element> filter, Set<Element> elements) {
+        return elements.stream().filter(filter).collect(Collectors.toSet());
     }
 
     @Override
@@ -135,7 +145,7 @@ public class Command {
         return (modifier == null ? "" : modifier + " - ")
                 + action
                 + (direction == null ? "" : " - " + direction)
-                + (elementDescription == null ? "" : " - " + elementDescription)
-                + (secondElementDescription == null ? "" : " - " + secondElementDescription);
+                + (mainElement == null ? "" : " - " + mainElement.size())
+                + (secondaryElement == null ? "" : " - " + secondaryElement.size());
     }
 }

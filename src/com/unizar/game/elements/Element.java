@@ -74,7 +74,7 @@ abstract public class Element implements Serializable {
     /**
      * The associated game
      */
-    transient protected Game game;
+    public transient Game game;
 
     /**
      * Registers the active game on this element

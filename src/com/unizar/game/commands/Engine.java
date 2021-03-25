@@ -6,6 +6,7 @@ import com.unizar.game.elements.Item;
 import com.unizar.game.elements.Location;
 import com.unizar.game.elements.NPC;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -36,6 +37,7 @@ public class Engine {
             return Result.error("Que quieres que haga?");
         }
 
+        final List<Element> interactable = npc.location.getInteractable();
 
         switch (command.action) {
             case WAIT -> {
@@ -51,39 +53,59 @@ public class Engine {
                 return Result.error("[obsoleto: pulsa F9 para cargar]");
             }
             case OPEN -> {
-                Predicate<Element> predicate = e -> e instanceof Item && ((Item) e).opened == Boolean.FALSE;
-                command.filterElement(npc.location.getInteractable(), predicate);
 
-                if (command.element == null) {
-                    if (command.elementDescription.isEmpty()) return Result.moreNeeded("Que quieres que abra?");
-                    else return Result.error("No veo '" + String.join(" ", command.elementDescription) + "'");
+                command.reFilterMainElement(List.of(
+                        interactable::contains, // first filter by interactable
+                        e -> e instanceof Item && ((Item) e).opened == Boolean.FALSE // then filter by openable
+                ));
+
+                if (command.mainElement.isEmpty()) {
+                    if (command.mainElementDescription != null)
+                        return Result.error("No veo '" + command.mainElementDescription + "'");
+                    else
+                        return Result.error("No veo nada que pueda abrir");
+                }
+                if (command.mainElement.size() >= 2) {
+                    return Result.moreNeeded("Que quieres que abra?");
                 }
 
-                if (!predicate.test(command.element)) {
-                    return Result.error("No puedo abrir " + command.element);
-                } else if (((Item) command.element).opened) {
-                    return Result.error(command.element + " ya está abierto/a");
+                Element element = command.mainElement.iterator().next();
+
+                if (!(element instanceof Item)) {
+                    return Result.error("No puedo abrir " + element);
+                } else if (((Item) element).opened) {
+                    return Result.error(element + " ya está abierto/a");
                 } else {
-                    ((Item) command.element).opened = true;
-                    return Result.done("Abres " + command.element);
+                    ((Item) element).opened = true;
+                    return Result.done("Abres " + element);
                 }
             }
             case CLOSE -> {
-                Predicate<Element> predicate = e -> e instanceof Item && ((Item) e).opened == Boolean.TRUE;
-                command.filterElement(npc.location.getInteractable(), predicate);
 
-                if (command.element == null) {
-                    if (command.elementDescription.isEmpty()) return Result.moreNeeded("Que quieres que cierre?");
-                    else return Result.error("No veo '" + String.join(" ", command.elementDescription) + "'");
+                command.reFilterMainElement(List.of(
+                        interactable::contains, // first filter by interactable
+                        e -> e instanceof Item && ((Item) e).opened == Boolean.TRUE // then filter by closeable
+                ));
+
+                if (command.mainElement.isEmpty()) {
+                    if (command.mainElementDescription != null)
+                        return Result.error("No veo '" + command.mainElementDescription + "'");
+                    else
+                        return Result.error("No veo nada que pueda cerrar");
+                }
+                if (command.mainElement.size() > 2) {
+                    return Result.moreNeeded("Que quieres que cierre?");
                 }
 
-                if (!predicate.test(command.element)) {
-                    return Result.error("No puedo cerrar " + command.element);
-                } else if (!((Item) command.element).opened) {
-                    return Result.error(command.element + " ya está cerrado/a");
+                Element element = command.mainElement.iterator().next();
+
+                if (!(element instanceof Item)) {
+                    return Result.error("No puedo cerrar " + element);
+                } else if (!((Item) element).opened) {
+                    return Result.error(element + " ya está cerrado/a");
                 } else {
-                    ((Item) command.element).opened = false;
-                    return Result.done("Cierras " + command.element);
+                    ((Item) element).opened = false;
+                    return Result.done("Cierras " + element);
                 }
             }
             case GO -> {
@@ -127,23 +149,34 @@ public class Engine {
                 return Result.done("Te diriges hacia " + command.direction.name);
             }
             case FOLLOW -> {
-                if (command.element == null) return Result.moreNeeded("A quien quieres seguir?");
+                Predicate<Element> followable = otherNPC -> ((Location) npc.location).exits.entrySet().stream().anyMatch(l -> l.getValue().first.elements.contains(otherNPC));
 
-                if (!(command.element instanceof NPC)) return Result.error("No puedo seguir a " + command.element);
+                command.reFilterMainElement(List.of(
+                        e -> e instanceof NPC,
+                        followable
+                ));
+
+                if (command.mainElement == null) return Result.moreNeeded("A quien quieres seguir?");
+
+                if (!(command.mainElement instanceof NPC))
+                    return Result.error("No puedo seguir a " + command.mainElement);
 
                 if (!(npc.location instanceof Location)) return Result.error("No puedes seguir a nadie desde aquí");
 
+                if (interactable.contains(command.mainElement))
+                    return Result.error("Ya estás con " + command.mainElement);
+
                 for (Map.Entry<Word.Direction, Utils.Pair<Location, Item>> entry : ((Location) npc.location).exits.entrySet()) {
-                    if (entry.getValue().first.elements.contains(command.element)) {
+                    if (entry.getValue().first.elements.contains(command.mainElement)) {
                         Result result = execute(npc, Command.go(entry.getKey()));
                         if (result.done) {
-                            return Result.done("Sigues a " + command.element);
+                            return Result.done("Sigues a " + command.mainElement);
                         } else {
-                            return Result.error("No puedes seguir a " + command.element + " desde aquí");
+                            return Result.error("No puedes seguir a " + command.mainElement + " desde aquí");
                         }
                     }
                 }
-                return Result.error("No puedes seguir a " + command.element + " desde aquí");
+                return Result.error("No puedes seguir a " + command.mainElement + " desde aquí");
             }
         }
 

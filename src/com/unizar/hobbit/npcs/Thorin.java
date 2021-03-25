@@ -1,6 +1,5 @@
 package com.unizar.hobbit.npcs;
 
-import com.unizar.Utils;
 import com.unizar.game.commands.Command;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
@@ -29,12 +28,7 @@ public class Thorin extends NPC {
             return;
         }
 
-        // try going in a random direction
-        result = game.engine.execute(this, Command.go(Utils.pickRandom(Word.Direction.values())));
-        if (result.done) {
-            onHear(result.output);
-            return;
-        }
+        // sing about gold
 
         // do default
         super.act();
