@@ -53,7 +53,6 @@ public class Engine {
                 return Result.error("[obsoleto: pulsa F9 para cargar]");
             }
             case OPEN -> {
-
                 command.reFilterMainElement(List.of(
                         interactable::contains, // first filter by interactable
                         e -> e instanceof Item && ((Item) e).opened == Boolean.FALSE // then filter by openable
@@ -61,9 +60,9 @@ public class Engine {
 
                 if (command.mainElement.isEmpty()) {
                     if (command.mainElementDescription != null)
-                        return Result.error("No veo '" + command.mainElementDescription + "'");
+                        return Result.error("No veo '" + command.mainElementDescription + "'.");
                     else
-                        return Result.error("No veo nada que pueda abrir");
+                        return Result.error("No veo nada que pueda abrir.");
                 }
                 if (command.mainElement.size() >= 2) {
                     return Result.moreNeeded("Que quieres que abra?");
@@ -72,12 +71,13 @@ public class Engine {
                 Element element = command.mainElement.iterator().next();
 
                 if (!(element instanceof Item)) {
-                    return Result.error("No puedo abrir " + element);
+                    return Result.error("No puedo abrir " + element + ".");
                 } else if (((Item) element).opened) {
-                    return Result.error(element + " ya está abierto/a");
+                    return Result.error(element + " ya está abierto/a.");
                 } else {
                     ((Item) element).opened = true;
-                    return Result.done("Abres " + element);
+                    npc.location.say(npc, npc + " abre " + element + ".");
+                    return Result.done("Abres " + element + ".");
                 }
             }
             case CLOSE -> {
@@ -89,9 +89,9 @@ public class Engine {
 
                 if (command.mainElement.isEmpty()) {
                     if (command.mainElementDescription != null)
-                        return Result.error("No veo '" + command.mainElementDescription + "'");
+                        return Result.error("No veo '" + command.mainElementDescription + "'.");
                     else
-                        return Result.error("No veo nada que pueda cerrar");
+                        return Result.error("No veo nada que pueda cerrar.");
                 }
                 if (command.mainElement.size() > 2) {
                     return Result.moreNeeded("Que quieres que cierre?");
@@ -100,12 +100,12 @@ public class Engine {
                 Element element = command.mainElement.iterator().next();
 
                 if (!(element instanceof Item)) {
-                    return Result.error("No puedo cerrar " + element);
+                    return Result.error("No puedo cerrar " + element + ".");
                 } else if (!((Item) element).opened) {
-                    return Result.error(element + " ya está cerrado/a");
+                    return Result.error(element + " ya está cerrado/a.");
                 } else {
                     ((Item) element).opened = false;
-                    return Result.done("Cierras " + element);
+                    return Result.done("Cierras " + element + ".");
                 }
             }
             case GO -> {
@@ -117,14 +117,14 @@ public class Engine {
 
                 if (!(npc.location instanceof Location)) {
                     // inside an item
-                    return Result.error("No puedes moverte mientras estás en " + npc.location);
+                    return Result.error("No puedes moverte mientras estás en " + npc.location + ".");
                 }
 
                 Utils.Pair<Location, Item> le = ((Location) npc.location).exits.get(command.direction);
 
                 if (le == null) {
                     // no exit
-                    return Result.error("No puedes ir hacia " + command.direction.name);
+                    return Result.error("No puedes ir hacia " + command.direction.name + ".");
                 }
 
                 Location newLocation = le.first;
@@ -132,11 +132,11 @@ public class Engine {
 
                 if (throughItem != null && !throughItem.opened) {
                     // closed exit
-                    return Result.error(throughItem + " está cerrado/a");
+                    return Result.error(throughItem + " está cerrado/a.");
                 }
 
                 // notify old npc
-                npc.location.say(npc, npc + " va hacia " + command.direction.name);
+                npc.location.say(npc, npc + " va hacia " + command.direction.name + ".");
 
                 // move
                 npc.location.elements.remove(npc);
@@ -144,11 +144,13 @@ public class Engine {
                 npc.location.elements.add(npc);
 
                 // notify new npc
-                npc.location.say(npc, npc + " entra");
+                npc.location.say(npc, npc + " entra.");
 
                 return Result.done("Te diriges hacia " + command.direction.name);
             }
             case FOLLOW -> {
+                if (!(npc.location instanceof Location)) return Result.error("No puedes seguir a nadie desde aquí.");
+
                 Predicate<Element> followable = otherNPC -> ((Location) npc.location).exits.entrySet().stream().anyMatch(l -> l.getValue().first.elements.contains(otherNPC));
 
                 command.reFilterMainElement(List.of(
@@ -156,27 +158,79 @@ public class Engine {
                         followable
                 ));
 
-                if (command.mainElement == null) return Result.moreNeeded("A quien quieres seguir?");
+                if (command.mainElement.isEmpty()) {
+                    if (command.mainElementDescription != null)
+                        return Result.error("No veo '" + command.mainElementDescription + "'.");
+                    else
+                        return Result.error("No veo nadie a quien seguir.");
+                }
+                if (command.mainElement.size() > 2) {
+                    return Result.moreNeeded("A quien quieres seguir?");
+                }
 
-                if (!(command.mainElement instanceof NPC))
-                    return Result.error("No puedo seguir a " + command.mainElement);
+                final Element element = command.mainElement.iterator().next();
 
-                if (!(npc.location instanceof Location)) return Result.error("No puedes seguir a nadie desde aquí");
+                if (!(element instanceof NPC))
+                    return Result.error("No puedo seguir a " + element + ".");
 
-                if (interactable.contains(command.mainElement))
-                    return Result.error("Ya estás con " + command.mainElement);
+                if (interactable.contains(element))
+                    return Result.error("Ya estás con " + element + ".");
 
                 for (Map.Entry<Word.Direction, Utils.Pair<Location, Item>> entry : ((Location) npc.location).exits.entrySet()) {
-                    if (entry.getValue().first.elements.contains(command.mainElement)) {
+                    if (entry.getValue().first.elements.contains(element)) {
                         Result result = execute(npc, Command.go(entry.getKey()));
                         if (result.done) {
-                            return Result.done("Sigues a " + command.mainElement);
+                            return Result.done("Sigues a " + element + ".");
                         } else {
-                            return Result.error("No puedes seguir a " + command.mainElement + " desde aquí");
+                            return Result.error("No puedes seguir a " + element + " desde aquí.");
                         }
                     }
                 }
-                return Result.error("No puedes seguir a " + command.mainElement + " desde aquí");
+                return Result.error("No puedes seguir a " + element + " desde aquí.");
+            }
+            case GIVE -> {
+                command.reFilterMainElement(List.of(npc.elements::contains));
+
+                if (command.mainElement.isEmpty()) {
+                    if (command.mainElementDescription != null)
+                        return Result.error("No tienes '" + command.mainElementDescription + "'.");
+                    else
+                        return Result.error("No tengo nada que dar.");
+                }
+                if (command.mainElement.size() > 2) {
+                    return Result.moreNeeded("Que quieres dar?");
+                }
+
+                final Element elementToGive = command.mainElement.iterator().next();
+
+                if (!npc.elements.contains(elementToGive)) {
+                    return Result.error("No tienes " + elementToGive + ".");
+                }
+
+                final Predicate<Element> giveable = e -> interactable.contains(e) && e instanceof NPC;
+                command.reFilterSecondaryElement(List.of(giveable));
+
+                if (command.secondaryElement.isEmpty()) {
+                    if (command.secondaryElementDescription != null)
+                        return Result.error("No puedes darle eso a '" + command.secondaryElementDescription + "'.");
+                    else
+                        return Result.error("No hay nadie a quien darle eso.");
+                }
+                if (command.secondaryElement.size() > 2) {
+                    return Result.moreNeeded("A quien quieres darselo?");
+                }
+
+                final Element whoToGiveItTo = command.secondaryElement.iterator().next();
+
+                if (!giveable.test(whoToGiveItTo)) {
+                    return Result.error("No puedes darle eso a " + elementToGive + ".");
+                } else {
+                    // give
+                    npc.elements.remove(elementToGive);
+                    whoToGiveItTo.elements.add(elementToGive);
+                    whoToGiveItTo.onHear(npc + " te da " + elementToGive + ".");
+                    return Result.done("Le das " + elementToGive + " a " + whoToGiveItTo + ".\n" + whoToGiveItTo + " te da las gracias.");
+                }
             }
         }
 

@@ -32,7 +32,7 @@ public class Utils {
 
     // ------------------------- -------------------------
 
-    static Random random = new Random();
+    public static Random random = new Random();
 
     /**
      * Picks a random element from an array

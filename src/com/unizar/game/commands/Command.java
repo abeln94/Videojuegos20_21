@@ -22,7 +22,7 @@ public class Command {
     public Set<Element> secondaryElement;
 
     public String mainElementDescription;
-    private String secondaryElementDescription;
+    public String secondaryElementDescription;
 
 
     public String invalidToken = null;
@@ -46,6 +46,10 @@ public class Command {
 
     public static Command act(Word.Action action, Element element) {
         return new Command(null, action, null, element, null);
+    }
+
+    public static Command act(Word.Action action, Element mainElement, Element secondaryElement) {
+        return new Command(null, action, null, mainElement, secondaryElement);
     }
 
     public static Command go(Word.Direction direction) {
@@ -90,10 +94,10 @@ public class Command {
                 }
                 case ELEMENT -> {
                     if (isSecondElement) {
-                        secondaryElementDescription = secondaryElementDescription == null ? word : secondaryElementDescription + word;
+                        secondaryElementDescription = secondaryElementDescription == null ? word : secondaryElementDescription + " " + word;
                         filterSecondaryElement(e -> Word.matchSentences(e.name, word));
                     } else {
-                        mainElementDescription = mainElementDescription == null ? word : mainElementDescription + word;
+                        mainElementDescription = mainElementDescription == null ? word : mainElementDescription + " " + word;
                         filterMainElement(e -> Word.matchSentences(e.name, word));
                     }
                 }
@@ -108,6 +112,13 @@ public class Command {
                 }
             }
         }
+
+        // special shortcuts
+        if (action == null && direction != null) {
+            // a direction without action is a go
+            action = Word.Action.GO;
+        }
+
     }
 
     // ------------------------- filters -------------------------

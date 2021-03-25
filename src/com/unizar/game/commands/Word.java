@@ -214,6 +214,7 @@ public class Word {
                 return filtered.get(0);
             default:
                 // multiple
+                System.out.println("multiple elements for '" + word + "': " + filtered);
                 return Utils.Pair.of(Type.MULTIPLE, null);
         }
 

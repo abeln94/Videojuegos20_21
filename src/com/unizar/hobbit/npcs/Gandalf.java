@@ -5,6 +5,7 @@ import com.unizar.game.commands.Command;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.NPC;
+import com.unizar.hobbit.items.GreenDoor;
 import com.unizar.hobbit.items.Map;
 import com.unizar.hobbit.rooms.StartLocation;
 
@@ -29,6 +30,24 @@ public class Gandalf extends NPC {
         if (result.done) {
             onHear(result.output);
             return;
+        }
+
+        // try opening the door
+        if (Utils.random.nextBoolean()) {
+            result = game.engine.execute(this, Command.act(Word.Action.OPEN, game.findElementByClassName(GreenDoor.class)));
+            if (result.done) {
+                onHear(result.output);
+                return;
+            }
+        }
+
+        // try giving the map to the player
+        if (Utils.random.nextBoolean()) {
+            result = game.engine.execute(this, Command.act(Word.Action.GIVE, game.findElementByClassName(Map.class), game.findElementByClassName(Bilbo_Player.class)));
+            if (result.done) {
+                onHear(result.output);
+                return;
+            }
         }
 
         // do default

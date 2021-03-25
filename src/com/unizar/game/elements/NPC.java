@@ -35,7 +35,7 @@ abstract public class NPC extends Element {
      * @param message what was heard
      */
     public void onHear(String message) {
-        System.out.println(this + ": " + message);
+        System.out.println("[" + this + "]> " + message);
     }
 
     @Override
