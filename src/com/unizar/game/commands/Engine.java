@@ -8,7 +8,6 @@ import com.unizar.game.elements.NPC;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * Executes a command from an npc.
@@ -38,6 +37,7 @@ public class Engine {
         }
 
         final List<Element> interactable = npc.location.getInteractable();
+        interactable.remove(npc);
 
         switch (command.action) {
             case WAIT -> {
@@ -53,60 +53,81 @@ public class Engine {
                 return Result.error("[obsoleto: pulsa F9 para cargar]");
             }
             case OPEN -> {
-                command.reFilterMainElement(List.of(
-                        interactable::contains, // first filter by interactable
-                        e -> e instanceof Item && ((Item) e).opened == Boolean.FALSE // then filter by openable
-                ));
 
-                if (command.mainElement.isEmpty()) {
-                    if (command.mainElementDescription != null)
-                        return Result.error("No veo '" + command.mainElementDescription + "'.");
-                    else
-                        return Result.error("No veo nada que pueda abrir.");
-                }
-                if (command.mainElement.size() >= 2) {
+                // you must have the element
+                String error = command.main.require(
+                        interactable::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                );
+                if (error != null) return Result.error(error);
+
+                // and it needs to be openable
+                error = command.main.require(
+                        e -> e instanceof Item && ((Item) e).opened != null,
+                        "No puedo abrir {}.",
+                        "nada"
+                );
+                if (error != null) return Result.error(error);
+
+                // and be closed
+                error = command.main.require(
+                        e -> ((Item) e).opened == Boolean.FALSE,
+                        "{} está ya abierto/a.",
+                        "todo"
+                );
+                if (error != null) return Result.error(error);
+
+                // got it?
+                Item element = (Item) command.main.get();
+                if (element == null) {
+                    // multiple results
                     return Result.moreNeeded("Que quieres que abra?");
                 }
 
-                Element element = command.mainElement.iterator().next();
-
-                if (!(element instanceof Item)) {
-                    return Result.error("No puedo abrir " + element + ".");
-                } else if (((Item) element).opened) {
-                    return Result.error(element + " ya está abierto/a.");
-                } else {
-                    ((Item) element).opened = true;
-                    npc.location.say(npc, npc + " abre " + element + ".");
-                    return Result.done("Abres " + element + ".");
-                }
+                // open
+                element.opened = true;
+                npc.location.say(npc, npc + " abre " + element + ".");
+                return Result.done("Abres " + element + ".");
             }
             case CLOSE -> {
 
-                command.reFilterMainElement(List.of(
-                        interactable::contains, // first filter by interactable
-                        e -> e instanceof Item && ((Item) e).opened == Boolean.TRUE // then filter by closeable
-                ));
+                // you must have the element
+                String error = command.main.require(
+                        interactable::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                );
+                if (error != null) return Result.error(error);
 
-                if (command.mainElement.isEmpty()) {
-                    if (command.mainElementDescription != null)
-                        return Result.error("No veo '" + command.mainElementDescription + "'.");
-                    else
-                        return Result.error("No veo nada que pueda cerrar.");
-                }
-                if (command.mainElement.size() > 2) {
+                // and it needs to be closeable
+                error = command.main.require(
+                        e -> e instanceof Item && ((Item) e).opened != null,
+                        "No puedo cerrar {}.",
+                        "nada"
+                );
+                if (error != null) return Result.error(error);
+
+                // and be opened
+                error = command.main.require(
+                        e -> ((Item) e).opened == Boolean.TRUE,
+                        "{} está ya cerrado/a.",
+                        "todo"
+                );
+                if (error != null) return Result.error(error);
+
+                // got it?
+                Item element = (Item) command.main.get();
+                if (element == null) {
+                    // multiple results
                     return Result.moreNeeded("Que quieres que cierre?");
                 }
 
-                Element element = command.mainElement.iterator().next();
+                // close
+                element.opened = false;
+                npc.location.say(npc, npc + " cierra " + element + ".");
+                return Result.done("Cierras " + element + ".");
 
-                if (!(element instanceof Item)) {
-                    return Result.error("No puedo cerrar " + element + ".");
-                } else if (!((Item) element).opened) {
-                    return Result.error(element + " ya está cerrado/a.");
-                } else {
-                    ((Item) element).opened = false;
-                    return Result.done("Cierras " + element + ".");
-                }
             }
             case GO -> {
                 if (command.direction == null) {
@@ -149,88 +170,104 @@ public class Engine {
                 return Result.done("Te diriges hacia " + command.direction.name);
             }
             case FOLLOW -> {
+                // check if we are inside something
                 if (!(npc.location instanceof Location)) return Result.error("No puedes seguir a nadie desde aquí.");
 
-                Predicate<Element> followable = otherNPC -> ((Location) npc.location).exits.entrySet().stream().anyMatch(l -> l.getValue().first.elements.contains(otherNPC));
-
-                command.reFilterMainElement(List.of(
+                // the element must be an npc
+                String error = command.main.require(
                         e -> e instanceof NPC,
-                        followable
-                ));
+                        "No puedes seguir a {}.",
+                        "nadie"
+                );
+                if (error != null) return Result.error(error);
 
-                if (command.mainElement.isEmpty()) {
-                    if (command.mainElementDescription != null)
-                        return Result.error("No veo '" + command.mainElementDescription + "'.");
-                    else
-                        return Result.error("No veo nadie a quien seguir.");
-                }
-                if (command.mainElement.size() > 2) {
+                // and not be interactable
+                error = command.main.require(
+                        e -> !interactable.contains(e),
+                        "Ya estás con {}.",
+                        "todos"
+                );
+                if (error != null) return Result.error(error);
+
+                // and be in one of the connected exits
+                error = command.main.require(
+                        otherNPC -> ((Location) npc.location).exits.entrySet().stream().anyMatch(l -> l.getValue().first.elements.contains(otherNPC)),
+                        "No veo a {}.",
+                        "nadie a quien seguir"
+                );
+                if (error != null) return Result.error(error);
+
+                // found it?
+                NPC toFollow = (NPC) command.main.get();
+                if (toFollow == null) {
+                    // multiple results
                     return Result.moreNeeded("A quien quieres seguir?");
                 }
 
-                final Element element = command.mainElement.iterator().next();
-
-                if (!(element instanceof NPC))
-                    return Result.error("No puedo seguir a " + element + ".");
-
-                if (interactable.contains(element))
-                    return Result.error("Ya estás con " + element + ".");
-
+                // find direction and follow
                 for (Map.Entry<Word.Direction, Utils.Pair<Location, Item>> entry : ((Location) npc.location).exits.entrySet()) {
-                    if (entry.getValue().first.elements.contains(element)) {
+                    if (entry.getValue().first.elements.contains(toFollow)) {
+                        // execute as a go command
                         Result result = execute(npc, Command.go(entry.getKey()));
                         if (result.done) {
-                            return Result.done("Sigues a " + element + ".");
+                            // ok
+                            return Result.done("Sigues a " + toFollow + ".");
                         } else {
-                            return Result.error("No puedes seguir a " + element + " desde aquí.");
+                            // can't follow
+                            return Result.error("No puedes seguir a " + toFollow + " desde aquí.");
                         }
                     }
                 }
-                return Result.error("No puedes seguir a " + element + " desde aquí.");
+
+                throw new RuntimeException("Unexpected condition");
             }
             case GIVE -> {
-                command.reFilterMainElement(List.of(npc.elements::contains));
 
-                if (command.mainElement.isEmpty()) {
-                    if (command.mainElementDescription != null)
-                        return Result.error("No tienes '" + command.mainElementDescription + "'.");
-                    else
-                        return Result.error("No tengo nada que dar.");
-                }
-                if (command.mainElement.size() > 2) {
+                // we must have it
+                String error = command.main.require(
+                        npc.elements::contains,
+                        "No tienes {}.",
+                        "nada que dar"
+                );
+                if (error != null) return Result.error(error);
+
+                // have it?
+                Element elementToGive = command.main.get();
+                if (elementToGive == null) {
+                    // multiple results
                     return Result.moreNeeded("Que quieres dar?");
                 }
 
-                final Element elementToGive = command.mainElement.iterator().next();
+                // check who to give it to
 
-                if (!npc.elements.contains(elementToGive)) {
-                    return Result.error("No tienes " + elementToGive + ".");
+                // it must be an npc
+                error = command.secondary.require(
+                        e -> e instanceof NPC,
+                        "No puedes darle cosas a {}.",
+                        "nadie"
+                );
+                if (error != null) return Result.error(error);
+
+                // and be interactable
+                error = command.secondary.require(
+                        interactable::contains,
+                        "No veo a {}.",
+                        "nadie desde aquí"
+                );
+                if (error != null) return Result.error(error);
+
+                // found it?
+                Element whoToGiveItTo = command.secondary.get();
+                if (whoToGiveItTo == null) {
+                    // multiple results
+                    return Result.moreNeeded("A quién se lo quieres dar?");
                 }
 
-                final Predicate<Element> giveable = e -> interactable.contains(e) && e instanceof NPC;
-                command.reFilterSecondaryElement(List.of(giveable));
-
-                if (command.secondaryElement.isEmpty()) {
-                    if (command.secondaryElementDescription != null)
-                        return Result.error("No puedes darle eso a '" + command.secondaryElementDescription + "'.");
-                    else
-                        return Result.error("No hay nadie a quien darle eso.");
-                }
-                if (command.secondaryElement.size() > 2) {
-                    return Result.moreNeeded("A quien quieres darselo?");
-                }
-
-                final Element whoToGiveItTo = command.secondaryElement.iterator().next();
-
-                if (!giveable.test(whoToGiveItTo)) {
-                    return Result.error("No puedes darle eso a " + elementToGive + ".");
-                } else {
-                    // give
-                    npc.elements.remove(elementToGive);
-                    whoToGiveItTo.elements.add(elementToGive);
-                    whoToGiveItTo.onHear(npc + " te da " + elementToGive + ".");
-                    return Result.done("Le das " + elementToGive + " a " + whoToGiveItTo + ".\n" + whoToGiveItTo + " te da las gracias.");
-                }
+                // give
+                npc.elements.remove(elementToGive);
+                whoToGiveItTo.elements.add(elementToGive);
+                whoToGiveItTo.onHear(npc + " te da " + elementToGive + ".");
+                return Result.done("Le das " + elementToGive + " a " + whoToGiveItTo + ".\n" + whoToGiveItTo + " te da las gracias.");
             }
         }
 

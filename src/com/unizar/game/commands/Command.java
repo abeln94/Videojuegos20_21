@@ -3,26 +3,21 @@ package com.unizar.game.commands;
 import com.unizar.Utils;
 import com.unizar.game.elements.Element;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * A command to process.
- * Currently consist of an adverb + action + preposition + direction + element (any can be null)
+ * A processed command, contains the command elements for the engine
  */
 public class Command {
-    public Word.Modifier modifier;
-    public Word.Action action;
-    public Word.Direction direction;
+    public Word.Modifier modifier = null;
+    public Word.Action action = null;
+    public Word.Direction direction = null;
 
-    public Set<Element> mainElement;
-    public Set<Element> secondaryElement;
-
-    public String mainElementDescription;
-    public String secondaryElementDescription;
+    public FilterableElements main;
+    public FilterableElements secondary;
 
 
     public String invalidToken = null;
@@ -30,42 +25,58 @@ public class Command {
 
     // ------------------------- constructors -------------------------
 
-    public Command(Word.Modifier modifier, Word.Action action, Word.Direction direction, Element mainElement, Element secondaryElement) {
+    public Command(Word.Modifier modifier, Word.Action action, Word.Direction direction, FilterableElements main, FilterableElements secondary) {
         this.modifier = modifier;
         this.action = action;
         this.direction = direction;
-        this.mainElement = mainElement == null ? Collections.emptySet() : Set.of(mainElement);
-        this.secondaryElement = secondaryElement == null ? Collections.emptySet() : Set.of(secondaryElement);
-        this.mainElementDescription = mainElement == null ? "" : mainElement.name;
-        this.secondaryElementDescription = secondaryElement == null ? "" : secondaryElement.name;
+        this.main = main;
+        this.secondary = secondary;
     }
 
+    /**
+     * A simple action without parameters
+     */
     public static Command simple(Word.Action action) {
         return new Command(null, action, null, null, null);
     }
 
+    /**
+     * An action that requires an element
+     */
     public static Command act(Word.Action action, Element element) {
-        return new Command(null, action, null, element, null);
+        return new Command(null, action, null, new FilterableElements(element), null);
     }
 
+    /**
+     * An action that requires two elements
+     */
     public static Command act(Word.Action action, Element mainElement, Element secondaryElement) {
-        return new Command(null, action, null, mainElement, secondaryElement);
+        return new Command(null, action, null, new FilterableElements(mainElement), new FilterableElements(secondaryElement));
     }
 
+    /**
+     * A go action
+     */
     public static Command go(Word.Direction direction) {
         return new Command(null, Word.Action.GO, direction, null, null);
     }
 
-    public Command(String sentence, Word.Token[] elementTokens, Set<Element> elements) {
+    /**
+     * Parse the sentence
+     *
+     * @param sentence user input
+     * @param elements game elements
+     */
+    public Command(String sentence, Set<Element> elements) {
         List<String> words = Word.separateWords(sentence);
 
-        mainElement = elements;
-        secondaryElement = elements;
+        main = new FilterableElements(elements);
+        secondary = new FilterableElements(elements);
 
         boolean isSecondElement = false;
         for (String word : words) {
             if (word.isEmpty()) continue;
-            Utils.Pair<Word.Type, Word.Token> parsing = Word.parse(word, elementTokens);
+            Utils.Pair<Word.Type, Word.Token> parsing = Word.parse(word, elements);
             switch (parsing.first) {
                 case ACTION -> {
                     if (action != null) {
@@ -93,13 +104,8 @@ public class Command {
                     isSecondElement = true;
                 }
                 case ELEMENT -> {
-                    if (isSecondElement) {
-                        secondaryElementDescription = secondaryElementDescription == null ? word : secondaryElementDescription + " " + word;
-                        filterSecondaryElement(e -> Word.matchSentences(e.name, word));
-                    } else {
-                        mainElementDescription = mainElementDescription == null ? word : mainElementDescription + " " + word;
-                        filterMainElement(e -> Word.matchSentences(e.name, word));
-                    }
+                    if (isSecondElement) secondary.addDescriptionWord(word);
+                    else main.addDescriptionWord(word);
                 }
                 case MULTIPLE -> {
                     parseError = true;
@@ -123,32 +129,82 @@ public class Command {
 
     // ------------------------- filters -------------------------
 
-    public void reFilterMainElement(List<Predicate<Element>> filters) {
-        mainElement = reFilter(filters, mainElement);
-    }
+    /**
+     * A collection of elements that can be filtered to match what the user expected
+     */
+    public static class FilterableElements {
+        public Set<Element> elements;
+        public String description = "";
 
-    public void reFilterSecondaryElement(List<Predicate<Element>> filter) {
-        secondaryElement = reFilter(filter, secondaryElement);
-    }
-
-    public void filterMainElement(Predicate<Element> filter) {
-        mainElement = filter(filter, mainElement);
-    }
-
-    public void filterSecondaryElement(Predicate<Element> filter) {
-        secondaryElement = filter(filter, secondaryElement);
-    }
-
-    private Set<Element> reFilter(List<Predicate<Element>> filters, Set<Element> elements) {
-        for (Predicate<Element> filter : filters) {
-            if (elements.size() <= 1) break;
-            elements = filter(filter, elements);
+        /**
+         * Contains just one element
+         *
+         * @param element this element
+         */
+        public FilterableElements(Element element) {
+            this.elements = Set.of(element);
+            this.description = element.name;
         }
-        return elements;
-    }
 
-    private Set<Element> filter(Predicate<Element> filter, Set<Element> elements) {
-        return elements.stream().filter(filter).collect(Collectors.toSet());
+        /**
+         * Contains a full list of elements
+         *
+         * @param elements the elements to initialize to
+         */
+        public FilterableElements(Set<Element> elements) {
+            this.elements = elements;
+        }
+
+        /**
+         * Adds a word description, filters the internal list
+         *
+         * @param word the word that the elements must match
+         */
+        public void addDescriptionWord(String word) {
+            elements = elements.stream().filter(e -> Word.matchSentences(e.name, word)).collect(Collectors.toSet());
+            description = description.isEmpty() ? word : description + " " + word;
+        }
+
+        /**
+         * Makes the element require something.
+         *
+         * @param filter        the filter that should be true for all elements in this collection
+         * @param message       the error message if, after applying the filter, no more elements are in the collection. Must contain a '{}' that will be replaced with the element description
+         * @param noDescription if no description was provided when this command was generated, return this as the description
+         * @return the error message, or null if this still contains elements after the filtering
+         */
+        public String require(Predicate<Element> filter, String message, String noDescription) {
+            assert !elements.isEmpty();
+
+            // prepare the missed error string
+            String missed = elements.size() == 1 ? elements.iterator().next().name // there is one element, use that one
+                    : description.isEmpty() ? noDescription // there is no description, use the parameter
+                    : "'" + description + "'"; // there is a description, use that
+
+            // filter
+            elements = elements.stream().filter(filter).collect(Collectors.toSet());
+
+            // check if there are no more elements
+            if (elements.isEmpty()) {
+                return message.replace("{}", missed);
+            }
+
+            // all ok
+            return null;
+        }
+
+        /**
+         * @return the element, only if there is one left
+         */
+        public Element get() {
+            assert elements.size() > 0;
+            return elements.size() == 1 ? elements.iterator().next() : null;
+        }
+
+        @Override
+        public String toString() {
+            return (description.isEmpty() ? "" : "'" + description + "' ") + "(" + elements.size() + ") ";
+        }
     }
 
     @Override
@@ -156,7 +212,7 @@ public class Command {
         return (modifier == null ? "" : modifier + " - ")
                 + action
                 + (direction == null ? "" : " - " + direction)
-                + (mainElement == null ? "" : " - " + mainElement.size())
-                + (secondaryElement == null ? "" : " - " + secondaryElement.size());
+                + (main == null ? "" : " - " + main)
+                + (secondary == null ? "" : " - " + secondary);
     }
 }
