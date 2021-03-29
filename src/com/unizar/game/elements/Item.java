@@ -16,4 +16,14 @@ public abstract class Item extends Element {
         super(name);
     }
 
+    /**
+     * An npc requested to examine this item
+     *
+     * @param npc which npc is examining the item
+     * @return the examination result
+     */
+    public String examine(NPC npc) {
+        return "Puedes ver " + getDescription(npc) + ".";
+    }
+
 }

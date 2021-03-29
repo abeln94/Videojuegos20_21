@@ -54,7 +54,7 @@ public class Engine {
             }
             case OPEN -> {
 
-                // you must have the element
+                // you must see the element
                 String error = command.main.require(
                         interactable::contains,
                         "No veo {} por aquí.",
@@ -92,7 +92,7 @@ public class Engine {
             }
             case CLOSE -> {
 
-                // you must have the element
+                // you must see the element
                 String error = command.main.require(
                         interactable::contains,
                         "No veo {} por aquí.",
@@ -268,6 +268,33 @@ public class Engine {
                 whoToGiveItTo.elements.add(elementToGive);
                 whoToGiveItTo.onHear(npc + " te da " + elementToGive + ".");
                 return Result.done("Le das " + elementToGive + " a " + whoToGiveItTo + ".\n" + whoToGiveItTo + " te da las gracias.");
+            }
+            case EXAMINE -> {
+                // you must see the element
+                String error = command.main.require(
+                        interactable::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                );
+                if (error != null) return Result.error(error);
+
+                // it must be an item
+                error = command.main.require(
+                        e -> e instanceof Item,
+                        "No puedes examinar {}.",
+                        "nada"
+                );
+                if (error != null) return Result.error(error);
+
+                // found it?
+                Item element = (Item) command.main.get();
+                if (element == null) {
+                    // multiple results
+                    return Result.moreNeeded("Que quieres examinar?");
+                }
+
+                // examine
+                return Result.done("Examinas " + element + ".\n" + element.examine(npc));
             }
         }
 
