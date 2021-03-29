@@ -38,7 +38,7 @@ public class Word {
         PUT("poner"),
         OPEN("abrir"),
         RUN("correr"),
-        SAY("decir"),
+        SAY("decir pedir"),
         SHOOT("disparar"),
         SWIM("nadar"),
         TAKE("coger"),

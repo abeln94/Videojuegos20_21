@@ -22,7 +22,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
     public Engine engine = new Engine();
 
     private final DataSaver saver = new DataSaver();
-    private final Parser analyzer = new Parser(this);
+    public final Parser parser = new Parser(this);
     public final Window window;
 
     private boolean onStartScreen = true;
@@ -73,7 +73,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
     @Override
     public void onText(String text) {
         // analyze command
-        analyzer.onText(text);
+        parser.onText(text);
 
         update();
     }
@@ -167,6 +167,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
      * @param output text to add
      */
     public void addOutput(String output) {
+        if (output.isEmpty()) return;
         window.addOutput(output);
     }
 

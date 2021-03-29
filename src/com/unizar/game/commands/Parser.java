@@ -43,7 +43,8 @@ public class Parser implements Window.InputListener {
 
         // write command
         game.addOutput("> " + rawText);
-        Command command = parse(appendableCommand + rawText, game.world.elements);
+        rawText = appendableCommand + rawText;
+        Command command = parse(rawText);
         appendableCommand = "";
 
         // execute
@@ -68,13 +69,34 @@ public class Parser implements Window.InputListener {
      * Parse the sentence
      *
      * @param sentence user input
-     * @param elements game elements
      */
-    public Command parse(String sentence, Set<Element> elements) {
-        Command command = new Command(null, null, null, new Command.FilterableElements(elements), new Command.FilterableElements(elements));
+    public Command parse(String sentence) {
+        Set<Element> elements = game.world.elements;
+        Command command = new Command(null, null, null, null, new Command.FilterableElements(elements), new Command.FilterableElements(elements));
 
+        // extract sequence
+        sentence = sentence.replaceAll("\"\"", "\"");
+        long quotations = sentence.chars().filter(c -> c == '"').count();
+        if (quotations == 1) {
+            // one is missing, just add it (this helps with the 'say what?' extension, which adds a single '"' before asking again)
+            sentence = sentence + '"';
+            quotations++;
+        }
+        if (quotations == 2) {
+            // extract subsequence
+            command.sequence = sentence.substring(sentence.indexOf('"') + 1, sentence.lastIndexOf('"'));
+            sentence = sentence.replaceAll("\".*\"", " ");
+        } else if (quotations != 0) {
+            // invalid number of quotation marks
+            command.parseError = true;
+            return command;
+        }
+
+        // remove non-alphabetical chars
+        sentence = sentence.replaceAll("\\W", " ");
+
+        // parse each word
         List<String> words = Word.separateWords(sentence);
-
         boolean isSecondElement = false;
         for (String word : words) {
             if (word.isEmpty()) continue;

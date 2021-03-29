@@ -52,16 +52,16 @@ abstract public class Element implements Serializable {
     }
 
     /**
-     * Makes an npc say something to all the npcs on this location
+     * Makes an npc say something to all the other npcs on this location
      *
      * @param npc     who said the message
      * @param message what was said
      */
-    public void say(NPC npc, String message) {
+    public void notifyNPCs(NPC npc, String message) {
         elements.stream()
                 .filter(e -> e instanceof NPC)
                 .filter(e -> e != npc)
-                .forEach(e -> e.onHear(message));
+                .forEach(e -> e.hear(message));
     }
 
     /**
@@ -69,7 +69,7 @@ abstract public class Element implements Serializable {
      *
      * @param message what was heard
      */
-    public void onHear(String message) {
+    public void hear(String message) {
     }
 
     @Override

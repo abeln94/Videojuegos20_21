@@ -87,7 +87,7 @@ public class Engine {
 
                 // open
                 element.opened = true;
-                npc.location.say(npc, npc + " abre " + element + ".");
+                npc.location.notifyNPCs(npc, npc + " abre " + element + ".");
                 return Result.done("Abres " + element + ".");
             }
             case CLOSE -> {
@@ -125,7 +125,7 @@ public class Engine {
 
                 // close
                 element.opened = false;
-                npc.location.say(npc, npc + " cierra " + element + ".");
+                npc.location.notifyNPCs(npc, npc + " cierra " + element + ".");
                 return Result.done("Cierras " + element + ".");
 
             }
@@ -157,7 +157,7 @@ public class Engine {
                 }
 
                 // notify old npc
-                npc.location.say(npc, npc + " va hacia " + command.direction.description + ".");
+                npc.location.notifyNPCs(npc, npc + " va hacia " + command.direction.description + ".");
 
                 // move
                 npc.location.elements.remove(npc);
@@ -165,7 +165,7 @@ public class Engine {
                 npc.location.elements.add(npc);
 
                 // notify new npc
-                npc.location.say(npc, npc + " entra.");
+                npc.location.notifyNPCs(npc, npc + " entra.");
 
                 return Result.done("Te diriges hacia " + command.direction.description);
             }
@@ -266,7 +266,7 @@ public class Engine {
                 // give
                 npc.elements.remove(elementToGive);
                 whoToGiveItTo.elements.add(elementToGive);
-                whoToGiveItTo.onHear(npc + " te da " + elementToGive + ".");
+                whoToGiveItTo.hear(npc + " te da " + elementToGive + ".");
                 return Result.done("Le das " + elementToGive + " a " + whoToGiveItTo + ".\n" + whoToGiveItTo + " te da las gracias.");
             }
             case EXAMINE -> {
@@ -295,6 +295,40 @@ public class Engine {
 
                 // examine
                 return Result.done("Examinas " + element + ".\n" + element.examine(npc));
+            }
+            case SAY -> {
+
+                // the element must be an npc
+                String error = command.main.require(
+                        e -> e instanceof NPC,
+                        "No puedes hablarle a {}.",
+                        "nadie"
+                );
+                if (error != null) return Result.error(error);
+
+                // and be interactable
+                error = command.main.require(
+                        interactable::contains,
+                        "No veo a {} por aquí.",
+                        "nadie"
+                );
+                if (error != null) return Result.error(error);
+
+                // found it?
+                NPC toSay = (NPC) command.main.get();
+                if (toSay == null) {
+                    // multiple results
+                    return Result.moreNeeded("A quien quieres hablarle?");
+                }
+
+                // check subsequence
+                if (command.sequence == null) {
+                    return Result.moreNeeded("Que quieres decirle?", "\"");
+                }
+
+                // ask to NPC
+                toSay.ask(npc, command.sequence);
+                return Result.done(""); // the say command already handled the output
             }
         }
 

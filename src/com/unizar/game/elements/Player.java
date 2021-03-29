@@ -22,7 +22,7 @@ public class Player extends NPC {
     }
 
     @Override
-    public void onHear(String message) {
+    public void hear(String message) {
         game.window.addOutput(message);
     }
 }
