@@ -1,9 +1,7 @@
 package com.unizar.game.commands;
 
-import com.unizar.Utils;
 import com.unizar.game.elements.Element;
 
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -12,9 +10,9 @@ import java.util.stream.Collectors;
  * A processed command, contains the command elements for the engine
  */
 public class Command {
-    public Word.Modifier modifier = null;
-    public Word.Action action = null;
-    public Word.Direction direction = null;
+    public Word.Modifier modifier;
+    public Word.Action action;
+    public Word.Direction direction;
 
     public FilterableElements main;
     public FilterableElements secondary;
@@ -59,72 +57,6 @@ public class Command {
      */
     public static Command go(Word.Direction direction) {
         return new Command(null, Word.Action.GO, direction, null, null);
-    }
-
-    /**
-     * Parse the sentence
-     *
-     * @param sentence user input
-     * @param elements game elements
-     */
-    public Command(String sentence, Set<Element> elements) {
-        List<String> words = Word.separateWords(sentence);
-
-        main = new FilterableElements(elements);
-        secondary = new FilterableElements(elements);
-
-        boolean isSecondElement = false;
-        for (String word : words) {
-            if (word.isEmpty()) continue;
-            Utils.Pair<Word.Type, Word.Token> parsing = Word.parse(word, elements);
-            switch (parsing.first) {
-                case ACTION -> {
-                    if (action != null) {
-                        parseError = true;
-                        return;
-                    }
-                    action = (Word.Action) parsing.second;
-                }
-                case DIRECTION -> {
-                    if (direction != null) {
-                        parseError = true;
-                        return;
-                    }
-                    direction = (Word.Direction) parsing.second;
-                }
-                case MODIFIER -> {
-                    if (modifier != null) {
-                        parseError = true;
-                        return;
-                    }
-                    modifier = (Word.Modifier) parsing.second;
-                }
-                case PREPOSITION -> {
-                    // next element will be the second element
-                    isSecondElement = true;
-                }
-                case ELEMENT -> {
-                    if (isSecondElement) secondary.addDescriptionWord(word);
-                    else main.addDescriptionWord(word);
-                }
-                case MULTIPLE -> {
-                    parseError = true;
-                    return;
-                }
-                case UNKNOWN -> {
-                    invalidToken = word;
-                    parseError = true;
-                    return;
-                }
-            }
-        }
-
-        // special shortcuts
-        if (action == null && direction != null) {
-            // a direction without action is a go
-            action = Word.Action.GO;
-        }
-
     }
 
     // ------------------------- filters -------------------------

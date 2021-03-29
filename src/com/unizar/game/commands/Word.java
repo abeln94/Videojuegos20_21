@@ -54,7 +54,7 @@ public class Word {
         WEAR("vestir"),
 
         // special
-        EXAMINE("examinar"),
+        EXAMINE("examinar leer"),
         HELP("ayuda"),
         INVENTORY("inventario"),
         LOAD("cargar"),
@@ -84,14 +84,14 @@ public class Word {
      * A specific direction where you can navigate to
      */
     public enum Direction implements Token {
-        NORTH("norte"),
-        NORTHEAST("noreste"),
-        SOUTH("sur"),
-        NORTHWEST("noroeste"),
-        EAST("este"),
-        SOUTHEAST("sureste"),
-        WEST("oeste"),
-        SOUTHWEST("sureste"),
+        NORTH("el norte"),
+        NORTHEAST("el noreste"),
+        SOUTH("el sur"),
+        NORTHWEST("el noroeste"),
+        EAST("el este"),
+        SOUTHEAST("el sureste"),
+        WEST("el oeste"),
+        SOUTHWEST("el sureste"),
         UP("arriba"),
         DOWN("abajo"),
         ;
@@ -172,8 +172,14 @@ public class Word {
         ELEMENT,
         MULTIPLE,
         UNKNOWN,
+        IGNORE,
         ;
     }
+
+    /**
+     * Ignorable words in the input string
+     */
+    static String ignorable = "el la los las un una unos unas";
 
     // ------------------------- tokenizer -------------------------
 
@@ -184,7 +190,13 @@ public class Word {
      * @return list of words
      */
     static public List<String> separateWords(String sentence) {
-        return Arrays.asList(sentence.toLowerCase().split(" +"));
+
+        sentence = " " + sentence + " ";
+
+        // spanish is difficult
+        sentence = sentence.replaceAll(" al ", " a el ");
+
+        return Arrays.stream(sentence.toLowerCase().split(" +")).filter(s -> !s.isEmpty()).collect(Collectors.toList());
     }
 
     // ------------------------- parsing -------------------------
@@ -194,11 +206,13 @@ public class Word {
      *
      * @param word     the word to test
      * @param elements list of game elements
-     * @return a pair type-token (token is null when ELEMENT, MULTIPLE or UNKNOWN)
+     * @return a pair type-token (token is null when not needed)
      */
     static public Utils.Pair<Type, Token> parse(String word, Set<Element> elements) {
 
         // first check the word from all the game tokens
+        if (Word.matchSentences(ignorable, word)) return Utils.Pair.of(Type.IGNORE, null);
+
 
         // create the list
         List<Utils.Pair<Type, Token>> all = new ArrayList<>();
@@ -212,7 +226,7 @@ public class Word {
         }
 
         // filter
-        List<Utils.Pair<Type, Token>> filtered = all.stream().filter(p -> Word.matchWords(word, p.second.getName())).collect(Collectors.toList());
+        List<Utils.Pair<Type, Token>> filtered = all.stream().filter(p -> Word.matchSentences(p.second.getName(), word)).collect(Collectors.toList());
         switch (filtered.size()) {
             case 0:
                 // nothing, continue checking

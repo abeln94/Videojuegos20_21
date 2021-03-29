@@ -260,7 +260,7 @@ public class Engine {
                 Element whoToGiveItTo = command.secondary.get();
                 if (whoToGiveItTo == null) {
                     // multiple results
-                    return Result.moreNeeded("A quién se lo quieres dar?");
+                    return Result.moreNeeded("A quién se lo quieres dar?", Word.Preposition.AT.name);
                 }
 
                 // give
