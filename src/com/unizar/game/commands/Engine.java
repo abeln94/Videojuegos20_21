@@ -145,7 +145,7 @@ public class Engine {
 
                 if (le == null) {
                     // no exit
-                    return Result.error("No puedes ir hacia " + command.direction.name + ".");
+                    return Result.error("No puedes ir hacia " + command.direction.description + ".");
                 }
 
                 Location newLocation = le.first;
@@ -157,7 +157,7 @@ public class Engine {
                 }
 
                 // notify old npc
-                npc.location.say(npc, npc + " va hacia " + command.direction.name + ".");
+                npc.location.say(npc, npc + " va hacia " + command.direction.description + ".");
 
                 // move
                 npc.location.elements.remove(npc);
@@ -167,7 +167,7 @@ public class Engine {
                 // notify new npc
                 npc.location.say(npc, npc + " entra.");
 
-                return Result.done("Te diriges hacia " + command.direction.name);
+                return Result.done("Te diriges hacia " + command.direction.description);
             }
             case FOLLOW -> {
                 // check if we are inside something
@@ -260,7 +260,7 @@ public class Engine {
                 Element whoToGiveItTo = command.secondary.get();
                 if (whoToGiveItTo == null) {
                     // multiple results
-                    return Result.moreNeeded("A quién se lo quieres dar?", Word.Preposition.AT.name);
+                    return Result.moreNeeded("A quién se lo quieres dar?", Word.Preposition.AT.alias);
                 }
 
                 // give

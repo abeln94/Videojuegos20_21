@@ -3,9 +3,9 @@ package com.unizar.game.commands;
 import com.unizar.Utils;
 import com.unizar.game.elements.Element;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,14 +14,10 @@ import java.util.stream.Collectors;
  */
 public class Word {
 
-    public interface Token {
-        String getName();
-    }
-
     /**
      * A distinguishable action
      */
-    public enum Action implements Token {
+    public enum Action {
         BREAK("romper"),
         CLIMB("saltar"),
         CLOSE("cerrar"),
@@ -68,50 +64,42 @@ public class Word {
         WAIT("esperar"),
         ;
 
-        Action(String name) {
-            this.name = name;
+        Action(String alias) {
+            this.alias = alias;
         }
 
-        public final String name;
-
-        @Override
-        public String getName() {
-            return name;
-        }
+        public final String alias;
     }
 
     /**
      * A specific direction where you can navigate to
      */
-    public enum Direction implements Token {
-        NORTH("el norte"),
-        NORTHEAST("el noreste"),
-        SOUTH("el sur"),
-        NORTHWEST("el noroeste"),
-        EAST("el este"),
-        SOUTHEAST("el sureste"),
-        WEST("el oeste"),
-        SOUTHWEST("el sureste"),
-        UP("arriba"),
-        DOWN("abajo"),
+    public enum Direction {
+        NORTH("el norte", "n"),
+        NORTHEAST("el noreste", "ne"),
+        SOUTH("el sur", "s"),
+        NORTHWEST("el noroeste", "no"),
+        EAST("el este", "e"),
+        SOUTHEAST("el sureste", "se"),
+        WEST("el oeste", "o"),
+        SOUTHWEST("el suroeste", "so"),
+        UP("arriba", "ar"),
+        DOWN("abajo", "ab"),
         ;
 
-        Direction(String name) {
-            this.name = name;
+        Direction(String description, String extraAlias) {
+            this.description = description;
+            this.alias = description + " " + extraAlias;
         }
 
-        public final String name;
-
-        @Override
-        public String getName() {
-            return name;
-        }
+        public final String description;
+        public final String alias;
     }
 
     /**
      * A preposition for a secondary element
      */
-    public enum Preposition implements Token {
+    public enum Preposition {
         ACROSS("cruzando"),
         AT("a"),
         FROM("desde"),
@@ -126,39 +114,29 @@ public class Word {
         WITH("con"),
         ;
 
-        Preposition(String name) {
-            this.name = name;
+        Preposition(String alias) {
+            this.alias = alias;
         }
 
-        public final String name;
-
-        @Override
-        public String getName() {
-            return name;
-        }
+        public final String alias;
     }
 
 
     /**
      * A modifier
      */
-    public enum Modifier implements Token {
+    public enum Modifier {
         CAREFULLY("cuidadosamente"),
         SOFTLY("suavemente"),
         QUICKLY("rápidamente"),
         VICIOUSLY("viciosamente"),
         ;
 
-        Modifier(String name) {
-            this.name = name;
+        Modifier(String alias) {
+            this.alias = alias;
         }
 
-        public final String name;
-
-        @Override
-        public String getName() {
-            return name;
-        }
+        public final String alias;
     }
 
     /**
@@ -206,50 +184,38 @@ public class Word {
      *
      * @param word     the word to test
      * @param elements list of game elements
-     * @return a pair type-token (token is null when not needed)
+     * @return a pair type-object (object depends on the type)
      */
-    static public Utils.Pair<Type, Token> parse(String word, Set<Element> elements) {
+    static public Utils.Pair<Type, Object> parse(String word, Set<Element> elements) {
 
-        // first check the word from all the game tokens
+        // first check ignorable
         if (Word.matchSentences(ignorable, word)) return Utils.Pair.of(Type.IGNORE, null);
 
+        // then check actions
+        Optional<Action> action = Arrays.stream(Action.values()).filter(a -> Word.matchSentences(a.alias, word)).findFirst();
+        if (action.isPresent()) return Utils.Pair.of(Type.ACTION, action.get());
 
-        // create the list
-        List<Utils.Pair<Type, Token>> all = new ArrayList<>();
-        for (Utils.Pair<Type, ? extends Token[]> tokens : List.of(
-                Utils.Pair.of(Type.ACTION, Word.Action.values()),
-                Utils.Pair.of(Type.DIRECTION, Word.Direction.values()),
-                Utils.Pair.of(Type.PREPOSITION, Word.Preposition.values()),
-                Utils.Pair.of(Type.MODIFIER, Modifier.values())
-        )) {
-            all.addAll(Arrays.stream(tokens.second).map(t -> Utils.Pair.of(tokens.first, t)).collect(Collectors.toList()));
-        }
+        // later directions
+        Optional<Direction> direction = Arrays.stream(Direction.values()).filter(d -> Word.matchSentences(d.alias, word)).findFirst();
+        if (direction.isPresent()) return Utils.Pair.of(Type.DIRECTION, direction.get());
 
-        // filter
-        List<Utils.Pair<Type, Token>> filtered = all.stream().filter(p -> Word.matchSentences(p.second.getName(), word)).collect(Collectors.toList());
-        switch (filtered.size()) {
-            case 0:
-                // nothing, continue checking
-                break;
-            case 1:
-                // found, return it
-                return filtered.get(0);
-            default:
-                // multiple options
-                System.out.println("multiple elements for '" + word + "': " + filtered);
-                return Utils.Pair.of(Type.MULTIPLE, null);
-        }
+        // next prepositions
+        Optional<Preposition> preposition = Arrays.stream(Preposition.values()).filter(p -> Word.matchSentences(p.alias, word)).findFirst();
+        if (preposition.isPresent()) return Utils.Pair.of(Type.PREPOSITION, preposition.get());
 
-        // second check the word in the game-specific elements
+        // now modifiers
+        final Optional<Modifier> modifier = Arrays.stream(Modifier.values()).filter(m -> Word.matchSentences(m.alias, word)).findFirst();
+        if (modifier.isPresent()) return Utils.Pair.of(Type.MODIFIER, modifier.get());
 
-        // filter
-        Set<String> matchingTokens = elements.stream()
+
+        // and finally, check the word in the game-specific elements
+        long matchingObjectTokens = elements.stream()
                 .flatMap(element -> Word.separateWords(element.name).stream())
                 .distinct()
                 .filter(elementWord -> Word.matchWords(word, elementWord))
-                .collect(Collectors.toSet());
-        // check if there is a match
-        if (matchingTokens.size() >= 1) return Utils.Pair.of(Type.ELEMENT, null);
+                .count();
+        if (matchingObjectTokens >= 1) return Utils.Pair.of(Type.ELEMENT, null);
+
 
         // nothing matched, the word is unknown
         return Utils.Pair.of(Type.UNKNOWN, null);

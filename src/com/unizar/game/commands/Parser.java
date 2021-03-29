@@ -78,7 +78,7 @@ public class Parser implements Window.InputListener {
         boolean isSecondElement = false;
         for (String word : words) {
             if (word.isEmpty()) continue;
-            Utils.Pair<Word.Type, Word.Token> parsing = Word.parse(word, elements);
+            Utils.Pair<Word.Type, Object> parsing = Word.parse(word, elements);
             switch (parsing.first) {
                 case ACTION -> {
                     if (command.action != null) {
