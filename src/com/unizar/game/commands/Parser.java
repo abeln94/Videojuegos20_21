@@ -5,6 +5,7 @@ import com.unizar.game.Game;
 import com.unizar.game.Window;
 import com.unizar.game.elements.Element;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -21,12 +22,42 @@ public class Parser implements Window.InputListener {
         this.game = game;
     }
 
-    // ------------------------- data -------------------------
+    // ------------------------- input history -------------------------
 
     /**
-     * To allow 'ask more info'
+     * Last entered inputs (ignores 'needsMore')
      */
-    private String appendableCommand = "";
+    private final List<String> historyInput = new ArrayList<>();
+    private int historyIndex = 0; // the top of the list is a special 'empty' input
+
+    /**
+     * Restores a previous entered input
+     *
+     * @param previous if true, will go back to the previous input, if false to a newer one
+     */
+    public void restoreInput(boolean previous) {
+        if (previous) {
+            if (historyIndex - 1 < 0) return;
+
+            // go back in history
+            historyIndex--;
+        } else {
+            if (historyIndex + 1 > historyInput.size()) return;
+
+            // go forward in history
+            historyIndex++;
+        }
+        // set
+        game.window.setCommand(historyIndex == historyInput.size() ? "" : historyInput.get(historyIndex));
+    }
+
+    /**
+     *
+     */
+    public void clearHistory() {
+        historyInput.clear();
+        historyIndex = 0;
+    }
 
     // ------------------------- parser -------------------------
 
@@ -43,9 +74,7 @@ public class Parser implements Window.InputListener {
 
         // write command
         game.addOutput("> " + rawText);
-        rawText = appendableCommand + rawText;
         Command command = parse(rawText);
-        appendableCommand = "";
 
         // execute
         Result result = game.engine.execute(game.getPlayer(), command);
@@ -58,7 +87,11 @@ public class Parser implements Window.InputListener {
 
         // check if requires more
         if (result.requiresMore != null) {
-            appendableCommand = rawText + " " + result.requiresMore + " ";
+            game.window.setCommand(rawText + " " + (result.requiresMore.isEmpty() ? "" : result.requiresMore + " "));
+        } else {
+            // add to history
+            historyInput.add(rawText);
+            historyIndex = historyInput.size();
         }
 
         // if was ok, let other elements act

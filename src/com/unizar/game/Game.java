@@ -109,13 +109,21 @@ public class Game extends KeyAdapter implements Window.InputListener {
                     world = newWorld;
                     world.register(this);
                     update();
+                    parser.clearHistory();
                 } else {
                     window.addOutput("[No hay datos guardados]");
                 }
             }
 
+            // Press top arrow to repeat input
+            case KeyEvent.VK_UP -> parser.restoreInput(true);
+            case KeyEvent.VK_DOWN -> parser.restoreInput(false);
+
             // Press F2 to reset
-            case KeyEvent.VK_F2 -> reset();
+            case KeyEvent.VK_F2 -> {
+                reset();
+                parser.clearHistory();
+            }
         }
     }
 

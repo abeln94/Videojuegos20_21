@@ -132,8 +132,9 @@ public class Window {
      */
     public void setCommandListener(InputListener inputListener) {
         commandInput.addActionListener(e -> {
-            inputListener.onText(commandInput.getText());
+            final String text = commandInput.getText();
             commandInput.setText("");
+            inputListener.onText(text);
         });
     }
 
@@ -146,8 +147,18 @@ public class Window {
         commandInput.addKeyListener(listener);
     }
 
+    /**
+     * Clears the command input textbox
+     */
     public void clearCommand() {
         commandInput.setText("");
+    }
+
+    /**
+     * Sets the command input text
+     */
+    public void setCommand(String command) {
+        commandInput.setText(command);
     }
 
     // ------------------------- description -------------------------
