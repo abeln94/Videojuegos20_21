@@ -3,6 +3,7 @@ package com.unizar.game.commands;
 import com.unizar.game.elements.Element;
 
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -70,6 +71,7 @@ public class Command {
     public static class FilterableElements {
         public Set<Element> elements;
         public String description = "";
+        public String error = null;
 
         /**
          * Contains just one element
@@ -108,8 +110,11 @@ public class Command {
          * @param noDescription if no description was provided when this command was generated, return this as the description
          * @return the error message, or null if this still contains elements after the filtering
          */
-        public String require(Predicate<Element> filter, String message, String noDescription) {
+        public Command.FilterableElements require(Predicate<Element> filter, String message, String noDescription) {
             assert !elements.isEmpty();
+
+            // already an error
+            if (error != null) return this;
 
             // prepare the missed error string
             String missed = elements.size() == 1 ? elements.iterator().next().name // there is one element, use that one
@@ -121,19 +126,48 @@ public class Command {
 
             // check if there are no more elements
             if (elements.isEmpty()) {
-                return message.replace("{}", missed);
+                error = message.replace("{}", missed);
             }
 
-            // all ok
-            return null;
+            // finished
+            return this;
         }
 
         /**
-         * @return the element, only if there is one left
+         * Apply a function to the element, or returns an error
+         *
+         * @param moreNeeded string to return if there are multiple elements available
+         * @param action     what to run if there is exactly one element
+         * @return the corresponding result
          */
-        public Element get() {
-            assert elements.size() > 0;
-            return elements.size() == 1 ? elements.iterator().next() : null;
+        public Result apply(String moreNeeded, Function<Element, Result> action) {
+            return apply(moreNeeded, null, action);
+        }
+
+        /**
+         * Apply a function to the element, or returns an error
+         *
+         * @param moreNeeded           string to return if there are multiple elements available
+         * @param moreNeededAppendable appendable string for the moreNeeded result
+         * @param action               what to run if there is exactly one element
+         * @return the corresponding result
+         */
+        public Result apply(String moreNeeded, String moreNeededAppendable, Function<Element, Result> action) {
+            switch (elements.size()) {
+                case 1 -> {
+                    // only one element, apply
+                    return action.apply(elements.iterator().next());
+                }
+                case 0 -> {
+                    // no elements, return previous error
+                    assert error != null;
+                    return Result.error(error);
+                }
+                default -> {
+                    // multiple elements, more info needed
+                    return Result.moreNeeded(moreNeeded, moreNeededAppendable);
+                }
+            }
         }
 
         @Override
