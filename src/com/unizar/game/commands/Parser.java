@@ -87,7 +87,7 @@ public class Parser implements Window.InputListener {
 
         // check if requires more
         if (result.requiresMore != null) {
-            game.window.setCommand(rawText + " " + (result.requiresMore.isEmpty() ? "" : result.requiresMore + " "));
+            game.window.setCommand(rawText + " " + result.requiresMore);
         } else {
             // add to history
             historyInput.add(rawText);

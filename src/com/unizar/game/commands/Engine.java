@@ -198,7 +198,7 @@ public class Engine {
                             interactable::contains,
                             "No veo a {}.",
                             "nadie desde aquí"
-                    ).apply("A quién se lo quieres dar?", Word.Preposition.AT.alias, whoToGiveItTo -> {
+                    ).apply("A quién se lo quieres dar?", Word.Preposition.AT.alias + " ", whoToGiveItTo -> {
 
                         // give
                         npc.elements.remove(elementToGive);
@@ -227,7 +227,7 @@ public class Engine {
 
             }
             case SAY -> {
-                return command.main.require(
+                return command.secondary.require(
                         // the element must be an npc
                         e -> e instanceof NPC,
                         "No puedes hablarle a {}.",
