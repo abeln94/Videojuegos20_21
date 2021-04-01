@@ -52,19 +52,11 @@ abstract public class Location extends Element {
         }).map(e -> e.getKey().description).collect(Collectors.toList());
         description.append(Utils.joinList("", ". Hay una salida hacia", ". Hay salidas visibles hacia", visibleExits));
 
-        description.append(". Puedes ver:");
         List<Element> visible = elements.stream().filter(e -> e != npc).collect(Collectors.toList());
         if (visible.isEmpty()) {
-            description.append("\n - Nada");
+            description.append(". No ves nada desde aquí");
         } else {
-            boolean dot = false;
-            for (Element e : visible) {
-                String d = e.getDescription(npc);
-                if (d != null) {
-                    description.append((dot ? "." : "") + "\n - " + d);
-                    dot = true;
-                }
-            }
+            description.append(". Puedes ver:\n - " + visible.stream().map(e -> e.getDescription(npc)).collect(Collectors.joining(".\n - ")));
         }
 
         return description.toString();

@@ -140,7 +140,9 @@ public class Game extends KeyAdapter implements Window.InputListener {
         // describe current room
         Element location = getPlayer().location;
         setImage(location instanceof Location ? ((Location) location).image : null);
-        addDescription("Te encuentras en " + location.getDescription(getPlayer()) + ".");
+        addDescription("Te encuentras en " + location.getDescription(getPlayer()) + "."); //TODO: include the dots inside the description, not outside
+        addDescription("");
+        addDescription(getPlayer().getDescription(getPlayer()) + ".");
     }
 
     /**

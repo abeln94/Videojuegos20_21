@@ -46,6 +46,9 @@ public class Engine {
             case LOOK -> {
                 return Result.error("[obsoleto: la descripción está ahora a la derecha]");
             }
+            case INVENTORY -> {
+                return Result.error("[obsoleto: tu inventario se muestra ahora a la derecha]");
+            }
             case SAVE -> {
                 return Result.error("[obsoleto: pulsa F6 para guardar]");
             }

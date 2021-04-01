@@ -26,7 +26,7 @@ abstract public class NPC extends Element {
     public String getDescription(NPC npc) {
         String prefix = ": " + this + " lleva";
 
-        return super.getDescription(npc) + Utils.joinList("", prefix, prefix, elements.stream().map(e -> e.getDescription(npc)).collect(Collectors.toList()));
+        return this + Utils.joinList("", prefix, prefix, elements.stream().map(e -> e.getDescription(npc)).collect(Collectors.toList()));
     }
 
     /**
