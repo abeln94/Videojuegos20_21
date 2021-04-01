@@ -51,7 +51,7 @@ public class Parser implements Window.InputListener {
         Result result = game.engine.execute(game.getPlayer(), command);
 
         // spanish is difficult
-        result.output = result.output.replaceAll(" a el ", " al ");
+        result.output = result.output.replaceAll("\\ba el\\b", "al");
 
         // add output
         game.addOutput(result.output);

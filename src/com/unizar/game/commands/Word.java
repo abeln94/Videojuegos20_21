@@ -81,7 +81,7 @@ public class Word {
         NORTHWEST("el noroeste", "no"),
         EAST("el este", "e"),
         SOUTHEAST("el sureste", "se"),
-        WEST("el oeste", "o"),
+        WEST("el oeste", "o w"),
         SOUTHWEST("el suroeste", "so"),
         UP("arriba", "ar"),
         DOWN("abajo", "ab"),
@@ -169,10 +169,8 @@ public class Word {
      */
     static public List<String> separateWords(String sentence) {
 
-        sentence = " " + sentence + " ";
-
         // spanish is difficult
-        sentence = sentence.replaceAll(" al ", " a el ");
+        sentence = sentence.replaceAll("\\bal\\b", "a el");
 
         return Arrays.stream(sentence.toLowerCase().split(" +")).filter(s -> !s.isEmpty()).collect(Collectors.toList());
     }
