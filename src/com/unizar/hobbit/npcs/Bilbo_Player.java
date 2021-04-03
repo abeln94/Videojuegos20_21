@@ -7,6 +7,7 @@ public class Bilbo_Player extends Player {
 
     public Bilbo_Player() {
         super("Bilbo");
+        weight = 25;
     }
 
     @Override

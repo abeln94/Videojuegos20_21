@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 abstract public class NPC extends Element {
 
     /**
-     * The location of this npc
+     * The location of this npc (duplicated entry to avoid searching)
      * (this is an element because you can be inside an item)
      */
     public Element location;

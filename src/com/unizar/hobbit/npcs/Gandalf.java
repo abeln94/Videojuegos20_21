@@ -12,6 +12,7 @@ import com.unizar.hobbit.rooms.StartLocation;
 public class Gandalf extends NPC {
     public Gandalf() {
         super("Gandalf");
+        weight = 50;
     }
 
     @Override

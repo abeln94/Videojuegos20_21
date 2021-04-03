@@ -13,6 +13,7 @@ public class Thorin extends NPC {
 
     public Thorin() {
         super("Thorin");
+        weight = 25;
     }
 
     @Override

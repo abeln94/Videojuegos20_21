@@ -134,9 +134,7 @@ public class Engine {
                 npc.location.notifyNPCs(npc, npc + " va hacia " + command.direction.description + ".");
 
                 // move
-                npc.location.elements.remove(npc);
-                npc.location = newLocation;
-                npc.location.elements.add(npc);
+                setParent(npc, npc.location, newLocation);
 
                 // notify new npc
                 npc.location.notifyNPCs(npc, npc + " entra.");
@@ -204,11 +202,41 @@ public class Engine {
                     ).apply("A quién se lo quieres dar?", Word.Preposition.AT.alias + " ", whoToGiveItTo -> {
 
                         // give
-                        npc.elements.remove(elementToGive);
-                        whoToGiveItTo.elements.add(elementToGive);
+                        setParent(elementToGive, npc, whoToGiveItTo);
                         whoToGiveItTo.hear(npc + " te da " + elementToGive + ".");
                         return Result.done("Le das " + elementToGive + " a " + whoToGiveItTo + ".\n" + whoToGiveItTo + " te da las gracias.");
                     });
+                });
+            }
+            case PICK -> {
+                return command.main.require(
+                        // it must be in the location of the npc
+                        npc.location.elements::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                ).require(
+                        // it must have less weight
+                        e -> e.weight < npc.weight,
+                        "No puedes coger {}.",
+                        "nada"
+                ).apply("Que quieres coger?", pickable -> {
+
+                    // pick
+                    setParent(pickable, npc.location, npc);
+                    return Result.done("Coges " + pickable);
+                });
+            }
+            case DROP -> {
+                return command.main.require(
+                        // You must have it
+                        npc.elements::contains,
+                        "No tienes {}.",
+                        "nada"
+                ).apply("Que quieres tirar?", dropable -> {
+
+                    // drop
+                    setParent(dropable, npc, npc.location);
+                    return Result.done("Tiras " + dropable);
                 });
             }
             case EXAMINE -> {
@@ -257,4 +285,21 @@ public class Engine {
 
         return Result.error("Aún no se hacer eso!");
     }
+
+    // ------------------------- utils -------------------------
+
+    /**
+     * Sets the parent of an element (moves the element)
+     *
+     * @param element   what to move
+     * @param oldParent from where
+     * @param newParent to where
+     */
+    private void setParent(Element element, Element oldParent, Element newParent) {
+        assert oldParent.elements.contains(element);
+        oldParent.elements.remove(element);
+        newParent.elements.add(element);
+        if (element instanceof NPC) ((NPC) element).location = newParent;
+    }
+
 }

@@ -17,6 +17,11 @@ abstract public class Element implements Serializable {
     public final String name;
 
     /**
+     * The weight of this element (if npc, can carry only other elements with smaller weight).
+     */
+    public int weight = Integer.MAX_VALUE;
+
+    /**
      * List of elements inside this element
      */
     public final List<Element> elements = new ArrayList<>();

@@ -7,6 +7,7 @@ public class Map extends Item {
 
     public Map() {
         super("el mapa peculiar");
+        weight = 1;
     }
 
     @Override
