@@ -2,7 +2,7 @@
 
 Abel Naya Forcano
 
-Tiempo: 4h
+Tiempo: 4h (P2), 5,5h (P3)
 
 Sandra Navarro  Moreno
 

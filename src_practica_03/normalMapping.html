@@ -77,11 +77,21 @@ attribute vec3 tangent;
 attribute vec3 tangent2;
 
 // Declarar aqui varying necesarias para la resolucion
+varying vec2 vUv;
+varying vec3 vNormal; // normal del vertice en espacio de la camara
+varying vec3 vTangent; // tangente del vertice en espacio de la camara
+varying vec3 vTangent2; // bitangente del vertice en espacio de la camara
+varying vec4 vPosition; // posicion del vertice en espacio de la camara
 
 
 void main() {
 	
 	// Calculos para dar valor a las varying aqui
+	vUv = uv;
+	vNormal = normalize(normalMatrix * normal);
+	vTangent = normalize(normalMatrix * tangent);
+	vTangent2 = normalize(normalMatrix * tangent2);
+	vPosition = modelViewMatrix * vec4(position, 1.0);
 
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
@@ -117,6 +127,11 @@ uniform sampler2D diffuseTexture;
 uniform sampler2D normalMap;
 
 // Declarar aqui varying necesarias para la resolucion
+varying vec2 vUv;
+varying vec3 vNormal; // normal del vertice en espacio de la camara
+varying vec3 vTangent; // tangente del vertice en espacio de la camara
+varying vec3 vTangent2; // bitangente del vertice en espacio de la camara
+varying vec4 vPosition; // posicion del vertice en espacio de la camara
 
 
 vec3 to_sRGB(vec3 c) { return pow(c, vec3(1.0/2.2)); }
@@ -127,9 +142,27 @@ void main() {
 	vec3 finalColor = vec3(0.0, 0.0, 0.0);
 	
 	// Calculos necesarios para obtener la normal de la textura en espacio de la camara aqui
-	
+	vec3 tNormal = (texture2D(normalMap, vUv).rgb - vec3(0.5)) * vec3(bumpiness, -bumpiness, 1.0);
+	vec3 normal = mat3(normalize(vTangent), normalize(vTangent2), normalize(vNormal)) * tNormal;
+
 	// Calculos necesarios para la iluminacion aqui
-    
+    for(int i = 0; i < NUM_LIGHTS; ++i){
+        vec3 I_luz = lightColors[i];
+        vec3 n = normalize(normal);
+        vec3 l = normalize(lightPositions[i] - vec3(vPosition));
+        vec3 v = normalize(vec3(0.0) - vec3(vPosition)); // la cámara está en el origen
+        vec3 h = normalize(l + v);
+        vec3 c_diff = from_sRGB(texture2D(diffuseTexture, vUv).rgb);
+        vec3 c_spec = vec3(1.0);
+        float m = 1.0 / roughness;
+        float r = distance(lightPositions[i], vec3(vPosition));
+
+        float nPh = max(0.0, dot(n, h));
+        float nPl = max(0.0, dot(n, l));
+
+        finalColor += 1.0 / r / r * ( c_diff + c_spec * pow(nPh, m) ) * I_luz * nPl;
+    }
+
     // finalColor debe acabar conteniendo la intensidad/color resultante en el fragment
     
     // Solo se sombrea si esta "de cara", si no se le da un color fijo
@@ -149,15 +182,15 @@ void main() {
             commonInit();
             init();
             animate();
-            
+
             function init() {
                 defaultTextureTarget = 'diffuseTexture';
                 meshMaterial.uniforms.diffuseTexture = { type: 't', value: null };
                 meshMaterial.uniforms.normalMap = { type: 't', value: null };
-            
+
                 addLight(new THREE.Vector3(50, 50, 100), new THREE.Vector3(0.8, 0.8, 0.8));
                 addLight(new THREE.Vector3(-50, -50, -50), new THREE.Vector3(0.5, 0.5, 0.6));
-                
+
                 document.getElementById('roughnessRange').oninput();
                 document.getElementById('bumpinessRange').oninput();
             }
