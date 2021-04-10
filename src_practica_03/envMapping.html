@@ -66,41 +66,46 @@
 // attribute vec2 uv;
 
 // Declarar aqui varying necesarias para la resolucion
+varying vec3 vNormal; // normal del vertice en espacio de la camara
+varying vec4 vPosition; // posicion del vertice en espacio de la camara
 
 
 void main() {
-    
-	// Calculos para dar valor a las varying aqui
+
+    // Se da valor a las variables varying
+    vNormal = normalize(normalMatrix * normal); //vector unitario para la normal, n
+    vPosition = normalize(modelViewMatrix * vec4(position, 1.0)); //vector unitario de posicion
 
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);    
-    
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
 }
         </script>
 <!-----------------------------------------------------------------------------
         FRAGMENT SHADER
 ------------------------------------------------------------------------------>
         <script id="fragmentShader" type="x-shader/x-fragment">
-			
+
 // Exposicion; no tendreis que hacer nada con ella
 // Su valor es controlado por un slider
 uniform float exposure;
 
-// Sampler utilizado para acceder al mapa de entorno 
-uniform samplerCube environmentMap; 
+// Sampler utilizado para acceder al mapa de entorno
+uniform samplerCube environmentMap;
 
 // Declarar aqui varying necesarias para la resolucion
+varying vec3 vNormal; // normal del vertice en espacio de la camara
+varying vec4 vPosition; // posicion del vertice en espacio de la camara
 
 
 void main() {
-    
-    // Calculos necesarios para la reflexion y el acceso al mapa de entorno aqui
-    
-    // colorRef debe acabar conteniendo la intensidad/color resultante en el fragment (el valor obtenido del mapa de entorno)
-    
+
+    // Se calcula la reflexion y el acceso al mapa de entorno, el resultado se guarda en colorRef
+    vec4 colorRef = textureCube(environmentMap, reflect(vNormal, vec3(vPosition)));
+
     // gl_FragColor
-    gl_FragColor = vec4(1.0); // placeholder - luego sera: gl_FragColor = colorRef; 
+    gl_FragColor = colorRef;
     
 }
         </script>

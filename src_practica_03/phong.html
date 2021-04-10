@@ -77,7 +77,10 @@ varying vec4 vPosition; // posicion del vertice en espacio de la camara
 
 void main() {
 
-	// Calculos para dar valor a las varying aqui
+	// Se da valor a las variables varying
+    vUv = uv; //vector que parte del punto a la camara
+    vNormal = normalize(normalMatrix * normal); //vector unitario para la normal, n
+    vPosition = normalize(modelViewMatrix * vec4(position, 1.0)); //vector unitario de posicion
 
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
@@ -90,8 +93,8 @@ void main() {
 ------------------------------------------------------------------------------>
         <script id="fragmentShader" type="x-shader/x-fragment">
 
-// Intensidad (color) y posicion de las luces. 
-// NUM_LIGHTS es una constante que contiene el numero de luces.			
+// Intensidad (color) y posicion de las luces.
+// NUM_LIGHTS es una constante que contiene el numero de luces.
 uniform vec3 lightColors[ NUM_LIGHTS ];
 uniform vec3 lightPositions[ NUM_LIGHTS ]; // in eye space
 
@@ -101,13 +104,13 @@ uniform float exposure;
 
 // Roughness o rugosidad: tal y como se define aqui, roughness = 1.0 / m
 // Su valor es controlado por un slider
-uniform float roughness; 
+uniform float roughness;
 
 varying vec2 vUv;
 varying vec3 vNormal; // normal del fragment en espacio de la camara
 varying vec4 vPosition; // posicion del fragment en espacio de la camara
 
-// Sampler utilizado para acceder a la textura difusa 
+// Sampler utilizado para acceder a la textura difusa
 // (que se carga con el boton correspondiente del interfaz)
 uniform sampler2D diffuseTexture;
 
@@ -116,11 +119,37 @@ vec3 from_sRGB(vec3 c) { return pow(c, vec3(2.2)); }
 
 void main() {
 
-    vec3 finalColor = vec3(0.0, 0.0, 0.0);
-    
-    // Calculos necesarios para la iluminacion aqui
-    
-    // finalColor debe acabar conteniendo la intensidad/color resultante en el fragment
+    // Calculo de la intensidad para cada una de las luces, se guarda en finalColor
+    vec3 finalColor = vec3(0.0);
+    //v -> vector que parte del punto y va hacia la cámara
+    vec3 v = vec3(-vPosition); //se supone la cámara en el origen (0,0,0), es el origen menos el punto
+
+    //cdiff es el coeficiente de reflexión difusa, proporcionado por el valor de la textura en ese punto2
+    vec3 cdiff = from_sRGB(texture2D(diffuseTexture, vUv).rgb);
+
+    //cspec es el coeficiente de reflexión especular, que fijaremos a 1.0 para los tres canales
+    vec3 cspec = vec3(1.0);
+
+    //m indica el valor de rugosidad o roughness
+    float m = 1.0 / roughness;
+
+    for(int i = 0; i < NUM_LIGHTS; ++i){
+        //Iluz ->  intensidad o color de la luz incidente
+        vec3 Iluz = lightColors[i];
+
+        //n ->  normal en el punto, vector unitario -> vNormal
+        //l -> vector que va del punto a la luz, vector unitario
+        vec3 l = normalize(lightPositions[i] - vec3(vPosition));
+
+        // h -> vector que marca la bisectriz del ángulo formado por v y l
+        vec3 h = normalize(l + v);
+
+        //r es la distancia entre la luz y el punto
+        float r = distance(lightPositions[i], vec3(vPosition));
+
+        //los dos con los máximos es porque no pueden ser negativos los productos
+        finalColor += (1.0 / (r * r)) * ( cdiff + cspec * pow(max(0.0, dot(vNormal, h)), m) ) * Iluz * max(0.0, dot(vNormal, l));
+    }
     
     // Solo se sombrea si esta "de cara", si no se le da un color fijo
     if (gl_FrontFacing) {
