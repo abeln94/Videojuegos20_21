@@ -6,7 +6,7 @@ Sandra Navarro Moreno (681138)
 
 ### Resolución
 Dedicación Abel: 4h (P2), 6h (P3)
-Dedicación Sandra 3,5h (P2), 8h(P3)
+Dedicación Sandra 3,5h (P2), 8h (P3)
 
 No se han utilizado recursos externos, pero sí algunas funciones de javascript que ya se conocían de antemano como .reduce(), .map(), .splice() o inline functions (=>).
 
