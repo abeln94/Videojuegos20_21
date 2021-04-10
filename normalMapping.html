@@ -176,7 +176,7 @@ void main() {
 
         //n ->  normal en el punto, vector unitario
         //l -> vector que va del punto a la luz, vector unitario
-        vec3 l = normalize(vec3(vPosition) - lightPositions[i]);
+        vec3 l = normalize(lightPositions[i] - vec3(vPosition));
 
         // h -> vector que marca la bisectriz del ángulo formado por v y l
         vec3 h = normalize(l + v); 
