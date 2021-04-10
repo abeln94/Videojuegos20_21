@@ -4,9 +4,18 @@
 Abel Naya Forcano (544125)
 Sandra Navarro Moreno (681138)
 
-### Resolución
-Dedicación Abel: 4h (P2), 6h (P3)
-Dedicación Sandra 3,5h (P2), 8h (P3)
+### Desarrollo
+Dedicación Abel (aproximación):
+- P2 -> 4h 
+- P3.3 -> 2,5h
+- P3.4 -> 0,5h
+- P3.5 -> 3h
+
+Dedicación Sandra (aproximación):
+- P2 -> 3,5h
+- P3.3 -> 3h
+- P3.4 -> 2h
+- P3.5 -> 3h
 
 No se han utilizado recursos externos, pero sí algunas funciones de javascript que ya se conocían de antemano como .reduce(), .map(), .splice() o inline functions (=>).
 
