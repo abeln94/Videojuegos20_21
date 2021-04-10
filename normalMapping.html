@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<!-- This is only an example file, it is not required to be submitted. -->
 <html lang="en">
     <head>
-        <title>Phong shader</title>
+        <title>Normal mapping</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
         <style>
@@ -21,25 +20,29 @@
             <input type="button" id="meshInputButton" value="Select OBJ File" onclick="document.getElementById('meshInputFile').click()">
             <input type="file" id="texInputFile" style="display: none;" onchange="loadTexture(this.files[0], 'diffuseTexture')">
             <input type="button" id="texInputButton" value="Select Texture File" onclick="document.getElementById('texInputFile').click()">
+            <input type="file" id="normalInputFile" style="display: none;" onchange="loadTexture(this.files[0], 'normalMap')">
+            <input type="button" id="normalInputButton" value="Select Normal Map File" onclick="document.getElementById('normalInputFile').click()">
             <label><input type="checkbox" id="showAxesCheckbox" onchange="toggleAxes(this.checked)" checked="true">Show Axes</label>
             <label><input type="checkbox" id="showWireframeCheckbox" onchange="toggleWireframe(this.checked)">Show Wireframe</label>
             <label><input type="checkbox" id="showNormalsCheckbox" onchange="toggleNormals(this.checked)">Show Normals</label>
             <label><input type="checkbox" id="fixLightsToCameraCheckbox" onchange="toggleFixLightsToCamera(this.checked)">Fix lights to camera</label>
-            <br/>
+            <br>
             Normal length:
             <input type="range" id="normalLengthRange" min="0.02" max="0.5" step="0.02" value="0.3" oninput="setNormalLength(this.value)">
             Exposure:
             <input type="range" id="exposureRange" min="10.0" max="18.0" step="0.5" value="14.0" oninput="setUniformLog('exposure', this.value)">
             Roughness:
             <input type="range" id="roughnessRange" min="-16.0" max="0.0" step="0.5" value="-8.0" oninput="setUniformLog('roughness', this.value)">
+            Bumpiness:
+            <input type="range" id="bumpinessRange" min="-4.0" max="4.0" step="0.25" value="0.0" oninput="setUniformLog('bumpiness', this.value)">
             <br>
             Left click + drag to orbit. Right click + drag to pan. Scroll to zoom.
         </div>
     </div>
 
         <script src="js/three.min.js"></script>
+        <script src="js/BufferGeometryUtils.js"></script>
         <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r84/three.min.js"></script> -->
-        <script src="js/BufferGeometryUtils.js"></script> 
         <script src="js/Detector.js"></script>
         <script src="js/OrbitControls.js"></script>
         <script src="js/OBJLoader.js"></script>
@@ -70,32 +73,44 @@
 // attribute vec3 normal;
 // attribute vec2 uv;
 
-// varying necesarias para la resolucion:
+attribute vec3 tangent;
+attribute vec3 tangent2;
+
+// varying necesarias para la resolucion
 varying vec2 vUv;
 varying vec3 vNormal; // normal del vertice en espacio de la camara
 varying vec4 vPosition; // posicion del vertice en espacio de la camara
 
-void main() {
+varying vec3 vTangent; // tangente (puede ser cualquiera, se toma la tangente en la dirección de la coordenada u creciente de las coordenadas de textura)
+varying vec3 vTangent2; //bitangente (perpendicular a vTangent y vNormal)
 
+
+void main() {
+	
 	// Se da valor a las variables varying
     vUv = uv; //vector que parte del punto a la camara
     vNormal = normalize(normalMatrix * normal); //vector unitario para la normal, n
     vPosition = normalize(modelViewMatrix * vec4(position, 1.0)); //vector unitario de posicion
 
+    //transformar en el vertex shader a espacio de la cámara y pasarlas al fragment shader
+	vTangent = normalize(normalMatrix * tangent); // tangente (puede ser cualquiera, se toma la tangente en la dirección de la coordenada u creciente de las coordenadas de textura)
+	vTangent2 = normalize(normalMatrix * tangent2); //bitangente (perpendicular a vTangent y vNormal)
+
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-
+     
 }
         </script>
 <!-----------------------------------------------------------------------------
         FRAGMENT SHADER
 ------------------------------------------------------------------------------>
         <script id="fragmentShader" type="x-shader/x-fragment">
+			
 // Intensidad (color) y posicion de las luces. 
-// NUM_LIGHTS es una constante que contiene el numero de luces.			
+// NUM_LIGHTS es una constante que contiene el numero de luces.				
 uniform vec3 lightColors[ NUM_LIGHTS ];
-uniform vec3 lightPositions[ NUM_LIGHTS ]; // in eye space
+uniform vec3 lightPositions[ NUM_LIGHTS ]; // in view coordinates
 
 // Exposicion; no tendreis que hacer nada con ella
 // Su valor es controlado por un slider
@@ -103,20 +118,43 @@ uniform float exposure;
 
 // Roughness o rugosidad: tal y como se define aqui, roughness = 1.0 / m
 // Su valor es controlado por un slider
-uniform float roughness; 
+uniform float roughness;
 
-varying vec2 vUv;
-varying vec3 vNormal; // normal del fragment en espacio de la camara
-varying vec4 vPosition; // posicion del fragment en espacio de la camara
+// Bumpiness (mas informacion sobre ella en el guion)
+// Su valor es controlado por un slider
+uniform float bumpiness;
 
-// Sampler utilizado para acceder a la textura difusa 
-// (que se carga con el boton correspondiente del interfaz)
+// Samplers utilizados para acceder a las texturas (difusa y normal map)
+// (ambas se cargan con el boton correspondiente del interfaz)
 uniform sampler2D diffuseTexture;
+uniform sampler2D normalMap;
+
+// varying necesarias para la resolucion
+varying vec2 vUv;
+varying vec3 vNormal; // normal del vertice en espacio de la camara
+varying vec4 vPosition; // posicion del vertice en espacio de la camara
+
+varying vec3 vTangent; // tangente (puede ser cualquiera, se toma la tangente en la dirección de la coordenada u creciente de las coordenadas de textura)
+varying vec3 vTangent2; //bitangente (perpendicular a vTangent y vNormal)
 
 vec3 to_sRGB(vec3 c) { return pow(c, vec3(1.0/2.2)); }
 vec3 from_sRGB(vec3 c) { return pow(c, vec3(2.2)); }
 
 void main() {
+	
+	// Calculos necesarios para obtener la normal de la textura en espacio de la camara aqui
+	//La matriz de transformación del espacio tangente a la cámara -> a partir de los tres vectores que forman dicho espacio, expresados en coordenadas de la cámara 
+	//la normal (geométrica), la tangente, y la bitangente -> matriz ortogonal
+	mat3 Mtc = mat3(vTangent, vTangent2, vNormal);
+
+	//Tendremos que transformar los valores (r, g, b) de la textura restando 0.5 a cada componente, para recuperar los valores negativos.
+	vec3 neg = texture2D(normalMap, vUv).rgb - vec3(0.5);
+
+	//bumpiness ->slider asociado en el interfaz -> regular la fuerza del normal map -> multiplicar las coordenadas x e y de la normal de la textura por el valor de bumpiness.
+	//normales codificadas en formato de DirectX, con la componente y (el canal verde) invertido
+	vec3 bum = vec3(bumpiness, -bumpiness, 1.0);
+	
+	vec3 normal = normalize(Mtc * neg * bum);
 
     // Calculo de la intensidad para cada una de las luces, se guarda en finalColor
     vec3 finalColor = vec3(0.0);
@@ -136,7 +174,7 @@ void main() {
         //Iluz ->  intensidad o color de la luz incidente
         vec3 Iluz = lightColors[i];
 
-        //n ->  normal en el punto, vector unitario -> vNormal
+        //n ->  normal en el punto, vector unitario
         //l -> vector que va del punto a la luz, vector unitario
         vec3 l = normalize(vec3(vPosition) - lightPositions[i]);
 
@@ -147,7 +185,7 @@ void main() {
         float r = distance(lightPositions[i], vec3(vPosition));            
         
         //los dos con los máximos es porque no pueden ser negativos los productos
-        finalColor += (1.0 / (r * r)) * ( cdiff + cspec * pow(max(0.0, dot(vNormal, h)), m) ) * Iluz * max(0.0, dot(vNormal, l));
+        finalColor += (1.0 / (r * r)) * ( cdiff + cspec * pow(max(0.0, dot(normal, h)), m) ) * Iluz * max(0.0, dot(normal, l));
     }
     
     // Solo se sombrea si esta "de cara", si no se le da un color fijo
@@ -156,7 +194,7 @@ void main() {
     } else {
         gl_FragColor = vec4(170.0/255.0, 160.0/255.0, 0.0, 1.0); 
     }
-    
+	    
 }
         </script>
 <!-----------------------------------------------------------------------------
@@ -171,11 +209,13 @@ void main() {
             function init() {
                 defaultTextureTarget = 'diffuseTexture';
                 meshMaterial.uniforms.diffuseTexture = { type: 't', value: null };
+                meshMaterial.uniforms.normalMap = { type: 't', value: null };
             
                 addLight(new THREE.Vector3(50, 50, 100), new THREE.Vector3(0.8, 0.8, 0.8));
                 addLight(new THREE.Vector3(-50, -50, -50), new THREE.Vector3(0.5, 0.5, 0.6));
                 
                 document.getElementById('roughnessRange').oninput();
+                document.getElementById('bumpinessRange').oninput();
             }
         </script>
     </body>
