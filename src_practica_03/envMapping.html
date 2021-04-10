@@ -66,15 +66,15 @@
 // attribute vec2 uv;
 
 // Declarar aqui varying necesarias para la resolucion
-varying vec3 vNormal; // normal del fragment en espacio de la camara
-varying vec4 vPosition; // posicion del fragment en espacio de la camara
+varying vec3 vNormal; // normal del vertice en espacio de la camara
+varying vec4 vPosition; // posicion del vertice en espacio de la camara
 
 
 void main() {
     
 	// Calculos para dar valor a las varying aqui
-	vNormal = normalize(normalMatrix * normal); // normalize(vec3(modelViewMatrix * vec4(normal, 0.0)));
-	vPosition = modelViewMatrix * vec4(position, 1.0);
+	vNormal = normalize(normalMatrix * normal); // vector unitario para la normal, n
+    vPosition = modelViewMatrix * vec4(position, 1.0); // vector de posicion
 
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo

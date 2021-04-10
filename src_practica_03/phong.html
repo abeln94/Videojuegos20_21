@@ -79,8 +79,8 @@ void main() {
 
 	// Calculos para dar valor a las varying aqui
 	vUv = uv;
-	vNormal = normalize(normalMatrix * normal); // normalize(vec3(modelViewMatrix * vec4(normal, 0.0)));
-	vPosition = modelViewMatrix * vec4(position, 1.0);
+    vNormal = normalize(normalMatrix * normal); // vector unitario para la normal, n
+    vPosition = modelViewMatrix * vec4(position, 1.0); // vector de posicion
 
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
@@ -122,24 +122,43 @@ void main() {
     vec3 finalColor = vec3(0.0, 0.0, 0.0);
     
     // Calculos necesarios para la iluminacion aqui
+
+    // v -> vector que parte del punto y va hacia la cámara
+    vec3 v = vec3(-vPosition); // la cámara está en el origen (0,0,0), es el origen menos el punto
+
+    // cdiff es el coeficiente de reflexión difusa, proporcionado por el valor de la textura en ese punto2
+    vec3 cdiff = from_sRGB(texture2D(diffuseTexture, vUv).rgb);
+
+    // cspec es el coeficiente de reflexión especular, que fijaremos a 1.0 para los tres canales
+    vec3 cspec = vec3(1.0);
+
+    // m indica el valor de rugosidad o roughness
+    float m = 1.0 / roughness;
+
     for(int i = 0; i < NUM_LIGHTS; ++i){
-        vec3 I_luz = lightColors[i];
-        vec3 n = normalize(vNormal);
+
+        // Iluz -> intensidad o color de la luz incidente
+        vec3 Iluz = lightColors[i];
+
+        // n ->  normal en el punto
+        vec3 n = normalize(vNormal); // vector unitario -> vNormal
+
+        // l -> vector que va del punto a la luz, vector unitario
         vec3 l = normalize(lightPositions[i] - vec3(vPosition));
-        vec3 v = normalize(vec3(0.0) - vec3(vPosition)); // la cámara está en el origen
+
+        // h -> vector que marca la bisectriz del ángulo formado por v y l
         vec3 h = normalize(l + v);
-        vec3 c_diff = from_sRGB(texture2D(diffuseTexture, vUv).rgb);
-        vec3 c_spec = vec3(1.0);
-        float m = 1.0 / roughness;
+
+        // r es la distancia entre la luz y el punto
         float r = distance(lightPositions[i], vec3(vPosition));
 
+        // los dos productos escalares no pueden ser negativos
         float nPh = max(0.0, dot(n, h));
         float nPl = max(0.0, dot(n, l));
 
-        finalColor += 1.0 / r / r * ( c_diff + c_spec * pow(nPh, m) ) * I_luz * nPl;
+        // finalColor debe acabar conteniendo la intensidad/color resultante en el fragment
+        finalColor += 1.0 / (r * r) * ( cdiff + cspec * pow(nPh, m) ) * Iluz * nPl;
     }
-    
-    // finalColor debe acabar conteniendo la intensidad/color resultante en el fragment
     
     // Solo se sombrea si esta "de cara", si no se le da un color fijo
     if (gl_FrontFacing) {
