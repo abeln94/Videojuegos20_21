@@ -103,5 +103,10 @@ abstract public class Element implements Serializable {
      * Make sure to call super.init() AFTER your data
      */
     public void init() {
+        elements.forEach(element -> {
+            if (element instanceof NPC) {
+                ((NPC) element).location = this;
+            }
+        });
     }
 }

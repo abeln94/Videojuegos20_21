@@ -7,7 +7,6 @@ import com.unizar.game.commands.Word;
 import com.unizar.game.elements.NPC;
 import com.unizar.hobbit.items.GreenDoor;
 import com.unizar.hobbit.items.Map;
-import com.unizar.hobbit.rooms.StartLocation;
 
 public class Gandalf extends NPC {
     public Gandalf() {
@@ -18,7 +17,6 @@ public class Gandalf extends NPC {
     @Override
     public void init() {
         elements.add(game.findElementByClassName(Map.class));
-        location = game.findElementByClassName(StartLocation.class);
         super.init();
     }
 

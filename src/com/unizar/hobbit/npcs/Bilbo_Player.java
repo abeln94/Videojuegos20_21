@@ -1,7 +1,6 @@
 package com.unizar.hobbit.npcs;
 
 import com.unizar.game.elements.Player;
-import com.unizar.hobbit.rooms.StartLocation;
 
 public class Bilbo_Player extends Player {
 
@@ -12,7 +11,6 @@ public class Bilbo_Player extends Player {
 
     @Override
     public void init() {
-        location = game.findElementByClassName(StartLocation.class);
         super.init();
     }
 

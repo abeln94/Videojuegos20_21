@@ -5,7 +5,6 @@ import com.unizar.game.commands.Command;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.NPC;
-import com.unizar.hobbit.rooms.StartLocation;
 
 public class Thorin extends NPC {
 
@@ -14,12 +13,6 @@ public class Thorin extends NPC {
     public Thorin() {
         super("Thorin");
         weight = 25;
-    }
-
-    @Override
-    public void init() {
-        location = game.findElementByClassName(StartLocation.class);
-        super.init();
     }
 
     @Override

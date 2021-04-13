@@ -27,6 +27,8 @@ public class Game extends KeyAdapter {
     public final Parser parser = new Parser(this);
     public final Window window;
 
+    // ------------------------- local -------------------------
+
     private enum State {
         StartScreen,
         Playing,
