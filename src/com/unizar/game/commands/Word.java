@@ -41,7 +41,7 @@ public class Word {
         SAY("decir pedir"),
         SHOOT("disparar"),
         SWIM("nadar"),
-        TAKE("coger"),
+        //TAKE("coger"), same as PICK
         THROW("lanzar"),
         TIE("atar"),
         TURN("girar"),

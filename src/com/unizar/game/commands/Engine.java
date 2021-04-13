@@ -55,6 +55,9 @@ public class Engine {
             case LOAD -> {
                 return Result.error("[obsoleto: pulsa F9 para cargar]");
             }
+            case QUIT -> {
+                return Result.error("[obsoleto: pulsa la X de la ventana si quieres cerrar el juego]");
+            }
             case OPEN -> {
                 return command.main.require(
                         // you must see the element
@@ -281,10 +284,10 @@ public class Engine {
                 });
             }
             case HELP -> {
-                return Result.error(npc.game.world.requiredObjectives.get(0).first + ".");
+                return Result.done(npc.game.world.requiredObjectives.get(0).first + ".");
             }
             case SCORE -> {
-                return Result.error(npc.game.getCompletion());
+                return Result.done(npc.game.getCompletion());
             }
             case PUT -> {
                 return command.main.require(
