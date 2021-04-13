@@ -35,7 +35,7 @@ public class Word {
         KILL("matar"),
         LOCK("bloquear"),
         PICK("elegir coger"),
-        PUT("poner"),
+        PUT("poner colocar"),
         OPEN("abrir"),
         RUN("correr"),
         SAY("decir pedir"),

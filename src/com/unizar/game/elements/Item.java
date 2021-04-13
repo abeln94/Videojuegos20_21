@@ -1,5 +1,9 @@
 package com.unizar.game.elements;
 
+import com.unizar.Utils;
+
+import java.util.stream.Collectors;
+
 /**
  * An item.
  * Can be closeable
@@ -14,6 +18,13 @@ public abstract class Item extends Element {
 
     public Item(String name) {
         super(name);
+    }
+
+    @Override
+    public String getDescription(NPC npc) {
+        String prefix = ": " + " Contiene";
+
+        return this + Utils.joinList("", prefix, prefix, elements.stream().map(e -> e.getDescription(npc)).collect(Collectors.toList()));
     }
 
     /**

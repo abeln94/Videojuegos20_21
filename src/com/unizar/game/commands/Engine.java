@@ -286,6 +286,38 @@ public class Engine {
             case SCORE -> {
                 return Result.error(npc.game.getCompletion());
             }
+            case PUT -> {
+                return command.main.require(
+                        // we must have it
+                        npc.elements::contains,
+                        "No tienes {}.",
+                        "nada para poner"
+                ).apply("Que quieres poner?", elementToGive -> {
+
+                    // check what to give it to
+                    return command.secondary.require(
+                            // it must be an item
+                            e -> e instanceof Item,
+                            "No puedes poner cosas en {}.",
+                            "nada"
+                    ).require(
+                            // and be interactable
+                            interactable::contains,
+                            "No veo {}.",
+                            "nada desde aquí"
+                    ).require(
+                            // and must be open
+                            item -> ((Item) item).opened != Boolean.FALSE,
+                            "{} está cerrado.",
+                            "todo"
+                    ).apply("Donde lo quieres poner?", Word.Preposition.AT.alias + " ", container -> {
+
+                        // put
+                        setParent(elementToGive, npc, container);
+                        return Result.done("Pones " + elementToGive + " en " + container + ".");
+                    });
+                });
+            }
         }
 
 
