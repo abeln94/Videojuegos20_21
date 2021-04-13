@@ -81,7 +81,7 @@ public class Window {
         Font font = null;
         try {
             InputStream is = this.getClass().getResourceAsStream(fontName);
-            font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(20f);
+            font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(20f); // TODO: hacer mas grandes
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
