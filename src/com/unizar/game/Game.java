@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -188,7 +189,7 @@ public class Game extends KeyAdapter {
         // describe current room
         Element location = getPlayer().location;
         setImage(location instanceof Location ? ((Location) location).image : null);
-        addDescription("Te encuentras en " + location.getDescription(getPlayer()) + "F"); //TODO: include the dots inside the description, not outside
+        addDescription("Te encuentras en " + location.getDescription(getPlayer()) + "."); //TODO: include the dots inside the description, not outside
         addDescription("");
         addDescription(getPlayer().getDescription(getPlayer()) + ".");
     }
@@ -239,7 +240,7 @@ public class Game extends KeyAdapter {
      */
     public <T> T findElementByClassName(Class<T> name) {
         return (T) world.elements.stream()
-                .filter(name::isInstance).findFirst().orElseThrow();
+                .filter(name::isInstance).findFirst().orElseThrow(() -> new NoSuchElementException("Element " + name + " not found. Did you forgot to register it in the World?"));
     }
 
     public Player getPlayer() {

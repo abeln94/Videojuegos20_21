@@ -1,6 +1,7 @@
 package com.unizar.hobbit;
 
 import com.unizar.game.World;
+import com.unizar.hobbit.items.Gold;
 import com.unizar.hobbit.items.GreenDoor;
 import com.unizar.hobbit.items.Map;
 import com.unizar.hobbit.items.StartChest;
@@ -30,6 +31,7 @@ public class HobbitWorld extends World {
         elements.add(new Map());
         elements.add(new StartChest());
         elements.add(new GreenDoor());
+        elements.add(new Gold());
 
         // npcs
         elements.add(new Gandalf());
@@ -39,7 +41,10 @@ public class HobbitWorld extends World {
         // objectives
         requiredObjective("Prueba a 'abrir la puerta'", game -> game.findElementByClassName(GreenDoor.class).opened == Boolean.TRUE);
         requiredObjective("Ve a explorar el resto del mundo", game -> !(game.getPlayer().location instanceof StartLocation));
-        optionalObjective(game -> game.findElementByClassName(StartChest.class).opened == Boolean.TRUE);
+        requiredObjective("Guarda el oro en el cofre", game ->
+                game.findElementByClassName(StartChest.class).elements.contains(game.findElementByClassName(Gold.class))
+        );
+        optionalObjective(game -> game.findElementByClassName(Gandalf.class).elements.contains(game.findElementByClassName(Gold.class)));
 //        optionalObjective(game -> game.getPlayer().elements.contains());
 
     }
