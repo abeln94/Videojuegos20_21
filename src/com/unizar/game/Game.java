@@ -11,6 +11,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 
 /**
  * The game main class.
@@ -155,7 +156,12 @@ public class Game extends KeyAdapter implements Window.InputListener {
             window.drawImage(null);
         } else {
             try {
-                window.drawImage(ImageIO.read(Game.class.getResource(world.properties.getImagePath(label))));
+                final String path = world.properties.getImagePath(label);
+                final URL resource = Game.class.getResource(path);
+                if (resource == null) {
+                    throw new IOException("The image '" + path + "' doesn't exist.");
+                }
+                window.drawImage(ImageIO.read(resource));
             } catch (IOException e) {
                 e.printStackTrace();
             }

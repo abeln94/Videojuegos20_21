@@ -28,6 +28,6 @@ public class HobbitProperties extends Properties {
 
     @Override
     public String getDescription() {
-        return "Eren un hobbit, tu objetivo es derrotar al dragon y quedarte su tesoro.";
+        return "Eres un hobbit, tu objetivo es derrotar al dragon y quedarte su tesoro.";
     }
 }

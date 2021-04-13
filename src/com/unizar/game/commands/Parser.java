@@ -143,6 +143,7 @@ public class Parser implements Window.InputListener {
                         return command;
                     }
                     command.action = (Word.Action) parsing.second;
+                    isSecondElement = false;
                 }
                 case DIRECTION -> {
                     if (command.direction != null) {
