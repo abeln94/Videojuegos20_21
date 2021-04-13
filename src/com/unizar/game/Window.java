@@ -126,25 +126,19 @@ public class Window {
     // ------------------------- command -------------------------
 
     /**
-     * Registers a listener for when commands are entered on the window
-     *
-     * @param inputListener will be called when the user enters a command
-     */
-    public void setCommandListener(InputListener inputListener) {
-        commandInput.addActionListener(e -> {
-            final String text = commandInput.getText();
-            commandInput.setText("");
-            inputListener.onText(text);
-        });
-    }
-
-    /**
      * Registers a listener for any key pressed
      *
      * @param listener will be called when the user presses any key
      */
     public void setKeyListener(KeyAdapter listener) {
         commandInput.addKeyListener(listener);
+    }
+
+    /**
+     * @return the entered command
+     */
+    public String getCommand() {
+        return commandInput.getText();
     }
 
     /**

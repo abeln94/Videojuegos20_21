@@ -35,6 +35,13 @@ public class HobbitWorld extends World {
         elements.add(new Gandalf());
         elements.add(new Thorin());
 
+
+        // objectives
+        requiredObjective("Prueba a 'abrir la puerta'", game -> game.findElementByClassName(GreenDoor.class).opened == Boolean.TRUE);
+        requiredObjective("Ve a explorar el resto del mundo", game -> !(game.getPlayer().location instanceof StartLocation));
+        optionalObjective(game -> game.findElementByClassName(StartChest.class).opened == Boolean.TRUE);
+//        optionalObjective(game -> game.getPlayer().elements.contains());
+
     }
 
 }

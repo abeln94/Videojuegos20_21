@@ -36,7 +36,17 @@ abstract public class Properties implements Serializable {
     public abstract String getStartScreen();
 
     /**
-     * @return the description of the game
+     * @return the win screen (image name)
      */
-    public abstract String getDescription();
+    public abstract String getWinScreen();
+
+    /**
+     * @return the description of the start screen
+     */
+    public abstract String getStartDescription();
+
+    /**
+     * @return the description of the win screen
+     */
+    public abstract String getWinDescription();
 }

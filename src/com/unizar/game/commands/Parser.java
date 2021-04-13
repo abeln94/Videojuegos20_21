@@ -128,7 +128,7 @@ public class Parser implements Window.InputListener {
         }
 
         // remove non-alphabetical chars
-        sentence = sentence.replaceAll("\\W", " ");
+        sentence = sentence.replaceAll("[^0-9a-zA-ZñÑáéíóú]", " ");
 
         // parse each word
         List<String> words = Word.separateWords(sentence);

@@ -280,6 +280,12 @@ public class Engine {
                     return Result.done(""); // the say command already handled the output
                 });
             }
+            case HELP -> {
+                return Result.error(npc.game.world.requiredObjectives.get(0).first + ".");
+            }
+            case SCORE -> {
+                return Result.error(npc.game.getCompletion());
+            }
         }
 
 

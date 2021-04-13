@@ -12,11 +12,12 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.stream.Collectors;
 
 /**
  * The game main class.
  */
-public class Game extends KeyAdapter implements Window.InputListener {
+public class Game extends KeyAdapter {
 
     // ------------------------- global -------------------------
     public World world;
@@ -26,7 +27,14 @@ public class Game extends KeyAdapter implements Window.InputListener {
     public final Parser parser = new Parser(this);
     public final Window window;
 
-    private boolean onStartScreen = true;
+    private enum State {
+        StartScreen,
+        Playing,
+        GameOverScreen,
+        WinScreen,
+    }
+
+    private State state;
 
     // ------------------------- initializers -------------------------
 
@@ -38,9 +46,37 @@ public class Game extends KeyAdapter implements Window.InputListener {
     public Game(World world) {
         this.world = world;
         window = new Window(world.properties.getTitle(), world.properties.getImageRatio(), world.properties.getFontName());
-        window.setCommandListener(this);
         window.setKeyListener(this);
+        startScreen();
+    }
+
+    /**
+     * Start the game
+     */
+    public void startScreen() {
+        state = State.StartScreen;
         reset();
+        setImage(world.properties.getStartScreen());
+        window.clearOutput();
+        addOutput("Escribe aquí los comandos y pulsa enter para introducirlos.");
+        addOutput("También puedes pulsar F6/F9 para guardar/cargar la partida. Y pulsar F2 para resetear.");
+        window.clearDescription();
+        addDescription(world.properties.getStartDescription());
+        addDescription("");
+        addDescription("Pulsa cualquier tecla para empezar.");
+    }
+
+    public void winScreen() {
+        state = State.WinScreen;
+        setImage(world.properties.getWinScreen());
+        window.clearOutput();
+        addOutput("Enhorabuena, has completado el juego.");
+        window.clearDescription();
+        addDescription(world.properties.getWinDescription());
+        addDescription("");
+        addDescription(getCompletion());
+        addDescription("");
+        addDescription("Pulsa cualquier tecla para volver a empezar.");
     }
 
     /**
@@ -57,41 +93,36 @@ public class Game extends KeyAdapter implements Window.InputListener {
         }
         world.register(this);
         world.init();
-
-        // restart
-        onStartScreen = true;
-        setImage(world.properties.getStartScreen());
-        window.clearOutput();
-        addOutput("Escribe aquí los comandos y pulsa enter para introducirlos.");
-        addOutput("También puedes pulsar F6/F9 para guardar/cargar la partida. Y pulsar F2 para resetear.");
-        window.clearDescription();
-        addDescription(world.properties.getDescription());
-        addDescription("Pulsa cualquier tecla para empezar.");
     }
 
     // ------------------------- listeners -------------------------
 
     @Override
-    public void onText(String text) {
-        // analyze command
-        parser.onText(text);
-
-        update();
-    }
-
-    @Override
     public void keyReleased(KeyEvent e) {
-        if (onStartScreen) {
-            // any key while on the start screen
-            onStartScreen = false;
-            window.clearCommand();
-            update();
+        switch (state) {
+            case StartScreen -> {
+                state = State.Playing;
+                window.clearCommand();
+                update();
+            }
+            case Playing -> {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    // analyze command
+                    final String command = window.getCommand();
+                    window.clearCommand();
+                    parser.onText(command);
+                }
+            }
+            case GameOverScreen, WinScreen -> {
+                window.clearCommand();
+                startScreen();
+            }
         }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (onStartScreen) return;
+        if (state != State.Playing) return;
 
         switch (e.getKeyCode()) {
 
@@ -122,7 +153,7 @@ public class Game extends KeyAdapter implements Window.InputListener {
 
             // Press F2 to reset
             case KeyEvent.VK_F2 -> {
-                reset();
+                startScreen();
                 parser.clearHistory();
             }
         }
@@ -131,6 +162,20 @@ public class Game extends KeyAdapter implements Window.InputListener {
     public void afterPlayer() {
         // act each element
         world.elements.forEach(Element::act);
+
+        // update objectives
+        world.requiredObjectives = world.requiredObjectives.stream().filter(p -> !p.second.apply(this)).collect(Collectors.toList());
+        world.optionalObjectives = world.optionalObjectives.stream().filter(p -> !p.apply(this)).collect(Collectors.toList());
+
+        // check finalization
+        if (world.requiredObjectives.isEmpty()) {
+            // win the game
+            winScreen();
+        } else {
+            // still playing
+            update();
+        }
+
     }
 
     // ------------------------- game commands -------------------------
@@ -199,4 +244,8 @@ public class Game extends KeyAdapter implements Window.InputListener {
         return findElementByClassName(Player.class);
     }
 
+    public String getCompletion() {
+        final int percentage = 100 - 100 * (world.requiredObjectives.size() + world.optionalObjectives.size()) / world.totalObjectives;
+        return "Has completado el " + percentage + "% de tu aventura.";
+    }
 }

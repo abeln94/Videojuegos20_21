@@ -27,7 +27,17 @@ public class HobbitProperties extends Properties {
     }
 
     @Override
-    public String getDescription() {
+    public String getWinScreen() {
+        return "48";
+    }
+
+    @Override
+    public String getStartDescription() {
         return "Eres un hobbit, tu objetivo es derrotar al dragon y quedarte su tesoro.";
+    }
+
+    @Override
+    public String getWinDescription() {
+        return "Has conseguido derrotar al dragón y te has llevado su oro (que si, de verdad)!";
     }
 }
