@@ -26,6 +26,11 @@ abstract public class Element implements Serializable {
      */
     public final List<Element> elements = new ArrayList<>();
 
+    /**
+     * Whether this element is alive or not
+     */
+    public boolean alive = true;
+
     public Element(String name) {
         this.name = name;
     }

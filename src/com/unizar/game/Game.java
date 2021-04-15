@@ -72,10 +72,21 @@ public class Game extends KeyAdapter {
     public void winScreen() {
         state = State.WinScreen;
         setImage(world.properties.getWinScreen());
-        window.clearOutput();
         addOutput("Enhorabuena, has completado el juego.");
         window.clearDescription();
         addDescription(world.properties.getWinDescription());
+        addDescription("");
+        addDescription(getCompletion());
+        addDescription("");
+        addDescription("Pulsa cualquier tecla para volver a empezar.");
+    }
+
+    public void gameOverScreen() {
+        state = State.GameOverScreen;
+        setImage(null);
+        addOutput("Has muerto.");
+        window.clearDescription();
+        addDescription("Estás muerto.");
         addDescription("");
         addDescription(getCompletion());
         addDescription("");
@@ -170,14 +181,20 @@ public class Game extends KeyAdapter {
         world.requiredObjectives = world.requiredObjectives.stream().filter(p -> !p.second.apply(this)).collect(Collectors.toList());
         world.optionalObjectives = world.optionalObjectives.stream().filter(p -> !p.apply(this)).collect(Collectors.toList());
 
+        // check death
+        if (!getPlayer().alive) {
+            gameOverScreen();
+            return;
+        }
+
         // check finalization
         if (world.requiredObjectives.isEmpty()) {
-            // win the game
             winScreen();
-        } else {
-            // still playing
-            update();
+            return;
         }
+
+        // still playing
+        update();
 
     }
 

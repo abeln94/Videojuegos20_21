@@ -321,6 +321,38 @@ public class Engine {
                     });
                 });
             }
+            case KILL -> {
+                return command.main.require(
+                        // the element must be an npc
+                        e -> e instanceof NPC,
+                        "No puedes atacar a {}.",
+                        "nadie"
+                ).require(
+                        // and be interactable
+                        interactable::contains,
+                        "No veo a {} por aquí.",
+                        "nadie"
+                ).apply("A quien quieres atacar?", attack -> {
+
+                    // attack
+                    ((NPC) attack).lastAttackedBy = npc;
+                    if (attack.weight > npc.weight) {
+                        // stronger, the attack fails
+                        attack.hear(npc + " te ataca pero no te provoca ningún daño.");
+                        return Result.done("Atacas a " + attack + " pero el esfuerzo es en vano. Su defensa es muy fuerte.");
+                    }
+                    if (attack.weight == npc.weight) {
+                        // same strength, the attack fails
+                        attack.hear(npc + " te ataca pero solo logra hacerte daño.");
+                        return Result.done("Atacas a " + attack + " pero no eres suficientemente fuerte y solo logras hacerle daño.");
+                    }
+                    // weaker, the attack success
+                    attack.hear(npc + " te ataca. Con un golpe certero, te parte el cráneo.");
+                    attack.alive = false;
+                    setParent(attack, npc.location, null);
+                    return Result.done("Atacas a " + attack + ". Con un golpe certero le partes el cráneo.");
+                });
+            }
         }
 
 
@@ -334,12 +366,12 @@ public class Engine {
      *
      * @param element   what to move
      * @param oldParent from where
-     * @param newParent to where
+     * @param newParent to where (can be null to 'remove' it)
      */
     private void setParent(Element element, Element oldParent, Element newParent) {
         assert oldParent.elements.contains(element);
         oldParent.elements.remove(element);
-        newParent.elements.add(element);
+        if (newParent != null) newParent.elements.add(element);
         if (element instanceof NPC) ((NPC) element).location = newParent;
     }
 

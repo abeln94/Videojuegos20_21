@@ -18,6 +18,11 @@ abstract public class NPC extends Element {
      */
     public Element location;
 
+    /**
+     * The last npc that attacked this one
+     */
+    public NPC lastAttackedBy = null;
+
     public NPC(String name) {
         super(name);
     }

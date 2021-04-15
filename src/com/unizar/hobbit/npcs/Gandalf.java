@@ -24,6 +24,16 @@ public class Gandalf extends NPC {
     public void act() {
         Result result;
 
+        // return attack
+        if (lastAttackedBy != null) {
+            result = game.engine.execute(this, Command.act(Word.Action.KILL, lastAttackedBy));
+            lastAttackedBy = null;
+            if (result.done) {
+                hear(result.output);
+                return;
+            }
+        }
+
         // try going in a random direction
         result = game.engine.execute(this, Command.go(Utils.pickRandom(Word.Direction.values())));
         if (result.done) {

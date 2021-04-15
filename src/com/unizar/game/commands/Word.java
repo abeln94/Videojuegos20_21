@@ -32,7 +32,7 @@ public class Word {
         FOLLOW("seguir"),
         GIVE("dar"),
         GO("ir"),
-        KILL("matar"),
+        KILL("matar atacar"),
         LOCK("bloquear"),
         PICK("elegir coger"),
         PUT("poner colocar"),

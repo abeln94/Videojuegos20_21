@@ -12,12 +12,23 @@ public class Thorin extends NPC {
 
     public Thorin() {
         super("Thorin");
-        weight = 25;
+        weight = 26;
     }
 
     @Override
     public void act() {
         Result result;
+
+        // return attack
+        if (lastAttackedBy != null) {
+            result = game.engine.execute(this, Command.act(Word.Action.KILL, lastAttackedBy));
+            lastAttackedBy = null;
+            if (result.done) {
+                hear(result.output);
+                tiredness = 0;
+                return;
+            }
+        }
 
         // try following the player
         result = game.engine.execute(this, Command.act(Word.Action.FOLLOW, game.getPlayer()));
