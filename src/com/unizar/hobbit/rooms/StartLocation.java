@@ -12,7 +12,7 @@ import com.unizar.hobbit.npcs.Thorin;
 public class StartLocation extends Location {
 
     public StartLocation() {
-        super("una sala alargada confortable", "2");
+        super("una sala alargada y cálida", "StartLocation");
     }
 
     @Override
@@ -23,7 +23,7 @@ public class StartLocation extends Location {
 
         elements.add(game.findElementByClassName(StartChest.class));
 
-        exits.put(Word.Direction.EAST, Utils.Pair.of(game.findElementByClassName(EastLocation.class), game.findElementByClassName(GreenDoor.class)));
+        exits.put(Word.Direction.EAST, Utils.Pair.of(game.findElementByClassName(EmptyLand.class), game.findElementByClassName(GreenDoor.class)));
         super.init();
     }
 }

@@ -15,7 +15,8 @@ import java.util.function.Function;
  * Extend your game's world class, then in the constructor set the properties and add the elements
  */
 public abstract class World implements Serializable {
-
+    // ---------------------------- time ----------------------------
+    public int time;
     // ------------------------- properties -------------------------
 
     /**
@@ -67,6 +68,10 @@ public abstract class World implements Serializable {
      */
     public void init() {
         elements.forEach(Element::init);
+    }
+
+    public void act() {
+        this.time = (this.time + 1) % 20; //cada vez que wait avanza una hora, 0-5 noche, 6-11 dia
     }
 
 }

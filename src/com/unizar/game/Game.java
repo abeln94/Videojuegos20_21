@@ -195,7 +195,7 @@ public class Game extends KeyAdapter {
 
         // still playing
         update();
-
+        world.act();
     }
 
     // ------------------------- game commands -------------------------

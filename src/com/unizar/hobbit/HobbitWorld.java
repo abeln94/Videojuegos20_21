@@ -2,14 +2,9 @@ package com.unizar.hobbit;
 
 import com.unizar.game.World;
 import com.unizar.hobbit.items.Gold;
-import com.unizar.hobbit.items.GreenDoor;
-import com.unizar.hobbit.items.Map;
-import com.unizar.hobbit.items.StartChest;
-import com.unizar.hobbit.npcs.Bilbo_Player;
-import com.unizar.hobbit.npcs.Gandalf;
-import com.unizar.hobbit.npcs.Thorin;
-import com.unizar.hobbit.rooms.EastLocation;
-import com.unizar.hobbit.rooms.StartLocation;
+import com.unizar.hobbit.items.*;
+import com.unizar.hobbit.npcs.*;
+import com.unizar.hobbit.rooms.*;
 
 /**
  * This should be better with annotations, but from now lets use it explicitly
@@ -25,17 +20,45 @@ public class HobbitWorld extends World {
 
         // rooms
         elements.add(new StartLocation());
-        elements.add(new EastLocation());
+        elements.add(new EmptyLand());
+        elements.add(new TrollsClearing());
+        elements.add(new HiddenPath());
+        elements.add(new TrollsCave());
+        elements.add(new Rivendell());
+        elements.add(new DangerousPath());
+        elements.add(new DeadlyPath());
+        elements.add(new NarrowPath_1());
+        elements.add(new NarrowPath_2());
+        elements.add(new NarrowPath_3());
+        elements.add(new NarrowPath_4());
+        elements.add(new NarrowPath_5());
+        elements.add(new NarrowPath_6());
+        elements.add(new NarrowPath_7());
+        elements.add(new SteepPath_1());
+        elements.add(new SteepPath_2());
+        elements.add(new SteepPath_3());
+        elements.add(new MistyValley_1());
+        elements.add(new MistyValley_2());
+        elements.add(new DimValley());
 
         // items
         elements.add(new Map());
         elements.add(new StartChest());
         elements.add(new GreenDoor());
+        elements.add(new LargeKey());
+        elements.add(new RockDoor());
+        elements.add(new Sword());
+        elements.add(new Rope());
+        elements.add(new Food());
+        elements.add(new GoldenKey());
         elements.add(new Gold());
 
         // npcs
         elements.add(new Gandalf());
         elements.add(new Thorin());
+        elements.add(new HideousTroll());
+        elements.add(new ViciousTroll());
+        elements.add(new Elrond());
 
 
         // objectives
