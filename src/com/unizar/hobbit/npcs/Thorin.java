@@ -41,13 +41,13 @@ public class Thorin extends NPC {
 
         // hurry up!
         if (tiredness > 3 && Utils.random.nextBoolean()) {
-            location.notifyNPCs(this, this + " dice: Date prisa");
+            getLocation().notifyNPCs(this, this + " dice: Date prisa");
             return;
         }
 
         // sing about gold
         if (tiredness > 5 && Utils.random.nextBoolean()) {
-            location.notifyNPCs(this, this + " se sienta y empieza a cantar sobre oro.");
+            getLocation().notifyNPCs(this, this + " se sienta y empieza a cantar sobre oro.");
             tiredness = 0;
             return;
         }

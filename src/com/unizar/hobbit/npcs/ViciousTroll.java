@@ -15,11 +15,11 @@ public class ViciousTroll extends NPC {
     public void act() {
         if (!game.world.night) return; // is a rock
 
-        if (location.elements.contains(game.getPlayer())) {
+        if (getLocation().elements.contains(game.getPlayer())) {
             // the player is there
             if (!playerSaw) {
                 // first time
-                location.notifyNPCs(this, this + " dice: Puedo proba, pero no dan pa na");
+                getLocation().notifyNPCs(this, this + " dice: Puedo proba, pero no dan pa na");
                 playerSaw = true;
                 return;
             }

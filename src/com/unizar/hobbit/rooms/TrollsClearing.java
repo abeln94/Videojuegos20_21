@@ -1,7 +1,6 @@
 package com.unizar.hobbit.rooms;
 
 import com.unizar.Utils;
-import com.unizar.game.commands.Engine;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Location;
 import com.unizar.hobbit.items.LargeKey;
@@ -39,7 +38,7 @@ public class TrollsClearing extends Location {
             // trolls are visible
             elements.add(troll1);
             elements.add(troll2);
-            if (elements.contains(key)) Engine.setParent(key, this, troll1);
+            if (elements.contains(key)) key.moveTo(troll1);
 
         } else {
             // day
@@ -49,7 +48,7 @@ public class TrollsClearing extends Location {
             // trolls are stone
             elements.remove(troll1);
             elements.remove(troll2);
-            if (troll1.elements.contains(key)) Engine.setParent(key, troll1, this);
+            if (troll1.elements.contains(key)) key.moveTo(this);
         }
     }
 }

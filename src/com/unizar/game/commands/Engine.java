@@ -36,7 +36,7 @@ public class Engine {
             return Result.error("Que quieres que haga?");
         }
 
-        final List<Element> interactable = npc.location.getInteractable();
+        final List<Element> interactable = npc.getLocation().getInteractable();
         interactable.remove(npc);
 
         switch (command.action) {
@@ -78,7 +78,7 @@ public class Engine {
 
                     // open
                     ((Item) element).opened = true;
-                    npc.location.notifyNPCs(npc, npc + " abre " + element + ".");
+                    npc.getLocation().notifyNPCs(npc, npc + " abre " + element + ".");
                     return Result.done("Abres " + element + ".");
                 });
             }
@@ -102,7 +102,7 @@ public class Engine {
 
                     // close
                     ((Item) element).opened = false;
-                    npc.location.notifyNPCs(npc, npc + " cierra " + element + ".");
+                    npc.getLocation().notifyNPCs(npc, npc + " cierra " + element + ".");
                     return Result.done("Cierras " + element + ".");
                 });
             }
@@ -113,12 +113,12 @@ public class Engine {
                     return Result.moreNeeded("Hacia donde quieres que vaya?");
                 }
 
-                if (!(npc.location instanceof Location)) {
+                if (!(npc.getLocation() instanceof Location)) {
                     // inside an item
-                    return Result.error("No puedes moverte mientras estás en " + npc.location + ".");
+                    return Result.error("No puedes moverte mientras estás en " + npc.getLocation() + ".");
                 }
 
-                Utils.Pair<Location, Item> le = ((Location) npc.location).exits.get(command.direction);
+                Utils.Pair<Location, Item> le = ((Location) npc.getLocation()).exits.get(command.direction);
 
                 if (le == null) {
                     // no exit
@@ -134,19 +134,20 @@ public class Engine {
                 }
 
                 // notify old npc
-                npc.location.notifyNPCs(npc, npc + " va hacia " + command.direction.description + ".");
+                npc.getLocation().notifyNPCs(npc, npc + " va hacia " + command.direction.description + ".");
 
                 // move
-                setParent(npc, npc.location, newLocation);
+                npc.moveTo(newLocation);
 
                 // notify new npc
-                npc.location.notifyNPCs(npc, npc + " entra.");
+                npc.getLocation().notifyNPCs(npc, npc + " entra.");
 
                 return Result.done("Te diriges hacia " + command.direction.description);
             }
             case FOLLOW -> {
                 // check if we are inside something
-                if (!(npc.location instanceof Location)) return Result.error("No puedes seguir a nadie desde aquí.");
+                if (!(npc.getLocation() instanceof Location))
+                    return Result.error("No puedes seguir a nadie desde aquí.");
 
                 return command.main.require(
                         // the element must be an npc
@@ -160,13 +161,13 @@ public class Engine {
                         "todos"
                 ).require(
                         // and be in one of the connected exits
-                        otherNPC -> ((Location) npc.location).exits.entrySet().stream().anyMatch(l -> l.getValue().first.elements.contains(otherNPC)),
+                        otherNPC -> ((Location) npc.getLocation()).exits.entrySet().stream().anyMatch(l -> l.getValue().first.elements.contains(otherNPC)),
                         "No veo a {}.",
                         "nadie a quien seguir"
                 ).apply("A quien quieres seguir?", toFollow -> {
 
                     // find direction and follow
-                    for (Map.Entry<Word.Direction, Utils.Pair<Location, Item>> entry : ((Location) npc.location).exits.entrySet()) {
+                    for (Map.Entry<Word.Direction, Utils.Pair<Location, Item>> entry : ((Location) npc.getLocation()).exits.entrySet()) {
                         if (entry.getValue().first.elements.contains(toFollow)) {
                             // execute as a go command
                             Result result = execute(npc, Command.go(entry.getKey()));
@@ -205,7 +206,7 @@ public class Engine {
                     ).apply("A quién se lo quieres dar?", Word.Preposition.AT.alias + " ", whoToGiveItTo -> {
 
                         // give
-                        setParent(elementToGive, npc, whoToGiveItTo);
+                        elementToGive.moveTo(whoToGiveItTo);
                         whoToGiveItTo.hear(npc + " te da " + elementToGive + ".");
                         return Result.done("Le das " + elementToGive + " a " + whoToGiveItTo + ".\n" + whoToGiveItTo + " te da las gracias.");
                     });
@@ -214,7 +215,7 @@ public class Engine {
             case PICK -> {
                 return command.main.require(
                         // it must be in the location of the npc
-                        npc.location.elements::contains,
+                        npc.getLocation().elements::contains,
                         "No veo {} por aquí.",
                         "nada"
                 ).require(
@@ -225,7 +226,7 @@ public class Engine {
                 ).apply("Que quieres coger?", pickable -> {
 
                     // pick
-                    setParent(pickable, npc.location, npc);
+                    pickable.moveTo(npc);
                     return Result.done("Coges " + pickable);
                 });
             }
@@ -238,7 +239,7 @@ public class Engine {
                 ).apply("Que quieres tirar?", dropable -> {
 
                     // drop
-                    setParent(dropable, npc, npc.location);
+                    dropable.moveTo(npc.getLocation());
                     return Result.done("Tiras " + dropable);
                 });
             }
@@ -317,7 +318,7 @@ public class Engine {
                     ).apply("Donde lo quieres poner?", Word.Preposition.AT.alias + " ", container -> {
 
                         // put
-                        setParent(elementToGive, npc, container);
+                        elementToGive.moveTo(container);
                         return Result.done("Pones " + elementToGive + " en " + container + ".");
                     });
                 });
@@ -350,30 +351,40 @@ public class Engine {
                     // weaker, the attack success
                     attack.hear(npc + " te ataca. Con un golpe certero, te parte el cráneo.");
                     attack.alive = false;
-                    setParent(attack, npc.location, null);
+                    attack.moveTo(null);
                     return Result.done("Atacas a " + attack + ". Con un golpe certero le partes el cráneo.");
+                });
+            }
+            case EAT -> {
+                return command.main.require(
+                        // the element must be an item or npc
+                        e -> e instanceof Item || e instanceof NPC,
+                        "No puedes comer {}.",
+                        "nadie"
+                ).require(
+                        // and be interactable
+                        interactable::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                ).require(
+                        // and be lighter
+                        e -> e.weight < npc.weight,
+                        "{} pesa demasiado para comerlo.",
+                        "todo"
+                ).apply("Que quieres comer?", food -> {
+
+                    // eat
+                    food.alive = false;
+                    food.moveTo(null);
+                    food.hear(npc + " te come.");
+
+                    return Result.done("Te comes " + food + ".");
                 });
             }
         }
 
 
         return Result.error("Aún no se hacer eso!");
-    }
-
-    // ------------------------- utils -------------------------
-
-    /**
-     * Sets the parent of an element (moves the element)
-     *
-     * @param element   what to move
-     * @param oldParent from where
-     * @param newParent to where (can be null to 'remove' it)
-     */
-    static public void setParent(Element element, Element oldParent, Element newParent) {
-        assert oldParent.elements.contains(element);
-        oldParent.elements.remove(element);
-        if (newParent != null) newParent.elements.add(element);
-        if (element instanceof NPC) ((NPC) element).location = newParent;
     }
 
 }

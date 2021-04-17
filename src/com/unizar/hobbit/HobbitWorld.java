@@ -1,7 +1,6 @@
 package com.unizar.hobbit;
 
 import com.unizar.game.World;
-import com.unizar.hobbit.items.Gold;
 import com.unizar.hobbit.items.*;
 import com.unizar.hobbit.npcs.*;
 import com.unizar.hobbit.rooms.*;
@@ -63,7 +62,7 @@ public class HobbitWorld extends World {
 
         // objectives
         requiredObjective("Prueba a 'abrir la puerta'", game -> game.findElementByClassName(GreenDoor.class).opened == Boolean.TRUE);
-        requiredObjective("Ve a explorar el resto del mundo", game -> !(game.getPlayer().location instanceof StartLocation));
+        requiredObjective("Ve a explorar el resto del mundo", game -> !(game.getPlayer().getLocation() instanceof StartLocation));
         requiredObjective("Guarda el oro en el cofre", game ->
                 game.findElementByClassName(StartChest.class).elements.contains(game.findElementByClassName(Gold.class))
         );

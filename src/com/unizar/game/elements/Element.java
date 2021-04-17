@@ -84,6 +84,24 @@ abstract public class Element implements Serializable {
     public void hear(String message) {
     }
 
+    /**
+     * @return Returns the parent of this element (null if nowhere)
+     */
+    public Element getLocation() {
+        return game.world.elements.stream().filter(e -> e.elements.contains(this)).findFirst().orElse(null);
+    }
+
+    /**
+     * Moves this element to another parent
+     *
+     * @param newParent the new parent
+     */
+    public void moveTo(Element newParent) {
+        final Element parent = getLocation();
+        if (parent != null) parent.elements.remove(this);
+        if (newParent != null) newParent.elements.add(this);
+    }
+
     @Override
     public String toString() {
         return name;
@@ -110,10 +128,5 @@ abstract public class Element implements Serializable {
      * Make sure to call super.init() AFTER your data
      */
     public void init() {
-        elements.forEach(element -> {
-            if (element instanceof NPC) {
-                ((NPC) element).location = this;
-            }
-        });
     }
 }

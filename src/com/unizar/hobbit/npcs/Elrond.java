@@ -26,7 +26,7 @@ public class Elrond extends NPC {
     public void hear(String message) {
         if (message.contains(Map.ELROND_REPLY)) {
             // we examined the map, only the player can ask us to do it
-            location.notifyNPCs(this, this + " dice: Ve hacia el este desde Long Lake para llegar a Lake Town");
+            getLocation().notifyNPCs(this, this + " dice: Ve hacia el este desde Long Lake para llegar a Lake Town");
             // TODO: add that link from Long Lake to Lake Town
             return;
         }
@@ -37,11 +37,11 @@ public class Elrond extends NPC {
     public void act() {
         Result result;
 
-        if (location.elements.contains(game.getPlayer())) {
+        if (getLocation().elements.contains(game.getPlayer())) {
             // the player is there
             if (!playerSaw) {
                 // first time
-                location.notifyNPCs(this, this + " dice: Hola");
+                getLocation().notifyNPCs(this, this + " dice: Hola");
                 playerSaw = true;
                 return;
             }
@@ -50,7 +50,7 @@ public class Elrond extends NPC {
             if (!food.alive && Utils.random.nextBoolean()) {
                 // give the player food
                 food.alive = true;
-                elements.add(food);
+                food.moveTo(this);
                 result = game.engine.execute(this, Command.act(Word.Action.GIVE, food, game.getPlayer()));
                 if (result.done) {
                     hear(result.output);

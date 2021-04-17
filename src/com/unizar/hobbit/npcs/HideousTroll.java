@@ -27,11 +27,11 @@ public class HideousTroll extends NPC {
 
         Result result;
 
-        if (location.elements.contains(game.getPlayer())) {
+        if (getLocation().elements.contains(game.getPlayer())) {
             // the player is there
             if (!playerSaw) {
                 // first time
-                location.notifyNPCs(this, this + " dice: ¡¡Mira, mira!! ¿Me los pue hamar?");
+                getLocation().notifyNPCs(this, this + " dice: ¡¡Mira, mira!! ¿Me los pue hamar?");
                 playerSaw = true;
                 return;
             } else {

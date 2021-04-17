@@ -208,7 +208,7 @@ public class Game extends KeyAdapter {
         window.clearDescription();
 
         // describe current room
-        Element location = getPlayer().location;
+        Element location = getPlayer().getLocation();
         setImage(location instanceof Location ? ((Location) location).image : null);
         addDescription("Te encuentras en " + location.getDescription(getPlayer()) + "."); //TODO: include the dots inside the description, not outside
         addDescription("");
