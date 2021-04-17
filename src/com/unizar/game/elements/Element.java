@@ -4,7 +4,9 @@ import com.unizar.game.Game;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A generic element of the game
@@ -24,7 +26,7 @@ abstract public class Element implements Serializable {
     /**
      * List of elements inside this element
      */
-    public final List<Element> elements = new ArrayList<>();
+    public final Set<Element> elements = new HashSet<>();
 
     /**
      * Whether this element is alive or not

@@ -1,10 +1,10 @@
 package com.unizar.hobbit.rooms;
 
 import com.unizar.Utils;
+import com.unizar.game.commands.Engine;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Location;
 import com.unizar.hobbit.items.LargeKey;
-import com.unizar.hobbit.npcs.Bilbo_Player;
 import com.unizar.hobbit.npcs.HideousTroll;
 import com.unizar.hobbit.npcs.ViciousTroll;
 
@@ -27,20 +27,29 @@ public class TrollsClearing extends Location {
 
     @Override
     public void act() {
-        System.out.println(game.world.time);
-        if(game.world.time < 10){ //noche
+        final HideousTroll troll1 = game.findElementByClassName(HideousTroll.class);
+        final ViciousTroll troll2 = game.findElementByClassName(ViciousTroll.class);
+        final LargeKey key = game.findElementByClassName(LargeKey.class);
+
+        if (game.world.night) {
+            // night
             name = "el claro de los trolls";
             image = "TrollsClearingNight";
-        }
-        else{ //dia
+
+            // trolls are visible
+            elements.add(troll1);
+            elements.add(troll2);
+            if (elements.contains(key)) Engine.setParent(key, this, troll1);
+
+        } else {
+            // day
             name = "el claro de los trolls con dos trolls de piedra";
             image = "TrollsClearingDay";
-            if(elements.contains(game.findElementByClassName(HideousTroll.class)))
-                elements.remove(game.findElementByClassName(HideousTroll.class));
-            if(elements.contains(game.findElementByClassName(ViciousTroll.class)))
-                elements.remove(game.findElementByClassName(ViciousTroll.class));
-            if(!elements.contains(game.findElementByClassName(LargeKey.class)) && !game.findElementByClassName(Bilbo_Player.class).elements.contains(game.findElementByClassName(LargeKey.class)))
-                elements.add(game.findElementByClassName(LargeKey.class));
+
+            // trolls are stone
+            elements.remove(troll1);
+            elements.remove(troll2);
+            if (troll1.elements.contains(key)) Engine.setParent(key, troll1, this);
         }
     }
 }

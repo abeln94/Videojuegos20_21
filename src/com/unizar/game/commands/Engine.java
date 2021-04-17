@@ -368,7 +368,7 @@ public class Engine {
      * @param oldParent from where
      * @param newParent to where (can be null to 'remove' it)
      */
-    private void setParent(Element element, Element oldParent, Element newParent) {
+    static public void setParent(Element element, Element oldParent, Element newParent) {
         assert oldParent.elements.contains(element);
         oldParent.elements.remove(element);
         if (newParent != null) newParent.elements.add(element);

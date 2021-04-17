@@ -193,9 +193,13 @@ public class Game extends KeyAdapter {
             return;
         }
 
-        // still playing
-        update();
+        // new turn
         world.act();
+
+        // update window
+        update();
+
+        // wait for player
     }
 
     // ------------------------- game commands -------------------------

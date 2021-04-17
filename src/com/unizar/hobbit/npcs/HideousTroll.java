@@ -1,15 +1,14 @@
 package com.unizar.hobbit.npcs;
 
-import com.unizar.Utils;
 import com.unizar.game.commands.Command;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.NPC;
 import com.unizar.hobbit.items.LargeKey;
-import com.unizar.hobbit.rooms.EmptyLand;
-import com.unizar.hobbit.rooms.TrollsClearing;
 
 public class HideousTroll extends NPC {
+
+    private boolean firstInteraction = true;
 
     public HideousTroll() {
         super("Un Troll horrendo");
@@ -24,17 +23,24 @@ public class HideousTroll extends NPC {
 
     @Override
     public void act() {
-        Result result;
-        if(game.world.time < 10){
-            location.notifyNPCs(this, this + " dice: ¡¡Mira, mira!! ¿Me los pue hamar?");
-            this.FirstInteraction = false;
-        }
+        if (!game.world.night) return; // is a rock
 
-        if (Utils.random.nextBoolean()) {
-            result = game.engine.execute(this, Command.act(Word.Action.EAT, game.findElementByClassName(Bilbo_Player.class))); //TODO: lo mata
-            if (result.done) {
-                hear(result.output);
+        Result result;
+
+        if (location.elements.contains(game.getPlayer())) {
+            // the player is there
+            if (firstInteraction) {
+                // first time
+                location.notifyNPCs(this, this + " dice: ¡¡Mira, mira!! ¿Me los pue hamar?");
+                firstInteraction = false;
                 return;
+            } else {
+                // not first time, eat player
+                result = game.engine.execute(this, Command.act(Word.Action.EAT, game.findElementByClassName(Bilbo_Player.class))); //TODO: lo mata
+                if (result.done) {
+                    hear(result.output);
+                    return;
+                }
             }
         }
         super.act();

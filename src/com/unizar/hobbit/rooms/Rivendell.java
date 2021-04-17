@@ -3,11 +3,7 @@ package com.unizar.hobbit.rooms;
 import com.unizar.Utils;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Location;
-import com.unizar.hobbit.items.GreenDoor;
-import com.unizar.hobbit.items.StartChest;
-import com.unizar.hobbit.npcs.Bilbo_Player;
-import com.unizar.hobbit.npcs.Gandalf;
-import com.unizar.hobbit.npcs.Thorin;
+import com.unizar.hobbit.npcs.Elrond;
 
 public class Rivendell extends Location {
 

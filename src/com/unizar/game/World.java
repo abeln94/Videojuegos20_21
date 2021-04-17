@@ -2,6 +2,7 @@ package com.unizar.game;
 
 import com.unizar.Utils;
 import com.unizar.game.elements.Element;
+import com.unizar.game.elements.NPC;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,7 +17,10 @@ import java.util.function.Function;
  */
 public abstract class World implements Serializable {
     // ---------------------------- time ----------------------------
-    public int time;
+    private int time = 0;
+
+    public boolean night = true;
+
     // ------------------------- properties -------------------------
 
     /**
@@ -71,7 +75,17 @@ public abstract class World implements Serializable {
     }
 
     public void act() {
-        this.time = (this.time + 1) % 20; //cada vez que wait avanza una hora, 0-5 noche, 6-11 dia
+        time = (time + 1) % 20; // cada vez que wait avanza una hora, 0-9 noche, 10-19 dia
+        System.out.println("Current time: " + time);
+
+        if (time == 10) {
+            night = false;
+            elements.stream().filter(element -> element instanceof NPC).forEach(element -> element.hear("Se hace de día"));
+        }
+        if (time == 0) {
+            night = true;
+            elements.stream().filter(element -> element instanceof NPC).forEach(element -> element.hear("Se hace de noche"));
+        }
     }
 
 }
