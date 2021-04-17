@@ -32,6 +32,7 @@ public abstract class World implements Serializable {
 
     /**
      * Objectives
+     * TODO: they are not serializable, replace with help on each screen
      */
     public List<Utils.Pair<String, Function<Game, Boolean>>> requiredObjectives = new ArrayList<>();
     public List<Function<Game, Boolean>> optionalObjectives = new ArrayList<>();

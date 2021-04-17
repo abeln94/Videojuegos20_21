@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.LargeKey;
 
 public class HideousTroll extends NPC {
 
-    private boolean firstInteraction = true;
+    private boolean playerSaw = false;
 
     public HideousTroll() {
         super("Un Troll horrendo");
@@ -29,10 +29,10 @@ public class HideousTroll extends NPC {
 
         if (location.elements.contains(game.getPlayer())) {
             // the player is there
-            if (firstInteraction) {
+            if (!playerSaw) {
                 // first time
                 location.notifyNPCs(this, this + " dice: ¡¡Mira, mira!! ¿Me los pue hamar?");
-                firstInteraction = false;
+                playerSaw = true;
                 return;
             } else {
                 // not first time, eat player

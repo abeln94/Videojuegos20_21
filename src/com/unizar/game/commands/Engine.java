@@ -279,8 +279,9 @@ public class Engine {
                     }
 
                     // ask to NPC
+                    npc.hear("Hablas con " + toSay);
                     ((NPC) toSay).ask(npc, command.sequence);
-                    return Result.done(""); // the say command already handled the output
+                    return Result.done(""); // the notification is above, otherwise the output order would be wrong
                 });
             }
             case HELP -> {

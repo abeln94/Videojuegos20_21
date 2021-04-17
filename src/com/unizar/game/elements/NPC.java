@@ -69,6 +69,8 @@ abstract public class NPC extends Element {
         final Result result = game.engine.execute(this, parse);
         if (!result.done) {
             npc.hear(this + " te responde: No puedo hacer eso");
+        } else {
+            hear(result.output);
         }
     }
 

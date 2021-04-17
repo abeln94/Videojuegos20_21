@@ -171,6 +171,7 @@ public class Word {
 
         // spanish is difficult
         sentence = sentence.replaceAll("\\bal\\b", "a el");
+        sentence = sentence.replaceAll("\\bdel\\b", "de el");
 
         return Arrays.stream(sentence.toLowerCase().split(" +")).filter(s -> !s.isEmpty()).collect(Collectors.toList());
     }

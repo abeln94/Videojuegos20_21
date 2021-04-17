@@ -4,7 +4,7 @@ import com.unizar.game.elements.NPC;
 
 public class ViciousTroll extends NPC {
 
-    private boolean firstInteraction = true;
+    private boolean playerSaw = false;
 
     public ViciousTroll() {
         super("Un Troll pendenciero");
@@ -17,10 +17,10 @@ public class ViciousTroll extends NPC {
 
         if (location.elements.contains(game.getPlayer())) {
             // the player is there
-            if (firstInteraction) {
+            if (!playerSaw) {
                 // first time
                 location.notifyNPCs(this, this + " dice: Puedo proba, pero no dan pa na");
-                firstInteraction = false;
+                playerSaw = true;
                 return;
             }
         }

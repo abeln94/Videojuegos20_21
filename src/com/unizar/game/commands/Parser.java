@@ -81,6 +81,7 @@ public class Parser implements Window.InputListener {
 
         // spanish is difficult
         result.output = result.output.replaceAll("\\ba el\\b", "al");
+        result.output = result.output.replaceAll("\\bde el\\b", "del");
 
         // add output
         game.addOutput(result.output);
@@ -130,7 +131,10 @@ public class Parser implements Window.InputListener {
         // remove non-alphabetical chars
         sentence = sentence.replaceAll("[^0-9a-zA-ZñÑáéíóú]", " ");
 
-        // parse each word
+        // when you say 'darme el mapa' the 'me' part is replaced by the player
+        sentence = sentence.replaceAll("\\bdarme\\b", "a " + game.getPlayer().name + " dar");
+
+        // get the words
         List<String> words = Word.separateWords(sentence);
         boolean isSecondElement = false;
         for (String word : words) {
