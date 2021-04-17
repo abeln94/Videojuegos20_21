@@ -14,7 +14,7 @@ abstract public class Location extends Element {
     /**
      * The image of this location (from the game's data image folder)
      */
-    public final String image;
+    public String image;
 
     /**
      * List of exits from this location. A map of

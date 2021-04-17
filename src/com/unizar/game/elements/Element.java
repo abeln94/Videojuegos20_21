@@ -14,7 +14,7 @@ abstract public class Element implements Serializable {
     /**
      * This element's name
      */
-    public final String name;
+    public String name;
 
     /**
      * The weight of this element (if npc, can carry only other elements with smaller weight).
