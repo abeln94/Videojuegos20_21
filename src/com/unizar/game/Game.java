@@ -4,6 +4,7 @@ import com.unizar.game.commands.Engine;
 import com.unizar.game.commands.Parser;
 import com.unizar.game.elements.Element;
 import com.unizar.game.elements.Location;
+import com.unizar.game.elements.NPC;
 import com.unizar.game.elements.Player;
 
 import javax.imageio.ImageIO;
@@ -174,8 +175,8 @@ public class Game extends KeyAdapter {
     }
 
     public void afterPlayer() {
-        // act each element
-        world.elements.forEach(Element::act);
+        // act each npc
+        world.elements.stream().filter(e -> e instanceof NPC).forEach(Element::act);
 
         // update objectives
         world.requiredObjectives = world.requiredObjectives.stream().filter(p -> !p.second.apply(this)).collect(Collectors.toList());
@@ -193,8 +194,9 @@ public class Game extends KeyAdapter {
             return;
         }
 
-        // new turn
+        // new turn, act each non-NPC
         world.act();
+        world.elements.stream().filter(e -> !(e instanceof NPC)).forEach(Element::act);
 
         // update window
         update();
