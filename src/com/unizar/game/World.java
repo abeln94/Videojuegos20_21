@@ -6,7 +6,7 @@ import com.unizar.game.elements.NPC;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -54,7 +54,7 @@ public abstract class World implements Serializable {
     /**
      * List of available elements.
      */
-    public Set<Element> elements = new HashSet<>();
+    public Set<Element> elements = new LinkedHashSet<>(); // must retain inserted order
 
 
     // ------------------------- game registration -------------------------
