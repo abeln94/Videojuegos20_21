@@ -1,10 +1,11 @@
 package com.unizar.hobbit.items;
 
 import com.unizar.game.elements.Item;
+import com.unizar.game.elements.NPC;
 
 public class Cupboard extends Item {
     public Cupboard() {
-        super("Una pesada cortina. Tras ella una pared. En la pared hay un gran armario.");
+        super("un gran armario");
     }
 
     @Override
@@ -14,11 +15,15 @@ public class Cupboard extends Item {
     }
 
     @Override
+    public String getDescription(NPC npc) {
+        return "Una pesada cortina. Tras ella una pared. En la pared hay " + this;
+    }
+
+    @Override
     public void act() {
-        if(opened){
+        if (opened) {
             elements.add(game.findElementByClassName(Food.class));
-        }
-        else{
+        } else {
             elements.remove(game.findElementByClassName(Food.class));
         }
     }

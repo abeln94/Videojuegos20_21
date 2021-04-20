@@ -186,7 +186,12 @@ public class Engine {
             }
             case GIVE -> {
                 return command.main.require(
-                        // we must have it
+                        // it must be interactable
+                        interactable::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                ).require(
+                        // and also we must have it
                         npc.elements::contains,
                         "No tienes {}.",
                         "nada que dar"
@@ -214,15 +219,20 @@ public class Engine {
             }
             case PICK -> {
                 return command.main.require(
-                        // it must be in the location of the npc
-                        npc.getLocation().elements::contains,
+                        // it must be interactable
+                        interactable::contains,
                         "No veo {} por aquí.",
+                        "nada"
+                ).require(
+                        // and also must be in the location of the npc
+                        npc.getLocation().elements::contains,
+                        "No puedes coger {}.",
                         "nada"
                 ).require(
                         // it must have less weight
                         e -> e.weight < npc.weight,
-                        "No puedes coger {}.",
-                        "nada"
+                        "{} pesa demasiado.",
+                        "todo"
                 ).apply("Que quieres coger?", pickable -> {
 
                     // pick

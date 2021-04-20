@@ -97,6 +97,7 @@ abstract public class Element implements Serializable {
      * @param newParent the new parent
      */
     public void moveTo(Element newParent) {
+        assert newParent != this;
         final Element parent = getLocation();
         if (parent != null) parent.elements.remove(this);
         if (newParent != null) newParent.elements.add(this);
