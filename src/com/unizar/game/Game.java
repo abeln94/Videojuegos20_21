@@ -171,6 +171,12 @@ public class Game extends KeyAdapter {
                 startScreen();
                 parser.clearHistory();
             }
+
+            // press F12 for debug
+            case KeyEvent.VK_F12 -> {
+                Debug.teleportPlayer(this);
+                update();
+            }
         }
     }
 
