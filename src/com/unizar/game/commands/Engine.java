@@ -8,7 +8,6 @@ import com.unizar.game.elements.NPC;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * Executes a command from an npc.
@@ -306,16 +305,20 @@ public class Engine {
                 });
             }
             case PICK -> {
-                final Predicate<Element> insideOpenedContainer = e -> e.getLocation() instanceof Item && ((Item) e.getLocation()).openable == Item.OPENABLE.OPENED;
                 return command.main.require(
                         // it must be interactable
                         interactable::contains,
                         "No veo {} por aquí.",
                         "nada"
                 ).require(
-                        // and also must be in the location of the npc, or inside another item
-                        e -> npc.getLocation().elements.contains(e) || insideOpenedContainer.test(e),
-                        "No puedes coger {} directamente.",
+                        // and not be carried by another npc
+                        e -> !(npc.getLocation() instanceof NPC),
+                        "No puedes coger {} de otro personaje.",
+                        "nada"
+                ).require(
+                        // and not be inside a closed item
+                        e -> !(e.getLocation() instanceof Item) || ((Item) e.getLocation()).openable == null || ((Item) e.getLocation()).openable == Item.OPENABLE.OPENED,
+                        "No puedes coger {} de un recipiente cerrado.",
                         "nada"
                 ).require(
                         // it must have less weight
@@ -487,11 +490,6 @@ public class Engine {
                         "No veo {} por aquí.",
                         "nada"
                 ).require(
-                        // and also must be in the location of the npc
-                        e -> npc.getLocation().elements.contains(e),
-                        "No puedes cavar en {} directamente.",
-                        "nada"
-                ).require(
                         // and allow digging
                         e -> e.hiddenElements.containsKey(Word.Action.DIG),
                         "No puedes cavar en {}.",
@@ -504,8 +502,27 @@ public class Engine {
                     return Result.done("Cavas en " + dig + ". Descubres " + found + ".");
                 });
             }
-        }
+            case BREAK -> {
+                return command.main.require(
+                        // it must be interactable
+                        interactable::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                ).require(
+                        // and allow breaking
+                        e -> e.hiddenElements.containsKey(Word.Action.BREAK),
+                        "No puedes romper {}.",
+                        "nada"
+                ).apply("Que quieres romper?", breakItem -> {
 
+                    // break
+                    final Element found = breakItem.hiddenElements.remove(Word.Action.BREAK);
+                    found.moveTo(breakItem.getLocation());
+                    breakItem.moveTo(null);
+                    return Result.done("Rompes " + breakItem + ". Descubres " + found + ".");
+                });
+            }
+        }
 
         return Result.error("Aún no se hacer eso!");
     }

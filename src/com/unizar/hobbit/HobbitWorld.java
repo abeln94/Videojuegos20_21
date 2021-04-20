@@ -71,7 +71,7 @@ public class HobbitWorld extends World {
         elements.add(new Food.ElrondFood());
         elements.add(new GoldenKey());
         elements.add(new GoblinDoor());
-        elements.add(new Window());
+        elements.add(new GoblinWindow());
         elements.add(new Sand());
         elements.add(new TrapDoor());
         elements.add(new SmallKey());
