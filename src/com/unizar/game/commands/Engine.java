@@ -8,6 +8,7 @@ import com.unizar.game.elements.NPC;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Executes a command from an npc.
@@ -218,15 +219,16 @@ public class Engine {
                 });
             }
             case PICK -> {
+                final Predicate<Element> insideOpenedContainer = e -> e.getLocation() instanceof Item && ((Item) e.getLocation()).opened == Boolean.TRUE;
                 return command.main.require(
                         // it must be interactable
                         interactable::contains,
                         "No veo {} por aquí.",
                         "nada"
                 ).require(
-                        // and also must be in the location of the npc
-                        npc.getLocation().elements::contains,
-                        "No puedes coger {}.",
+                        // and also must be in the location of the npc, or inside another item
+                        e -> npc.getLocation().elements.contains(e) || insideOpenedContainer.test(e),
+                        "No puedes coger {} directamente.",
                         "nada"
                 ).require(
                         // it must have less weight

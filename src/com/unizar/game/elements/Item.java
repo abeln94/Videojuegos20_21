@@ -22,7 +22,7 @@ public abstract class Item extends Element {
 
     @Override
     public String getDescription(NPC npc) {
-        String prefix = ": " + " Contiene";
+        String prefix = ": Contiene";
 
         return this + Utils.joinList("", prefix, prefix, elements.stream().map(e -> e.getDescription(npc)).collect(Collectors.toList()));
     }

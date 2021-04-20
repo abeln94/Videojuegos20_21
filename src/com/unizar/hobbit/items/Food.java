@@ -6,6 +6,11 @@ public class Food extends Item {
     public Food() {
         super("comida");
         weight = 1;
-        alive = false; // will be 'created' by elrond
+    }
+
+    static public class ElrondFood extends Food {
+    }
+
+    static public class CupboardFood extends Food {
     }
 }

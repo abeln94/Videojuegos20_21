@@ -1,7 +1,6 @@
 package com.unizar.hobbit;
 
 import com.unizar.game.World;
-import com.unizar.game.elements.Element;
 import com.unizar.hobbit.items.*;
 import com.unizar.hobbit.npcs.*;
 import com.unizar.hobbit.rooms.*;
@@ -68,7 +67,8 @@ public class HobbitWorld extends World {
         elements.add(new RockDoor());
         elements.add(new Sword());
         elements.add(new Rope());
-        elements.add(new Food());
+        elements.add(new Food.CupboardFood());
+        elements.add(new Food.ElrondFood());
         elements.add(new GoldenKey());
         elements.add(new GoblinDoor());
         elements.add(new Window());

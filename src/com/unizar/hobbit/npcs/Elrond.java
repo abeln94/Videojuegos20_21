@@ -4,6 +4,7 @@ import com.unizar.Utils;
 import com.unizar.game.commands.Command;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
+import com.unizar.game.elements.Element;
 import com.unizar.game.elements.NPC;
 import com.unizar.hobbit.items.Food;
 import com.unizar.hobbit.items.Map;
@@ -46,10 +47,9 @@ public class Elrond extends NPC {
                 return;
             }
 
-            final Food food = game.findElementByClassName(Food.class);
-            if (!food.alive && Utils.random.nextBoolean()) {
+            final Element food = game.findElementByClassName(Food.ElrondFood.class);
+            if (food.getLocation() == null && Utils.random.nextBoolean()) {
                 // give the player food
-                food.alive = true;
                 food.moveTo(this);
                 result = game.engine.execute(this, Command.act(Word.Action.GIVE, food, game.getPlayer()));
                 if (result.done) {
