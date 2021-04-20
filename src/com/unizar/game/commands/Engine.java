@@ -480,6 +480,30 @@ public class Engine {
                     return Result.done("Te comes " + food + ".");
                 });
             }
+            case DIG -> {
+                return command.main.require(
+                        // it must be interactable
+                        interactable::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                ).require(
+                        // and also must be in the location of the npc
+                        e -> npc.getLocation().elements.contains(e),
+                        "No puedes cavar en {} directamente.",
+                        "nada"
+                ).require(
+                        // and allow digging
+                        e -> e.hiddenElements.containsKey(Word.Action.DIG),
+                        "No puedes cavar en {}.",
+                        "nada"
+                ).apply("Donde quieres cavar?", dig -> {
+
+                    // dig
+                    final Element found = dig.hiddenElements.remove(Word.Action.DIG);
+                    dig.elements.add(found);
+                    return Result.done("Cavas en " + dig + ". Descubres " + found + ".");
+                });
+            }
         }
 
 

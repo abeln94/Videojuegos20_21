@@ -1,17 +1,17 @@
 package com.unizar.game.elements;
 
 import com.unizar.game.Game;
+import com.unizar.game.commands.Word;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A generic element of the game
  */
 abstract public class Element implements Serializable {
+
+    // ------------------------- properties -------------------------
 
     /**
      * This element's name
@@ -29,9 +29,17 @@ abstract public class Element implements Serializable {
     public final Set<Element> elements = new HashSet<>();
 
     /**
+     * Elements that will be made visible (moved to elements) when the specific action is performed.
+     * Only some actions will trigger this.
+     */
+    public final Map<Word.Action, Element> hiddenElements = new HashMap<>();
+
+    /**
      * Whether this element is alive or not
      */
     public boolean alive = true;
+
+    // ------------------------- functions -------------------------
 
     public Element(String name) {
         this.name = name;
