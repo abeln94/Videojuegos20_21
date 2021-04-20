@@ -3,7 +3,7 @@ package com.unizar.hobbit.rooms;
 import com.unizar.Utils;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Location;
-import com.unizar.hobbit.items.HeavyCurtain;
+import com.unizar.hobbit.items.Cupboard;
 
 public class BeornsHouse extends Location {
 
@@ -14,7 +14,7 @@ public class BeornsHouse extends Location {
     @Override
     public void init() {
 
-        elements.add(game.findElementByClassName(HeavyCurtain.class));
+        elements.add(game.findElementByClassName(Cupboard.class));
 
         exits.put(Word.Direction.NORTHEAST, Utils.Pair.of(game.findElementByClassName(Mirkwood.class), null));
         exits.put(Word.Direction.NORTHWEST, Utils.Pair.of(game.findElementByClassName(TrelessOpening.class), null));

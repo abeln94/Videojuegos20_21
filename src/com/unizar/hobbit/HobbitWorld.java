@@ -78,8 +78,6 @@ public class HobbitWorld extends World {
         elements.add(new GoldenRing());
         elements.add(new Gold());
         elements.add(new GoblinGate());
-        elements.add(new HeavyCurtain());
-        elements.add(new Wall());
         elements.add(new Cupboard());
 
         // npcs

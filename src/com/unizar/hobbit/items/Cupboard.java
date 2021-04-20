@@ -4,7 +4,7 @@ import com.unizar.game.elements.Item;
 
 public class Cupboard extends Item {
     public Cupboard() {
-        super("un gran armario.");
+        super("Una pesada cortina. Tras ella una pared. En la pared hay un gran armario.");
     }
 
     @Override
