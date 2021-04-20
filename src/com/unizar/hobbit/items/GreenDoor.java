@@ -9,7 +9,7 @@ public class GreenDoor extends Item {
 
     @Override
     public void init() {
-        opened = false;
+        openable = OPENABLE.CLOSED;
         super.init();
     }
 }

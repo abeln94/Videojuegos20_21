@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 /**
  * The game main class.
@@ -77,8 +76,8 @@ public class Game extends KeyAdapter {
         window.clearDescription();
         addDescription(world.properties.getWinDescription());
         addDescription("");
-        addDescription(getCompletion());
-        addDescription("");
+//        addDescription(getCompletion());
+//        addDescription("");
         addDescription("Pulsa cualquier tecla para volver a empezar.");
     }
 
@@ -89,8 +88,8 @@ public class Game extends KeyAdapter {
         window.clearDescription();
         addDescription("Estás muerto.");
         addDescription("");
-        addDescription(getCompletion());
-        addDescription("");
+//        addDescription(getCompletion());
+//        addDescription("");
         addDescription("Pulsa cualquier tecla para volver a empezar.");
     }
 
@@ -184,9 +183,9 @@ public class Game extends KeyAdapter {
         // act each npc
         world.elements.stream().filter(e -> e instanceof NPC).forEach(Element::act);
 
-        // update objectives
-        world.requiredObjectives = world.requiredObjectives.stream().filter(p -> !p.second.apply(this)).collect(Collectors.toList());
-        world.optionalObjectives = world.optionalObjectives.stream().filter(p -> !p.apply(this)).collect(Collectors.toList());
+//        // update objectives
+//        world.requiredObjectives = world.requiredObjectives.stream().filter(p -> !p.second.apply(this)).collect(Collectors.toList());
+//        world.optionalObjectives = world.optionalObjectives.stream().filter(p -> !p.apply(this)).collect(Collectors.toList());
 
         // check death
         if (!getPlayer().alive) {
@@ -194,11 +193,11 @@ public class Game extends KeyAdapter {
             return;
         }
 
-        // check finalization
-        if (world.requiredObjectives.isEmpty()) {
-            winScreen();
-            return;
-        }
+//        // check finalization
+//        if (world.requiredObjectives.isEmpty()) {
+//            winScreen();
+//            return;
+//        }
 
         // new turn, act each non-NPC
         world.act();
@@ -276,8 +275,8 @@ public class Game extends KeyAdapter {
         return findElementByClassName(Player.class);
     }
 
-    public String getCompletion() {
-        final int percentage = 100 - 100 * (world.requiredObjectives.size() + world.optionalObjectives.size()) / world.totalObjectives;
-        return "Has completado el " + percentage + "% de tu aventura.";
-    }
+//    public String getCompletion() {
+//        final int percentage = 100 - 100 * (world.requiredObjectives.size() + world.optionalObjectives.size()) / world.totalObjectives;
+//        return "Has completado el " + percentage + "% de tu aventura.";
+//    }
 }

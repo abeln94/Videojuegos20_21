@@ -67,18 +67,22 @@ public class Engine {
                         "nada"
                 ).require(
                         // and it needs to be openable
-                        e -> e instanceof Item && ((Item) e).opened != null,
+                        e -> e instanceof Item && ((Item) e).openable != null,
                         "No puedes abrir {}.",
                         "nada"
                 ).require(
-                        // and be close
-                        e -> ((Item) e).opened == Boolean.FALSE,
+                        // and not be open already
+                        e -> ((Item) e).openable != Item.OPENABLE.OPENED,
                         "{} está ya abierto/a.",
                         "todo"
-                ).apply("Que quieres que abra?", element -> {
-
+                ).require(
+                        // and not be locked by an element
+                        e -> ((Item) e).openable != Item.OPENABLE.LOCKED,
+                        "{} está bloqueado/a.",
+                        "todo"
+                ).apply("Que quieres abrir?", element -> {
                     // open
-                    ((Item) element).opened = true;
+                    ((Item) element).openable = Item.OPENABLE.OPENED;
                     npc.getLocation().notifyNPCs(npc, npc + " abre " + element + ".");
                     return Result.done("Abres " + element + ".");
                 });
@@ -91,27 +95,106 @@ public class Engine {
                         "nada"
                 ).require(
                         // and it needs to be closeable
-                        e -> e instanceof Item && ((Item) e).opened != null,
+                        e -> e instanceof Item && ((Item) e).openable != null,
                         "No puedes cerrar {}.",
                         "nada"
                 ).require(
-                        // and be open
-                        e -> ((Item) e).opened == Boolean.TRUE,
+                        // and not be closed
+                        e -> ((Item) e).openable != Item.OPENABLE.CLOSED,
                         "{} está ya cerrado/a.",
                         "todo"
-                ).apply("Que quieres que cierre?", element -> {
+                ).require(
+                        // nor locked
+                        e -> ((Item) e).openable != Item.OPENABLE.LOCKED,
+                        "{} está bloqueado/a.",
+                        "todo"
+                ).apply("Que quieres cerrar?", element -> {
 
                     // close
-                    ((Item) element).opened = false;
+                    ((Item) element).openable = Item.OPENABLE.CLOSED;
                     npc.getLocation().notifyNPCs(npc, npc + " cierra " + element + ".");
                     return Result.done("Cierras " + element + ".");
+                });
+            }
+            case UNLOCK -> {
+                return command.main.require(
+                        // you must see the element
+                        interactable::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                ).require(
+                        // and it needs to be openable
+                        e -> e instanceof Item && ((Item) e).openable != null && ((Item) e).lockedWith != null,
+                        "No puedes desbloquear {}.",
+                        "nada"
+                ).require(
+                        // and be locked
+                        e -> ((Item) e).openable == Item.OPENABLE.LOCKED,
+                        "{} está ya desbloqueado.",
+                        "todo"
+                ).apply("Que quieres desbloquear?", unlockable -> {
+
+                    return command.secondary.require(
+                            // we must have it
+                            npc.elements::contains,
+                            "No tienes {}.",
+                            "nada con lo que desbloquearlo"
+                    ).require(
+                            // and be the unlockable item
+                            e -> e == ((Item) unlockable).lockedWith,
+                            "No puedes desbloquear " + unlockable + " con {}",
+                            "nada de lo que llevas"
+                    ).apply("Con que quieres desbloquearlo?", item -> {
+
+                        // unlock
+                        ((Item) unlockable).openable = Item.OPENABLE.CLOSED;
+                        npc.getLocation().notifyNPCs(npc, npc + " desbloquea " + unlockable + ".");
+                        return Result.done("Desbloqueas " + unlockable + ".");
+                    });
+                });
+            }
+            case LOCK -> {
+                return command.main.require(
+                        // you must see the element
+                        interactable::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                ).require(
+                        // and it needs to be openable
+                        e -> e instanceof Item && ((Item) e).openable != null && ((Item) e).lockedWith != null,
+                        "No puedes bloquear {}.",
+                        "nada"
+                ).require(
+                        // and be unlocked
+                        e -> ((Item) e).openable != Item.OPENABLE.LOCKED,
+                        "{} está ya bloqueado.",
+                        "todo"
+                ).apply("Que quieres bloquear?", lockable -> {
+
+                    return command.secondary.require(
+                            // we must have it
+                            npc.elements::contains,
+                            "No tienes {}.",
+                            "nada con lo que bloquearlo"
+                    ).require(
+                            // and be the unlockable item
+                            e -> e == ((Item) lockable).lockedWith,
+                            "No puedes bloquear " + lockable + " con {}",
+                            "nada de lo que llevas"
+                    ).apply("Con que quieres bloquearlo?", item -> {
+
+                        // lock
+                        ((Item) lockable).openable = Item.OPENABLE.LOCKED;
+                        npc.getLocation().notifyNPCs(npc, npc + " bloquea " + lockable + ".");
+                        return Result.done("Bloqueas " + lockable + ".");
+                    });
                 });
             }
             case GO -> {
                 if (command.direction == null) {
                     // no direction
                     // original game makes instead a 'go through'
-                    return Result.moreNeeded("Hacia donde quieres que vaya?");
+                    return Result.moreNeeded("Hacia donde quieres ir?");
                 }
 
                 if (!(npc.getLocation() instanceof Location)) {
@@ -129,9 +212,13 @@ public class Engine {
                 Location newLocation = le.first;
                 Item throughItem = le.second;
 
-                if (throughItem != null && !throughItem.opened) {
+                if (throughItem != null && throughItem.openable == Item.OPENABLE.CLOSED) {
                     // closed exit
                     return Result.error(throughItem + " está cerrado/a."); // TODO: add a 'genre' to items to remove the ugly 'o/a'
+                }
+                if (throughItem != null && throughItem.openable == Item.OPENABLE.LOCKED) {
+                    // locked exit
+                    return Result.error(throughItem + " está bloqueado/a.");
                 }
 
                 // notify old npc
@@ -219,7 +306,7 @@ public class Engine {
                 });
             }
             case PICK -> {
-                final Predicate<Element> insideOpenedContainer = e -> e.getLocation() instanceof Item && ((Item) e.getLocation()).opened == Boolean.TRUE;
+                final Predicate<Element> insideOpenedContainer = e -> e.getLocation() instanceof Item && ((Item) e.getLocation()).openable == Item.OPENABLE.OPENED;
                 return command.main.require(
                         // it must be interactable
                         interactable::contains,
@@ -297,12 +384,12 @@ public class Engine {
                     return Result.done(""); // the notification is above, otherwise the output order would be wrong
                 });
             }
-            case HELP -> {
-                return Result.done(npc.game.world.requiredObjectives.get(0).first + ".");
-            }
-            case SCORE -> {
-                return Result.done(npc.game.getCompletion());
-            }
+//            case HELP -> {
+//                return Result.done(npc.game.world.requiredObjectives.get(0).first + ".");
+//            }
+//            case SCORE -> {
+//                return Result.done(npc.game.getCompletion());
+//            }
             case PUT -> {
                 return command.main.require(
                         // we must have it
@@ -324,7 +411,7 @@ public class Engine {
                             "nada desde aquí"
                     ).require(
                             // and must be open
-                            item -> ((Item) item).opened != Boolean.FALSE,
+                            item -> ((Item) item).openable == Item.OPENABLE.OPENED,
                             "{} está cerrado.",
                             "todo"
                     ).apply("Donde lo quieres poner?", Word.Preposition.AT.alias + " ", container -> {

@@ -1,15 +1,11 @@
 package com.unizar.game;
 
-import com.unizar.Utils;
 import com.unizar.game.elements.Element;
 import com.unizar.game.elements.NPC;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * A game world.
@@ -28,25 +24,25 @@ public abstract class World implements Serializable {
      */
     public Properties properties;
 
-    // ------------------------- objectives -------------------------
-
-    /**
-     * Objectives
-     * TODO: they are not serializable, replace with help on each screen
-     */
-    public List<Utils.Pair<String, Function<Game, Boolean>>> requiredObjectives = new ArrayList<>();
-    public List<Function<Game, Boolean>> optionalObjectives = new ArrayList<>();
-    public int totalObjectives = 0;
-
-    public void requiredObjective(String help, Function<Game, Boolean> isCompleted) {
-        requiredObjectives.add(Utils.Pair.of(help, isCompleted));
-        totalObjectives++;
-    }
-
-    public void optionalObjective(Function<Game, Boolean> isCompleted) {
-        optionalObjectives.add(isCompleted);
-        totalObjectives++;
-    }
+//    // ------------------------- objectives -------------------------
+//
+//    /**
+//     * Objectives
+//     * TODO: they are not serializable, replace with help on each screen
+//     */
+//    public List<Utils.Pair<String, Function<Game, Boolean>>> requiredObjectives = new ArrayList<>();
+//    public List<Function<Game, Boolean>> optionalObjectives = new ArrayList<>();
+//    public int totalObjectives = 0;
+//
+//    public void requiredObjective(String help, Function<Game, Boolean> isCompleted) {
+//        requiredObjectives.add(Utils.Pair.of(help, isCompleted));
+//        totalObjectives++;
+//    }
+//
+//    public void optionalObjective(Function<Game, Boolean> isCompleted) {
+//        optionalObjectives.add(isCompleted);
+//        totalObjectives++;
+//    }
 
 
     // ------------------------- elements -------------------------

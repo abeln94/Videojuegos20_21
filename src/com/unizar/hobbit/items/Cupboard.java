@@ -11,7 +11,7 @@ public class Cupboard extends Item {
 
     @Override
     public void init() {
-        opened = false;
+        openable = OPENABLE.CLOSED;
         elements.add(game.findElementByClassName(Food.CupboardFood.class));
         super.init();
     }

@@ -10,11 +10,22 @@ import java.util.stream.Collectors;
  */
 public abstract class Item extends Element {
 
+    public enum OPENABLE {
+        OPENED, // the element is open
+        CLOSED, // the element is closed (and unlocked)
+        LOCKED // the element is locked (and closed)
+    }
+
     /**
      * If null, this item is not openable
-     * If not null, this item is openable (and this value is whether the item is opened or not)
+     * If not null, this item is openable (and its value corresponds to its state)
      */
-    public Boolean opened = null;
+    public OPENABLE openable = null;
+
+    /**
+     * If the element is locked, you need this element to unlock it (if null, this can't be unlocked)
+     */
+    public Element lockedWith = null;
 
     public Item(String name) {
         super(name);

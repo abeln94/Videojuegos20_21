@@ -9,7 +9,7 @@ public class GoblinDoor extends Item {
 
     @Override
     public void init() {
-        opened = false;
+        openable = OPENABLE.LOCKED; // can not be unlocked
         super.init();
     }
 }

@@ -9,7 +9,8 @@ public class RockDoor extends Item {
 
     @Override
     public void init() {
-        opened = false;
+        openable = OPENABLE.CLOSED;
+        lockedWith = game.findElementByClassName(LargeKey.class);
         super.init();
     }
 }

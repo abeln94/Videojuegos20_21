@@ -9,7 +9,7 @@ public class Window extends Item {
 
     @Override
     public void init() {
-        opened = true;
+        openable = OPENABLE.OPENED;
         super.init();
     }
 }
