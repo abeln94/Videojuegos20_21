@@ -34,11 +34,6 @@ abstract public class Element implements Serializable {
      */
     public final Map<Word.Action, Element> hiddenElements = new HashMap<>();
 
-    /**
-     * Whether this element is alive or not
-     */
-    public boolean alive = true;
-
     // ------------------------- functions -------------------------
 
     public Element(String name) {

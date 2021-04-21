@@ -188,16 +188,16 @@ public class Game extends KeyAdapter {
 //        world.optionalObjectives = world.optionalObjectives.stream().filter(p -> !p.apply(this)).collect(Collectors.toList());
 
         // check death
-        if (!getPlayer().alive) {
+        if (getPlayer().getLocation() == null) {
             gameOverScreen();
             return;
         }
 
-//        // check finalization
-//        if (world.requiredObjectives.isEmpty()) {
-//            winScreen();
-//            return;
-//        }
+        // check finalization
+        if (world.playerWon(this)) {
+            winScreen();
+            return;
+        }
 
         // new turn, act each non-NPC
         world.act();

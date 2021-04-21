@@ -24,8 +24,8 @@ public abstract class World implements Serializable {
      */
     public Properties properties;
 
-//    // ------------------------- objectives -------------------------
-//
+    // ------------------------- objectives -------------------------
+
 //    /**
 //     * Objectives
 //     * TODO: they are not serializable, replace with help on each screen
@@ -44,6 +44,7 @@ public abstract class World implements Serializable {
 //        totalObjectives++;
 //    }
 
+    abstract public boolean playerWon(Game game);
 
     // ------------------------- elements -------------------------
 
@@ -70,6 +71,8 @@ public abstract class World implements Serializable {
     public void init() {
         elements.forEach(Element::init);
     }
+
+    // ------------------------- world action -------------------------
 
     public void act() {
         time = (time + 1) % 20; // cada vez que wait avanza una hora, 0-9 noche, 10-19 dia

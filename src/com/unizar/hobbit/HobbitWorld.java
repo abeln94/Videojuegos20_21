@@ -1,5 +1,6 @@
 package com.unizar.hobbit;
 
+import com.unizar.game.Game;
 import com.unizar.game.World;
 import com.unizar.hobbit.items.*;
 import com.unizar.hobbit.npcs.*;
@@ -101,4 +102,8 @@ public class HobbitWorld extends World {
 
     }
 
+    @Override
+    public boolean playerWon(Game game) {
+        return game.findElementByClassName(StartChest.class).elements.contains(game.findElementByClassName(Gold.class));
+    }
 }

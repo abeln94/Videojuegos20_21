@@ -452,7 +452,6 @@ public class Engine {
                     }
                     // weaker, the attack success
                     attack.hear(npc + " te ataca. Con un golpe certero, te parte el cráneo.");
-                    attack.alive = false;
                     attack.moveTo(null);
                     return Result.done("Atacas a " + attack + ". Con un golpe certero le partes el cráneo.");
                 });
@@ -476,7 +475,6 @@ public class Engine {
                 ).apply("Que quieres comer?", food -> {
 
                     // eat
-                    food.alive = false;
                     food.moveTo(null);
                     food.hear(npc + " te come.");
 
