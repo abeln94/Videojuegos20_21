@@ -114,23 +114,24 @@ public class Game extends KeyAdapter {
     @Override
     public void keyReleased(KeyEvent e) {
         switch (state) {
-            case StartScreen -> {
+            case StartScreen:
                 state = State.Playing;
                 window.clearCommand();
                 update();
-            }
-            case Playing -> {
+                break;
+            case Playing:
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     // analyze command
                     final String command = window.getCommand();
                     window.clearCommand();
                     parser.onText(command);
                 }
-            }
-            case GameOverScreen, WinScreen -> {
+                break;
+            case GameOverScreen:
+            case WinScreen:
                 window.clearCommand();
                 startScreen();
-            }
+                break;
         }
     }
 
@@ -141,13 +142,13 @@ public class Game extends KeyAdapter {
         switch (e.getKeyCode()) {
 
             // press F6 to save
-            case KeyEvent.VK_F6 -> {
+            case KeyEvent.VK_F6:
                 window.addOutput("[guardado]");
                 saver.saveData(world);
-            }
+                break;
 
             // Press F9 to load
-            case KeyEvent.VK_F9 -> {
+            case KeyEvent.VK_F9:
                 World newWorld = saver.loadData();
                 if (newWorld != null) {
                     window.clearOutput();
@@ -159,23 +160,27 @@ public class Game extends KeyAdapter {
                 } else {
                     window.addOutput("[No hay datos guardados]");
                 }
-            }
+                break;
 
             // Press top arrow to repeat input
-            case KeyEvent.VK_UP -> parser.restoreInput(true);
-            case KeyEvent.VK_DOWN -> parser.restoreInput(false);
+            case KeyEvent.VK_UP:
+                parser.restoreInput(true);
+                break;
+            case KeyEvent.VK_DOWN:
+                parser.restoreInput(false);
+                break;
 
             // Press F2 to reset
-            case KeyEvent.VK_F2 -> {
+            case KeyEvent.VK_F2:
                 startScreen();
                 parser.clearHistory();
-            }
+                break;
 
             // press F12 for debug
-            case KeyEvent.VK_F12 -> {
+            case KeyEvent.VK_F12:
                 Debug.teleportPlayer(this);
                 update();
-            }
+                break;
         }
     }
 

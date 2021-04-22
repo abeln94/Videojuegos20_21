@@ -40,25 +40,19 @@ public class Engine {
         interactable.remove(npc);
 
         switch (command.action) {
-            case WAIT -> {
+            case WAIT:
                 return Result.done("Esperas. El tiempo pasa.");
-            }
-            case LOOK -> {
+            case LOOK:
                 return Result.error("[obsoleto: la descripción está ahora a la derecha]");
-            }
-            case INVENTORY -> {
+            case INVENTORY:
                 return Result.error("[obsoleto: tu inventario se muestra ahora a la derecha]");
-            }
-            case SAVE -> {
+            case SAVE:
                 return Result.error("[obsoleto: pulsa F6 para guardar]");
-            }
-            case LOAD -> {
+            case LOAD:
                 return Result.error("[obsoleto: pulsa F9 para cargar]");
-            }
-            case QUIT -> {
+            case QUIT:
                 return Result.error("[obsoleto: pulsa la X de la ventana si quieres cerrar el juego]");
-            }
-            case OPEN -> {
+            case OPEN:
                 return command.main.require(
                         // you must see the element
                         interactable::contains,
@@ -85,8 +79,7 @@ public class Engine {
                     npc.getLocation().notifyNPCs(npc, npc + " abre " + element + ".");
                     return Result.done("Abres " + element + ".");
                 });
-            }
-            case CLOSE -> {
+            case CLOSE:
                 return command.main.require(
                         // you must see the element
                         interactable::contains,
@@ -114,8 +107,7 @@ public class Engine {
                     npc.getLocation().notifyNPCs(npc, npc + " cierra " + element + ".");
                     return Result.done("Cierras " + element + ".");
                 });
-            }
-            case UNLOCK -> {
+            case UNLOCK:
                 return command.main.require(
                         // you must see the element
                         interactable::contains,
@@ -151,8 +143,7 @@ public class Engine {
                         return Result.done("Desbloqueas " + unlockable + ".");
                     });
                 });
-            }
-            case LOCK -> {
+            case LOCK:
                 return command.main.require(
                         // you must see the element
                         interactable::contains,
@@ -188,8 +179,7 @@ public class Engine {
                         return Result.done("Bloqueas " + lockable + ".");
                     });
                 });
-            }
-            case GO -> {
+            case GO:
                 if (command.direction == null) {
                     // no direction
                     // original game makes instead a 'go through'
@@ -230,8 +220,7 @@ public class Engine {
                 npc.getLocation().notifyNPCs(npc, npc + " entra.");
 
                 return Result.done("Te diriges hacia " + command.direction.description);
-            }
-            case FOLLOW -> {
+            case FOLLOW:
                 // check if we are inside something
                 if (!(npc.getLocation() instanceof Location))
                     return Result.error("No puedes seguir a nadie desde aquí.");
@@ -270,8 +259,7 @@ public class Engine {
 
                     throw new RuntimeException("Unexpected condition");
                 });
-            }
-            case GIVE -> {
+            case GIVE:
                 return command.main.require(
                         // it must be interactable
                         interactable::contains,
@@ -303,8 +291,7 @@ public class Engine {
                         return Result.done("Le das " + elementToGive + " a " + whoToGiveItTo + ".\n" + whoToGiveItTo + " te da las gracias.");
                     });
                 });
-            }
-            case PICK -> {
+            case PICK:
                 return command.main.require(
                         // it must be interactable
                         interactable::contains,
@@ -331,8 +318,7 @@ public class Engine {
                     pickable.moveTo(npc);
                     return Result.done("Coges " + pickable);
                 });
-            }
-            case DROP -> {
+            case DROP:
                 return command.main.require(
                         // You must have it
                         npc.elements::contains,
@@ -344,8 +330,7 @@ public class Engine {
                     dropable.moveTo(npc.getLocation());
                     return Result.done("Tiras " + dropable);
                 });
-            }
-            case EXAMINE -> {
+            case EXAMINE:
                 return command.main.require(
                         // you must see the element
                         interactable::contains,
@@ -362,8 +347,7 @@ public class Engine {
                     return Result.done("Examinas " + element + ".\n" + ((Item) element).examine(npc));
                 });
 
-            }
-            case SAY -> {
+            case SAY:
                 return command.secondary.require(
                         // the element must be an npc
                         e -> e instanceof NPC,
@@ -386,14 +370,11 @@ public class Engine {
                     ((NPC) toSay).ask(npc, command.sequence);
                     return Result.done(""); // the notification is above, otherwise the output order would be wrong
                 });
-            }
-//            case HELP -> {
+//            case HELP:
 //                return Result.done(npc.game.world.requiredObjectives.get(0).first + ".");
-//            }
-//            case SCORE -> {
+//            case SCORE:
 //                return Result.done(npc.game.getCompletion());
-//            }
-            case PUT -> {
+            case PUT:
                 return command.main.require(
                         // we must have it
                         npc.elements::contains,
@@ -424,8 +405,7 @@ public class Engine {
                         return Result.done("Pones " + elementToGive + " en " + container + ".");
                     });
                 });
-            }
-            case KILL -> {
+            case KILL:
                 return command.main.require(
                         // the element must be an npc
                         e -> e instanceof NPC,
@@ -455,8 +435,7 @@ public class Engine {
                     attack.moveTo(null);
                     return Result.done("Atacas a " + attack + ". Con un golpe certero le partes el cráneo.");
                 });
-            }
-            case EAT -> {
+            case EAT:
                 return command.main.require(
                         // the element must be an item or npc
                         e -> e instanceof Item || e instanceof NPC,
@@ -480,8 +459,7 @@ public class Engine {
 
                     return Result.done("Te comes " + food + ".");
                 });
-            }
-            case DIG -> {
+            case DIG:
                 return command.main.require(
                         // it must be interactable
                         interactable::contains,
@@ -499,8 +477,7 @@ public class Engine {
                     dig.elements.add(found);
                     return Result.done("Cavas en " + dig + ". Descubres " + found + ".");
                 });
-            }
-            case BREAK -> {
+            case BREAK:
                 return command.main.require(
                         // it must be interactable
                         interactable::contains,
@@ -519,7 +496,7 @@ public class Engine {
                     breakItem.moveTo(null);
                     return Result.done("Rompes " + breakItem + ". Descubres " + found + ".");
                 });
-            }
+
         }
 
         return Result.error("Aún no se hacer eso!");

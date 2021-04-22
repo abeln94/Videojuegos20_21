@@ -2,6 +2,7 @@ package com.unizar.game.commands;
 
 import com.unizar.game.elements.Element;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -79,7 +80,7 @@ public class Command {
          * @param element this element
          */
         public FilterableElements(Element element) {
-            this.elements = Set.of(element);
+            this.elements = Collections.singleton(element);
             this.description = element.name;
         }
 
@@ -154,19 +155,16 @@ public class Command {
          */
         public Result apply(String moreNeeded, String moreNeededAppendable, Function<Element, Result> action) {
             switch (elements.size()) {
-                case 1 -> {
+                case 1:
                     // only one element, apply
                     return action.apply(elements.iterator().next());
-                }
-                case 0 -> {
+                case 0:
                     // no elements, return previous error
                     assert error != null;
                     return Result.error(error);
-                }
-                default -> {
+                default:
                     // multiple elements, more info needed
                     return Result.moreNeeded(moreNeeded, moreNeededAppendable);
-                }
             }
         }
 

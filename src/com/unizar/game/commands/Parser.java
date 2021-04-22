@@ -141,48 +141,47 @@ public class Parser implements Window.InputListener {
             if (word.isEmpty()) continue;
             Utils.Pair<Word.Type, Object> parsing = Word.parse(word, elements);
             switch (parsing.first) {
-                case ACTION -> {
+                case ACTION:
                     if (command.action != null) {
                         command.parseError = true;
                         return command;
                     }
                     command.action = (Word.Action) parsing.second;
                     isSecondElement = false;
-                }
-                case DIRECTION -> {
+                    break;
+                case DIRECTION:
                     if (command.direction != null) {
                         command.parseError = true;
                         return command;
                     }
                     command.direction = (Word.Direction) parsing.second;
-                }
-                case MODIFIER -> {
+                    break;
+                case MODIFIER:
                     if (command.modifier != null) {
                         command.parseError = true;
                         return command;
                     }
                     command.modifier = (Word.Modifier) parsing.second;
-                }
-                case PREPOSITION -> {
+                    break;
+                case PREPOSITION:
                     // next element will be the second element
                     isSecondElement = true;
-                }
-                case ELEMENT -> {
+                    break;
+                case ELEMENT:
                     if (isSecondElement) command.secondary.addDescriptionWord(word);
                     else command.main.addDescriptionWord(word);
-                }
-                case MULTIPLE -> {
+                    break;
+                case MULTIPLE:
                     command.parseError = true;
                     return command;
-                }
-                case UNKNOWN -> {
+                case UNKNOWN:
                     command.invalidToken = word;
                     command.parseError = true;
                     return command;
-                }
 
-                case IGNORE -> { // ignore
-                }
+
+                case IGNORE: // ignore
+                    break;
             }
         }
 
