@@ -108,7 +108,7 @@ public class Parser implements Window.InputListener {
      */
     public Command parse(String sentence) {
         Set<Element> elements = game.world.elements;
-        Command command = new Command(null, null, null, null, new Command.FilterableElements(elements), new Command.FilterableElements(elements));
+        Command command = new Command(null, null, null, null, new FilterableElements(elements), new FilterableElements(elements));
 
         // extract sequence
         sentence = sentence.replaceAll("\"\"", "\"");
