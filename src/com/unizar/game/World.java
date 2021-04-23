@@ -1,5 +1,6 @@
 package com.unizar.game;
 
+import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Element;
 import com.unizar.game.elements.NPC;
 
@@ -23,26 +24,6 @@ public abstract class World implements Serializable {
      * Properties of this world.
      */
     public Properties properties;
-
-    // ------------------------- objectives -------------------------
-
-//    /**
-//     * Objectives
-//     * TODO: they are not serializable, replace with help on each screen
-//     */
-//    public List<Utils.Pair<String, Function<Game, Boolean>>> requiredObjectives = new ArrayList<>();
-//    public List<Function<Game, Boolean>> optionalObjectives = new ArrayList<>();
-//    public int totalObjectives = 0;
-//
-//    public void requiredObjective(String help, Function<Game, Boolean> isCompleted) {
-//        requiredObjectives.add(Utils.Pair.of(help, isCompleted));
-//        totalObjectives++;
-//    }
-//
-//    public void optionalObjective(Function<Game, Boolean> isCompleted) {
-//        optionalObjectives.add(isCompleted);
-//        totalObjectives++;
-//    }
 
     abstract public boolean playerWon(Game game);
 
@@ -86,6 +67,51 @@ public abstract class World implements Serializable {
             night = true;
             elements.stream().filter(element -> element instanceof NPC).forEach(element -> element.hear("Se hace de noche"));
         }
+    }
+
+    // ------------------------- constructor -------------------------
+
+    protected class WorldBuilder {
+        Element current;
+
+        private WorldBuilder(Element current) {
+            this.current = current;
+        }
+
+        public WorldBuilder with(Element element) {
+            // register
+            World.this.elements.add(element);
+            // and add as child
+            current.elements.add(element);
+            return this;
+        }
+
+        public WorldBuilder with(WorldBuilder builder) {
+            // don't register
+            // but add as child
+            current.elements.add(builder.current);
+            return this;
+        }
+
+        public WorldBuilder withHidden(Word.Action action, Element element) {
+            // register
+            World.this.elements.add(element);
+            // add to hidden
+            current.hiddenElements.put(action, element);
+            return this;
+        }
+
+        public WorldBuilder withHidden(Word.Action action, WorldBuilder builder) {
+            // don't register
+            // add to hidden
+            current.hiddenElements.put(action, builder.current);
+            return this;
+        }
+    }
+
+    public WorldBuilder add(Element element) {
+        elements.add(element);
+        return new WorldBuilder(element);
     }
 
 }

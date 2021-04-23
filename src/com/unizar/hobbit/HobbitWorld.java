@@ -90,16 +90,6 @@ public class HobbitWorld extends World {
         elements.add(new NastyGoblin());
         elements.add(new Gollum());
 
-
-        // objectives
-//        requiredObjective("Prueba a 'abrir la puerta'", game -> game.findElementByClassName(GreenDoor.class).openable == Boolean.TRUE);
-//        requiredObjective("Ve a explorar el resto del mundo", game -> !(game.getPlayer().getLocation() instanceof StartLocation));
-//        requiredObjective("Guarda el oro en el cofre", game ->
-//                game.findElementByClassName(StartChest.class).elements.contains(game.findElementByClassName(Gold.class))
-//        );
-//        optionalObjective(game -> game.findElementByClassName(Gandalf.class).elements.contains(game.findElementByClassName(Gold.class)));
-//        optionalObjective(game -> game.getPlayer().elements.contains());
-
     }
 
     @Override

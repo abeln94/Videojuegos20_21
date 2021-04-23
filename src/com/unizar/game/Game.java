@@ -210,7 +210,9 @@ public class Game extends KeyAdapter {
             return;
         }
 
-        // new turn, act each non-NPC
+        // new turn
+
+        // act each non-NPC
         world.act();
         world.elements.stream().filter(e -> !(e instanceof NPC)).forEach(Element::act);
 

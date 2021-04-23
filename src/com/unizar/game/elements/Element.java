@@ -141,7 +141,6 @@ abstract public class Element implements Serializable {
 
     /**
      * Initializes this element.
-     * Make sure to call super.init() AFTER your data
      */
     public void init() {
     }

@@ -474,7 +474,7 @@ public class Engine {
 
                     // dig
                     final Element found = dig.hiddenElements.remove(Word.Action.DIG);
-                    dig.elements.add(found);
+                    found.moveTo(dig);
                     return Result.done("Cavas en " + dig + ". Descubres " + found + ".");
                 });
             case BREAK:
