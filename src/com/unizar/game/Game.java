@@ -1,5 +1,6 @@
 package com.unizar.game;
 
+import com.unizar.Utils;
 import com.unizar.game.commands.Engine;
 import com.unizar.game.commands.Parser;
 import com.unizar.game.elements.Element;
@@ -62,7 +63,7 @@ public class Game extends KeyAdapter {
         setImage(world.properties.getStartScreen());
         window.clearOutput();
         addOutput("Escribe aquí los comandos y pulsa enter para introducirlos.");
-        addOutput("También puedes pulsar F6/F9 para guardar/cargar la partida. Y pulsar F2 para resetear.");
+        addOutput("También puedes pulsar F6/F9 para guardar/cargar la partida. Y pulsar F2 para resetear. Si necesitas ayuda sobre el juego puedes pulsar F1.");
         window.clearDescription();
         addDescription(world.properties.getStartDescription());
         addDescription("");
@@ -174,6 +175,11 @@ public class Game extends KeyAdapter {
             case KeyEvent.VK_F2:
                 startScreen();
                 parser.clearHistory();
+                break;
+
+            // press F1 for help
+            case KeyEvent.VK_F1:
+                Utils.showMessage("Ayuda", "/raw/help.txt");
                 break;
 
             // press F12 for debug

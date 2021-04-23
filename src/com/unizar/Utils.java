@@ -1,8 +1,15 @@
 package com.unizar;
 
+import com.unizar.game.Game;
+
+import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * That utils class
@@ -39,6 +46,33 @@ public class Utils {
      */
     static public <T> T pickRandom(T[] array) {
         return array[random.nextInt(array.length)];
+    }
+
+    /**
+     * Show a dialog with a scrollable window with content from a file
+     *
+     * @param title window title
+     * @param path  path to the file with the message text
+     */
+    public static void showMessage(String title, String path) {
+        // read message
+        final InputStream resource = Game.class.getResourceAsStream(path);
+        if (resource == null) {
+            throw new RuntimeException("The file '" + path + "' doesn't exist.");
+        }
+        final String message = new BufferedReader(new InputStreamReader(resource)).lines().collect(Collectors.joining("\n"));
+
+        // create window
+        JTextArea textArea = new JTextArea(25, 50);
+        textArea.setWrapStyleWord(true);
+        textArea.setLineWrap(true);
+        textArea.setText(message);
+        textArea.setCaretPosition(0); // to start at the top
+        textArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+
+        // show
+        JOptionPane.showMessageDialog(null, scrollPane, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
     // ------------------------- -------------------------

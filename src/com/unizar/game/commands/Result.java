@@ -61,7 +61,6 @@ public class Result {
 
     // ------------------------- functions -------------------------
 
-
     public void merge(Result result) {
         assert done;
         done = result.done;
