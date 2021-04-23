@@ -1,6 +1,7 @@
 package com.unizar.game.elements;
 
 import com.unizar.Utils;
+import com.unizar.game.Objective;
 import com.unizar.game.commands.Word;
 
 import java.util.*;
@@ -60,5 +61,17 @@ abstract public class Location extends Element {
         }
 
         return description.toString();
+    }
+
+    @Override
+    public void init() {
+        // add a new objective: visit this location
+        addObjective(new Objective() {
+            @Override
+            public boolean isCompleted() {
+                return game.getPlayer().getLocation() == Location.this;
+            }
+        });
+        super.init();
     }
 }

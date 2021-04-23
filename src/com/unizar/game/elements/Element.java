@@ -1,6 +1,7 @@
 package com.unizar.game.elements;
 
 import com.unizar.game.Game;
+import com.unizar.game.Objective;
 import com.unizar.game.commands.Word;
 
 import java.io.Serializable;
@@ -33,6 +34,17 @@ abstract public class Element implements Serializable {
      * Only some actions will trigger this.
      */
     public final Map<Word.Action, Element> hiddenElements = new HashMap<>();
+
+    // ------------------------- objectives -------------------------
+
+    public int totalObjectives = 0;
+
+    public Set<Objective> pendingObjectives = new HashSet<>();
+
+    public void addObjective(Objective objective) {
+        pendingObjectives.add(objective);
+        totalObjectives++;
+    }
 
     // ------------------------- functions -------------------------
 
@@ -67,7 +79,7 @@ abstract public class Element implements Serializable {
     }
 
     /**
-     * Makes an npc say something to all the other npcs on this location
+     * Makes an npc say something to all the other npcs on this element
      *
      * @param npc     who said the message
      * @param message what was said

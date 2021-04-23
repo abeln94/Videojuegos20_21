@@ -372,8 +372,8 @@ public class Engine {
                 });
 //            case HELP:
 //                return Result.done(npc.game.world.requiredObjectives.get(0).first + ".");
-//            case SCORE:
-//                return Result.done(npc.game.getCompletion());
+            case SCORE:
+                return Result.done(npc.game.getCompletion());
             case PUT:
                 return command.main.require(
                         // we must have it
