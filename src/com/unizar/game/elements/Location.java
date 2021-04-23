@@ -65,6 +65,7 @@ abstract public class Location extends Element {
 
     @Override
     public void init() {
+        super.init();
         // add a new objective: visit this location
         addObjective(new Objective() {
             @Override
@@ -72,6 +73,5 @@ abstract public class Location extends Element {
                 return game.getPlayer().getLocation() == Location.this;
             }
         });
-        super.init();
     }
 }

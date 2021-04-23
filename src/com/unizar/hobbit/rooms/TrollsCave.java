@@ -4,8 +4,6 @@ import com.unizar.Utils;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Location;
 import com.unizar.hobbit.items.RockDoor;
-import com.unizar.hobbit.items.Rope;
-import com.unizar.hobbit.items.Sword;
 
 public class TrollsCave extends Location {
 
@@ -15,9 +13,6 @@ public class TrollsCave extends Location {
 
     @Override
     public void init() {
-        elements.add(game.findElementByClassName(Sword.class));
-        elements.add(game.findElementByClassName(Rope.class));
-
         exits.put(Word.Direction.SOUTH, Utils.Pair.of(game.findElementByClassName(HiddenPath.class), game.findElementByClassName(RockDoor.class)));
         super.init();
     }

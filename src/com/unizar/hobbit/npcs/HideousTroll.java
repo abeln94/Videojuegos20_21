@@ -4,7 +4,6 @@ import com.unizar.game.commands.Command;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.NPC;
-import com.unizar.hobbit.items.LargeKey;
 
 public class HideousTroll extends NPC {
 
@@ -13,12 +12,6 @@ public class HideousTroll extends NPC {
     public HideousTroll() {
         super("Un Troll horrendo");
         weight = 200;
-    }
-
-    @Override
-    public void init() {
-        elements.add(game.findElementByClassName(LargeKey.class));
-        super.init();
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Location;
 import com.unizar.hobbit.items.GoblinDoor;
 import com.unizar.hobbit.items.GoblinWindow;
-import com.unizar.hobbit.items.Sand;
 
 public class GoblinDungeon extends Location {
 
@@ -15,7 +14,6 @@ public class GoblinDungeon extends Location {
 
     @Override
     public void init() {
-        elements.add(game.findElementByClassName(Sand.class));
 
         exits.put(Word.Direction.NORTH, Utils.Pair.of(game.findElementByClassName(DimValley.class), game.findElementByClassName(GoblinDoor.class)));
         exits.put(Word.Direction.WEST, Utils.Pair.of(game.findElementByClassName(DimValley.class), game.findElementByClassName(GoblinWindow.class)));

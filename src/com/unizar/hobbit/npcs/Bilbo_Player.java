@@ -9,9 +9,4 @@ public class Bilbo_Player extends Player {
         weight = 25;
     }
 
-    @Override
-    public void init() {
-        super.init();
-    }
-
 }

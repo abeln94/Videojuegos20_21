@@ -15,12 +15,6 @@ public class Gandalf extends NPC {
     }
 
     @Override
-    public void init() {
-        elements.add(game.findElementByClassName(Map.class));
-        super.init();
-    }
-
-    @Override
     public void act() {
         Result result;
 

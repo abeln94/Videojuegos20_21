@@ -19,11 +19,6 @@ public class Elrond extends NPC {
     }
 
     @Override
-    public void init() {
-        super.init();
-    }
-
-    @Override
     public void hear(String message) {
         if (message.contains(Map.ELROND_REPLY)) {
             // we examined the map, only the player can ask us to do it

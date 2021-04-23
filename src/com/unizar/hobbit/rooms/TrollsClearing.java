@@ -14,8 +14,6 @@ public class TrollsClearing extends Location {
 
     @Override
     public void init() {
-        elements.add(game.findElementByClassName(HideousTroll.class));
-        elements.add(game.findElementByClassName(ViciousTroll.class));
 
         exits.put(Word.Direction.WEST, Utils.Pair.of(game.findElementByClassName(EmptyLand.class), null));
         exits.put(Word.Direction.SOUTHWEST, Utils.Pair.of(game.findElementByClassName(EmptyLand.class), null));

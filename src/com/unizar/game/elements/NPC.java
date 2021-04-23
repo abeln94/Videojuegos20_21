@@ -73,9 +73,4 @@ abstract public class NPC extends Element {
         Result result = game.engine.execute(this, Command.simple(Word.Action.WAIT));
         System.out.println(this + ": " + result);
     }
-
-    @Override
-    public void init() {
-        super.init();
-    }
 }

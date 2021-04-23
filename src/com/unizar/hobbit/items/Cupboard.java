@@ -7,13 +7,7 @@ import com.unizar.game.elements.NPC;
 public class Cupboard extends Item {
     public Cupboard() {
         super("un gran armario");
-    }
-
-    @Override
-    public void init() {
         openable = OPENABLE.CLOSED;
-        elements.add(game.findElementByClassName(Food.CupboardFood.class));
-        super.init();
     }
 
     @Override
