@@ -66,7 +66,7 @@ public class Engine {
                 ).require(
                         // and not be open already
                         e -> ((Item) e).openable != Item.OPENABLE.OPENED,
-                        "{} está ya abierto/a.",
+                        "{} ya está abierto/a.",
                         "todo"
                 ).require(
                         // and not be locked by an element
@@ -93,7 +93,7 @@ public class Engine {
                 ).require(
                         // and not be closed
                         e -> ((Item) e).openable != Item.OPENABLE.CLOSED,
-                        "{} está ya cerrado/a.",
+                        "{} ya está cerrado/a.",
                         "todo"
                 ).require(
                         // nor locked
@@ -121,7 +121,7 @@ public class Engine {
                 ).require(
                         // and be locked
                         e -> ((Item) e).openable == Item.OPENABLE.LOCKED,
-                        "{} está ya desbloqueado.",
+                        "{} ya está desbloqueado.",
                         "todo"
                 ).apply("Que quieres desbloquear?", unlockable -> {
 
@@ -157,7 +157,7 @@ public class Engine {
                 ).require(
                         // and be unlocked
                         e -> ((Item) e).openable != Item.OPENABLE.LOCKED,
-                        "{} está ya bloqueado.",
+                        "{} ya está bloqueado.",
                         "todo"
                 ).apply("Que quieres bloquear?", lockable -> {
 

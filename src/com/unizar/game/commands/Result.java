@@ -8,7 +8,7 @@ public class Result {
     /**
      * Whether the command was executed correctly
      */
-    public boolean done = false;
+    public boolean done = true;
 
     /**
      * Whether the command is incomplete and requires more info
@@ -20,12 +20,13 @@ public class Result {
      */
     public String output = null;
 
+    // ------------------------- constructors -------------------------
+
     /**
      * Constructor: An ok result
      */
     public static Result done(String output) {
         Result result = new Result();
-        result.done = true;
         result.output = output;
         return result;
     }
@@ -42,6 +43,7 @@ public class Result {
      */
     public static Result moreNeeded(String output, String appendableInput) {
         Result result = new Result();
+        result.done = false;
         result.requiresMore = appendableInput == null ? "" : appendableInput;
         result.output = output;
         return result;
@@ -52,8 +54,19 @@ public class Result {
      */
     public static Result error(String output) {
         Result result = new Result();
+        result.done = false;
         result.output = output;
         return result;
+    }
+
+    // ------------------------- functions -------------------------
+
+
+    public void merge(Result result) {
+        assert done;
+        done = result.done;
+        requiresMore = result.requiresMore;
+        output = (output == null ? "" : output + "\n") + result.output;
     }
 
     @Override

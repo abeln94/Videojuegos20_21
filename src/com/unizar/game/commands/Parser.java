@@ -171,6 +171,12 @@ public class Parser implements Window.InputListener {
                     if (isSecondElement) command.secondary.addDescriptionWord(word);
                     else command.main.addDescriptionWord(word);
                     break;
+
+                case ALL:
+                    if (isSecondElement) command.secondary.markAsAll();
+                    else command.main.markAsAll();
+                    break;
+
                 case MULTIPLE:
                     command.parseError = true;
                     return command;
@@ -178,7 +184,6 @@ public class Parser implements Window.InputListener {
                     command.invalidToken = word;
                     command.parseError = true;
                     return command;
-
 
                 case IGNORE: // ignore
                     break;

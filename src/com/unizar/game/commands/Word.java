@@ -140,6 +140,11 @@ public class Word {
     }
 
     /**
+     * The 'all' words
+     */
+    static String all = "todo toda todos todas";
+
+    /**
      * A type of word
      */
     public enum Type {
@@ -151,6 +156,7 @@ public class Word {
         MULTIPLE,
         UNKNOWN,
         IGNORE,
+        ALL,
         ;
     }
 
@@ -205,6 +211,9 @@ public class Word {
         // now modifiers
         final Optional<Modifier> modifier = Arrays.stream(Modifier.values()).filter(m -> Word.matchSentences(m.alias, word)).findFirst();
         if (modifier.isPresent()) return Utils.Pair.of(Type.MODIFIER, modifier.get());
+
+        // all
+        if (Word.matchSentences(all, word)) return Utils.Pair.of(Type.ALL, null);
 
 
         // and finally, check the word in the game-specific elements

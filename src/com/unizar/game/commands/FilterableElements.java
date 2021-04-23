@@ -15,6 +15,9 @@ public class FilterableElements {
     public Set<Element> elements;
     public String description = "";
     public String error = null;
+    public boolean all = false;
+
+    // ------------------------- construction -------------------------
 
     /**
      * Contains just one element
@@ -44,6 +47,12 @@ public class FilterableElements {
         elements = elements.stream().filter(e -> Word.matchSentences(e.name, word)).collect(Collectors.toSet());
         description = description.isEmpty() ? word : description + " " + word;
     }
+
+    public void markAsAll() {
+        all = true;
+    }
+
+    // ------------------------- using -------------------------
 
     /**
      * Makes the element require something.
@@ -105,8 +114,22 @@ public class FilterableElements {
                 assert error != null;
                 return Result.error(error);
             default:
-                // multiple elements, more info needed
-                return Result.moreNeeded(moreNeeded, moreNeededAppendable);
+                // multiple elements
+                if (all) {
+                    // apply to all
+                    // TODO: in different turns
+                    Result result = new Result();
+                    for (Element element : elements) {
+                        result.merge(action.apply(element));
+                        if (!result.done) {
+                            return result;
+                        }
+                    }
+                    return result;
+                } else {
+                    //more info needed
+                    return Result.moreNeeded(moreNeeded, moreNeededAppendable);
+                }
         }
     }
 
