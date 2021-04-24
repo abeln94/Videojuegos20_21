@@ -527,6 +527,45 @@ public class Engine {
                     );
                 });
 
+            case THROW:
+                return command.main.require(
+                        // it must be interactable
+                        interactable::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                ).require(
+                        // and also we must have it
+                        npc.elements::contains,
+                        "No tienes {}.",
+                        "nada que lanzar"
+                ).apply("Que quieres lanzar?", elementToThrow -> {
+
+                    // check who to give it to
+                    return command.secondary.require(
+                            // it must be interactable
+                            interactable::contains,
+                            "No veo {} desde aquí.",
+                            "nada"
+                    ).require(
+                            // the element must be an item
+                            e -> e instanceof Item,
+                            "No puedes lanzar hacia {}.",
+                            "nada"
+                    ).require(
+                            // it must be in an exit
+                            item -> ((Location) npc.getLocation()).exits.values().stream().map(li -> li.second).filter(Objects::nonNull).collect(Collectors.toSet()).contains(item),
+                            "No hay nada hacia {}.",
+                            "ningun sitio"
+                    ).apply("Hacia donde lo quieres lanzar?", Word.Preposition.ACROSS.alias + " ", throwAcross -> {
+
+                        Location whereToThrow = ((Location) npc.getLocation()).exits.values().stream().filter(li -> li.second == throwAcross).map(li -> li.first).findAny().orElse(null);
+
+                        // throw
+                        elementToThrow.moveTo(whereToThrow);
+                        whereToThrow.notifyNPCs(npc, npc + " lanza " + elementToThrow + ".");
+                        return Result.done("Lanzas " + elementToThrow + " al otro lado de " + throwAcross + ".");
+                    });
+                });
         }
 
         return Result.error("Aún no se hacer eso!");
