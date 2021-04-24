@@ -8,6 +8,8 @@ import com.unizar.game.elements.NPC;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Executes a command from an npc.
@@ -42,8 +44,6 @@ public class Engine {
         switch (command.action) {
             case WAIT:
                 return Result.done("Esperas. El tiempo pasa.");
-            case LOOK:
-                return Result.error("[obsoleto: la descripción está ahora a la derecha]");
             case INVENTORY:
                 return Result.error("[obsoleto: tu inventario se muestra ahora a la derecha]");
             case SAVE:
@@ -495,6 +495,36 @@ public class Engine {
                     found.moveTo(breakItem.getLocation());
                     breakItem.moveTo(null);
                     return Result.done("Rompes " + breakItem + ". Descubres " + found + ".");
+                });
+
+            case LOOK:
+
+                // we must be in a location
+                if (!(npc.getLocation() instanceof Location)) {
+                    return Result.error("No puedes mirar desde aquí.");
+                }
+
+                return command.secondary.require(
+                        // it must be interactable
+                        interactable::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                ).require(
+                        // the element must be an item
+                        e -> e instanceof Item,
+                        "No puedes mirar hacia {}.",
+                        "nada"
+                ).require(
+                        // it must be in an exit
+                        item -> ((Location) npc.getLocation()).exits.values().stream().map(li -> li.second).filter(Objects::nonNull).collect(Collectors.toSet()).contains(item),
+                        "No hay nada hacia {}.",
+                        "ningun sitio"
+                ).apply("Hacia donde quieres mirar?", door -> {
+
+                    // look
+                    return Result.done("Miras hacia " + door + ". Puedes ver " +
+                            ((Location) npc.getLocation()).exits.values().stream().filter(li -> li.second == door).map(li -> li.first).findAny().orElse(null).getDescription()
+                    );
                 });
 
         }

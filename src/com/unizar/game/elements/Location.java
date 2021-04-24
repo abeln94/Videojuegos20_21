@@ -56,7 +56,7 @@ abstract public class Location extends Element {
         description.append(Utils.joinList("", " Hay una salida hacia", " Hay salidas visibles hacia", visibleExits));
 
         // add the elements descriptions
-        description.append(describeContents(" No ves nada desde aquí.", " Puedes ver:"));
+        description.append(describeContents(" No ves nada mas.", " Puedes ver:"));
 
         return description.toString();
     }
