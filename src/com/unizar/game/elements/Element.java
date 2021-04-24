@@ -1,11 +1,13 @@
 package com.unizar.game.elements;
 
+import com.unizar.Utils;
 import com.unizar.game.Game;
 import com.unizar.game.Objective;
 import com.unizar.game.commands.Word;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A generic element of the game
@@ -53,13 +55,29 @@ abstract public class Element implements Serializable {
     }
 
     /**
-     * Returns the description of this element from the perspective of a given npc
+     * Returns the description of this element (from the perspective of the player)
      *
-     * @param npc npc looking for a description of this element
      * @return the description as string
      */
-    public String getDescription(NPC npc) {
-        return name;
+    public String getDescription() {
+        return name + describeContents(".", ": Contiene");
+    }
+
+    /**
+     * Returns the description of the contents of this element (excludes the player)
+     *
+     * @param ifEmpty if there are no elements, returns this string instead
+     * @param prefix  if there are elements, appends this prefix and a line break
+     * @return either ifEmpty or prefix+"\n"+contents
+     */
+    public String describeContents(String ifEmpty, String prefix) {
+        final String contents = elements.stream()
+                .filter(e -> e != game.getPlayer())
+                .map(Element::getDescription)
+                .map(v -> "-" + v)
+                .map(Utils::increasePadding)
+                .collect(Collectors.joining("\n"));
+        return contents.isEmpty() ? ifEmpty : prefix + "\n" + contents;
     }
 
     /**

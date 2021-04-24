@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -30,11 +31,11 @@ public class Utils {
         if (list.isEmpty()) return empty;
 
         // one
-        if (list.size() == 1) return prefixOne + " " + list.get(0);
+        if (list.size() == 1) return prefixOne + " " + list.get(0) + ".";
 
         // 2+
         int last = list.size() - 1;
-        return prefixMultiple + " " + String.join(" y ", String.join(", ", list.subList(0, last)), list.get(last));
+        return prefixMultiple + " " + String.join(" y ", String.join(", ", list.subList(0, last)), list.get(last)) + ".";
     }
 
     // ------------------------- -------------------------
@@ -73,6 +74,18 @@ public class Utils {
 
         // show
         JOptionPane.showMessageDialog(null, scrollPane, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Increases the left padding of each line of a string
+     *
+     * @param string string content
+     * @return the same string, but each line has an additional 4 spaces before
+     */
+    public static String increasePadding(String string) {
+        return Arrays.stream(string.split("\n"))
+                .map(line -> "    " + line)
+                .collect(Collectors.joining("\n"));
     }
 
     // ------------------------- -------------------------

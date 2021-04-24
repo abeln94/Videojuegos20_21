@@ -5,8 +5,6 @@ import com.unizar.game.commands.Command;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 
-import java.util.stream.Collectors;
-
 /**
  * A generic NPC
  */
@@ -22,10 +20,8 @@ abstract public class NPC extends Element {
     }
 
     @Override
-    public String getDescription(NPC npc) {
-        String prefix = ": " + " Lleva";
-
-        return this + Utils.joinList("", prefix, prefix, elements.stream().map(e -> e.getDescription(npc)).collect(Collectors.toList()));
+    public String getDescription() {
+        return name + describeContents(".", ". Lleva:");
     }
 
     /**

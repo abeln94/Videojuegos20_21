@@ -41,24 +41,22 @@ abstract public class Location extends Element {
     }
 
     @Override
-    public String getDescription(NPC npc) {
-        StringBuilder description = new StringBuilder(super.getDescription(npc));
+    public String getDescription() {
+        // start with the location description
+        StringBuilder description = new StringBuilder(name + ".");
 
+        // add the object exits
         List<String> visibleExits = exits.entrySet().stream().filter(e -> {
             if (e.getValue().second != null) {
-                description.append(". Hacia " + e.getKey().description + " está " + e.getValue().second);
+                description.append(" Hacia " + e.getKey().description + " está " + e.getValue().second + ".");
                 return false;
             }
             return true;
         }).map(e -> e.getKey().description).collect(Collectors.toList());
-        description.append(Utils.joinList("", ". Hay una salida hacia", ". Hay salidas visibles hacia", visibleExits));
+        description.append(Utils.joinList("", " Hay una salida hacia", " Hay salidas visibles hacia", visibleExits));
 
-        List<Element> visible = elements.stream().filter(e -> e != npc).collect(Collectors.toList());
-        if (visible.isEmpty()) {
-            description.append(". No ves nada desde aquí");
-        } else {
-            description.append(". Puedes ver:\n - " + visible.stream().map(e -> e.getDescription(npc)).collect(Collectors.joining(".\n - ")));
-        }
+        // add the elements descriptions
+        description.append(describeContents(" No ves nada desde aquí.", " Puedes ver:"));
 
         return description.toString();
     }

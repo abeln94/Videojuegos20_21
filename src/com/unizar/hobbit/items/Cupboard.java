@@ -2,7 +2,6 @@ package com.unizar.hobbit.items;
 
 import com.unizar.game.elements.Element;
 import com.unizar.game.elements.Item;
-import com.unizar.game.elements.NPC;
 
 public class Cupboard extends Item {
     public Cupboard() {
@@ -17,8 +16,8 @@ public class Cupboard extends Item {
     }
 
     @Override
-    public String getDescription(NPC npc) {
-        return "Una pesada cortina. Tras ella una pared. En la pared hay " + super.getDescription(npc);
+    public String getDescription() {
+        return "Una pesada cortina. Tras ella una pared. En la pared hay " + super.getDescription();
     }
 
     @Override
