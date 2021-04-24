@@ -566,6 +566,35 @@ public class Engine {
                         return Result.done("Lanzas " + elementToThrow + " al otro lado de " + throwAcross + ".");
                     });
                 });
+
+            case PULL:
+                return command.secondary.require(
+                        // it must be interactable
+                        interactable::contains,
+                        "No veo {} por aquí.",
+                        "nada"
+                ).require(
+                        // and allow pulling
+                        e -> e.hiddenElements.containsKey(Word.Action.PULL),
+                        "No puedes tirar de {}.",
+                        "nada"
+                ).apply("De que quieres tirar?", pull -> {
+
+                    // pull
+                    final Element found = pull.hiddenElements.get(Word.Action.PULL);
+                    found.moveTo(pull);
+                    return Result.done("Tiras de " + pull + ". " + found + " viene a este lado.");
+                });
+
+            case TIRAR:
+                if (command.main.description.isEmpty() && !command.secondary.description.isEmpty()) {
+                    // "TIRAR from something" means pull
+                    command.action = Word.Action.PULL;
+                } else {
+                    // "TIRAR something" means DROP
+                    command.action = Word.Action.DROP;
+                }
+                return execute(npc, command);
         }
 
         return Result.error("Aún no se hacer eso!");

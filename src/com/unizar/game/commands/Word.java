@@ -24,7 +24,7 @@ public class Word {
         CROSS("cruzar"),
         DIG("cavar"),
         DRINK("beber"),
-        DROP("soltar tirar"),
+        DROP("soltar"),
         EAT("comer"),
         EMPTY("vaciar"),
         ENTER("entrar"),
@@ -37,6 +37,7 @@ public class Word {
         PICK("elegir coger"),
         PUT("poner colocar"),
         OPEN("abrir"),
+        PULL("estirar"),
         RUN("correr"),
         SAY("decir pedir"),
         SHOOT("disparar"),
@@ -62,6 +63,9 @@ public class Word {
         SAVE("guardar"),
         SCORE("puntuación"),
         WAIT("esperar"),
+
+        // spanishSpecial
+        TIRAR("tirar"),
         ;
 
         Action(String alias) {
@@ -102,7 +106,7 @@ public class Word {
     public enum Preposition {
         ACROSS("cruzando"),
         AT("a"),
-        FROM("desde"),
+        FROM("desde de"),
         IN("en"),
         INTO("dentro"),
         OFF("lejos"),
