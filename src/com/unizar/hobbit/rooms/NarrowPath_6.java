@@ -13,7 +13,7 @@ public class NarrowPath_6 extends Location {
     @Override
     public void init() {
         exits.put(Word.Direction.NORTHWEST, Utils.Pair.of(game.findElementByClassName(NarrowPath_5.class), null));
-        exits.put(Word.Direction.SOUTHWEST, Utils.Pair.of(game.findElementByClassName(DeadlyPath.class),null));
+        exits.put(Word.Direction.SOUTHWEST, Utils.Pair.of(game.findElementByClassName(NarrowPath_3.class),null));
         exits.put(Word.Direction.DOWN, Utils.Pair.of(game.findElementByClassName(SteepPath_1.class),null));
         super.init();
     }

@@ -14,11 +14,4 @@ public class TrapDoor extends Item {
         hiddenElements.put(Word.Action.BREAK, game.findElementByClassName(SmallKey.class));
         super.init();
     }
-
-    @Override
-    public void act() {
-        Result result;
-        //si SMASH se añade la small curious key
-        super.act();
-    }
 }

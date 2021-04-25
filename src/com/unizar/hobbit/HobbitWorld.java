@@ -58,6 +58,36 @@ public class HobbitWorld extends World {
         elements.add(new Mirkwood());
         elements.add(new BewitchedPlace());
         elements.add(new WestBlackRiver());
+        elements.add(new EastBlackRiver());
+        elements.add(new GreenForest());
+        elements.add(new PlaceOfBlackSpider());
+        elements.add(new ElvishClearing());
+        elements.add(new Elvenkings());
+        elements.add(new CellarOfWine());
+        elements.add(new RedDoorRoom());
+        elements.add(new Forestriver());
+        elements.add(new LongLake());
+        elements.add(new LakeTown());
+        elements.add(new BleakBarrenLand());
+        elements.add(new RuinsTownDale());
+        elements.add(new Ravenhill());
+        elements.add(new Sidedoor());
+        elements.add(new SmoothPassage());
+        elements.add(new EmptyPlace());
+        elements.add(new NarrowDangerousPath());
+        elements.add(new ForestGate());
+        elements.add(new DragonsHalls());
+        elements.add(new FastRiver());
+        elements.add(new Forest());
+        elements.add(new ForestGate());
+        elements.add(new Forestriver());
+        elements.add(new ForestRoad_1());
+        elements.add(new ForestRoad_2());
+        elements.add(new FrontGate());
+        elements.add(new LonelyMountain());
+        elements.add(new NarrowDangerousPath());
+        elements.add(new StrongRiver());
+        elements.add(new Waterfall());
 
         // items
         elements.add(new Map());
@@ -79,6 +109,19 @@ public class HobbitWorld extends World {
         elements.add(new Gold());
         elements.add(new GoblinGate());
         elements.add(new Cupboard());
+        elements.add(new SpiderWeb());
+        elements.add(new MagicDoor());
+        elements.add(new RedDoor());
+        elements.add(new LargeTrapDoor());
+        elements.add(new Barrel());
+        elements.add(new Wine());
+        elements.add(new RedKey());
+        elements.add(new StrongPortcullis());
+        elements.add(new Bow());
+        elements.add(new Arrow());
+        elements.add(new SideDoorLonelyMountain());
+        elements.add(new TheValuableTreasure());
+        elements.add(new RunningRiver());
 
         // npcs
         elements.add(new Gandalf());
@@ -88,6 +131,9 @@ public class HobbitWorld extends World {
         elements.add(new Elrond());
         elements.add(new NastyGoblin());
         elements.add(new Gollum());
+        elements.add(new Butler());
+        elements.add(new Bardo());
+        elements.add(new RedGoldenDragon());
 
 
         // objectives

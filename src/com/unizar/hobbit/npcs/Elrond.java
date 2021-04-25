@@ -27,7 +27,7 @@ public class Elrond extends NPC {
     public void hear(String message) {
         if (message.contains(Map.ELROND_REPLY)) {
             // we examined the map, only the player can ask us to do it
-            getLocation().notifyNPCs(this, this + " dice: Ve hacia el este desde Long Lake para llegar a Lake Town");
+            getLocation().notifyNPCs(this, this + " dice: Ve hacia el este desde el Gran Lago para llegar a Ciudad del lago");
             // TODO: add that link from Long Lake to Lake Town
             return;
         }

@@ -19,7 +19,9 @@ public class BeornsHouse extends Location {
         exits.put(Word.Direction.NORTHEAST, Utils.Pair.of(game.findElementByClassName(Mirkwood.class), null));
         exits.put(Word.Direction.NORTHWEST, Utils.Pair.of(game.findElementByClassName(TrelessOpening.class), null));
         //exits.put(Word.Direction.SOUTH, Utils.Pair.of(game.findElementByClassName(.class), null)); //TODO
-        exits.put(Word.Direction.SOUTHWEST, Utils.Pair.of(game.findElementByClassName(TrelessOpening.class), null));
+        //exits.put(Word.Direction.NORTH, Utils.Pair.of(game.findElementByClassName(.class), null)); //TODO
+        exits.put(Word.Direction.EAST, Utils.Pair.of(game.findElementByClassName(ForestGate.class), null));
+        exits.put(Word.Direction.SOUTHWEST, Utils.Pair.of(game.findElementByClassName(NarrowDangerousPath.class), null));
         super.init();
     }
 }
