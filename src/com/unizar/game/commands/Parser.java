@@ -3,11 +3,9 @@ package com.unizar.game.commands;
 import com.unizar.Utils;
 import com.unizar.game.Game;
 import com.unizar.game.Window;
-import com.unizar.game.elements.Element;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Basic parser, converts a string into a command simply by searching for the words
@@ -107,8 +105,7 @@ public class Parser implements Window.InputListener {
      * @param sentence user input
      */
     public Command parse(String sentence) {
-        Set<Element> elements = game.world.elements;
-        Command command = new Command(null, null, null, null, new FilterableElements(elements), new FilterableElements(elements));
+        Command command = new Command(game.world.elements);
 
         // extract sequence
         sentence = sentence.replaceAll("\"\"", "\"");
@@ -132,14 +129,14 @@ public class Parser implements Window.InputListener {
         sentence = sentence.replaceAll("[^0-9a-zA-ZñÑáéíóú]", " ");
 
         // when you say 'darme el mapa' the 'me' part is replaced by the player
-        sentence = sentence.replaceAll("\\bdarme\\b", "a " + game.getPlayer().name + " dar");
+        sentence = sentence.replaceAll("\\b([^ ]*)me\\b", "a " + game.getPlayer().name + " $1");
 
         // get the words
         List<String> words = Word.separateWords(sentence);
         boolean isSecondElement = false;
         for (String word : words) {
             if (word.isEmpty()) continue;
-            Utils.Pair<Word.Type, Object> parsing = Word.parse(word, elements);
+            Utils.Pair<Word.Type, Object> parsing = Word.parse(word, game.world.elements);
             switch (parsing.first) {
                 case ACTION:
                     if (command.action != null) {
@@ -177,6 +174,12 @@ public class Parser implements Window.InputListener {
                     else command.main.markAsAll();
                     break;
 
+                case AND:
+                    Command newCommand = new Command(game.world.elements);
+                    newCommand.beforeCommand = command;
+                    command = newCommand;
+                    break;
+
                 case MULTIPLE:
                     command.parseError = true;
                     return command;
@@ -190,11 +193,8 @@ public class Parser implements Window.InputListener {
             }
         }
 
-        // special shortcuts
-        if (command.action == null && command.direction != null) {
-            // a direction without action is a go
-            command.action = Word.Action.GO;
-        }
+        // validate
+        command.validate();
 
         return command;
     }

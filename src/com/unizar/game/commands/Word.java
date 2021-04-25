@@ -149,6 +149,11 @@ public class Word {
     static String all = "todo toda todos todas";
 
     /**
+     * To separate commands
+     */
+    static String and = "y";
+
+    /**
      * A type of word
      */
     public enum Type {
@@ -161,6 +166,7 @@ public class Word {
         UNKNOWN,
         IGNORE,
         ALL,
+        AND,
         ;
     }
 
@@ -215,6 +221,9 @@ public class Word {
         // now modifiers
         final Optional<Modifier> modifier = Arrays.stream(Modifier.values()).filter(m -> Word.matchSentences(m.alias, word)).findFirst();
         if (modifier.isPresent()) return Utils.Pair.of(Type.MODIFIER, modifier.get());
+
+        // the joiner
+        if (Word.matchSentences(and, word)) return Utils.Pair.of(Type.AND, null);
 
         // all
         if (Word.matchSentences(all, word)) return Utils.Pair.of(Type.ALL, null);

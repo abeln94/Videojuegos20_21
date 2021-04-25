@@ -2,6 +2,8 @@ package com.unizar.game.commands;
 
 import com.unizar.game.elements.Element;
 
+import java.util.Set;
+
 /**
  * A processed command, contains the command elements for the engine
  */
@@ -19,6 +21,8 @@ public class Command {
     public String invalidToken = null;
     public boolean parseError = false;
 
+    public Command beforeCommand = null;
+
     // ------------------------- constructors -------------------------
 
     public Command(Word.Modifier modifier, Word.Action action, Word.Direction direction, String sequence, FilterableElements main, FilterableElements secondary) {
@@ -28,6 +32,15 @@ public class Command {
         this.sequence = sequence;
         this.main = main;
         this.secondary = secondary;
+    }
+
+    /**
+     * Create a new empty command
+     *
+     * @param elements base list of elements for both main and secondary
+     */
+    public Command(Set<Element> elements) {
+        this(null, null, null, null, new FilterableElements(elements), new FilterableElements(elements));
     }
 
     /**
@@ -56,6 +69,31 @@ public class Command {
      */
     public static Command go(Word.Direction direction) {
         return new Command(null, Word.Action.GO, direction, null, null, null);
+    }
+
+    // ------------------------- generation -------------------------
+
+    /**
+     * Prepares this command after parsing
+     */
+    public void validate() {
+
+        // special shortcuts
+        if (action == null && direction != null) {
+            // a direction without action is a go
+            action = Word.Action.GO;
+        }
+
+        // chech merge
+        if (beforeCommand != null) {
+            // validate first the subcommand if necessary
+            beforeCommand.validate();
+
+            // merge with the subcommand values
+            if (modifier == null) modifier = beforeCommand.modifier;
+            if (action == null) action = beforeCommand.action;
+        }
+
     }
 
     // ------------------------- filters -------------------------

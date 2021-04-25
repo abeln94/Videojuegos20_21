@@ -38,6 +38,16 @@ public class Engine {
             return Result.error("Que quieres que haga?");
         }
 
+        if (command.beforeCommand != null) {
+            // multiple commands, run sub first
+            final Result result = execute(npc, command.beforeCommand);
+            // then this
+            command.beforeCommand = null;
+            // merge and return
+            result.merge(execute(npc, command));
+            return result;
+        }
+
         final List<Element> interactable = npc.getLocation().getInteractable();
         interactable.remove(npc);
 
