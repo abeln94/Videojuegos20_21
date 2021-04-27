@@ -71,6 +71,9 @@ public class Game extends KeyAdapter {
         addDescription("Pulsa cualquier tecla para empezar.");
     }
 
+    /**
+     * Wins the game
+     */
     public void winScreen() {
         state = State.WinScreen;
         setImage(world.properties.getWinScreen());
@@ -83,6 +86,9 @@ public class Game extends KeyAdapter {
         addDescription("Pulsa cualquier tecla para volver a empezar.");
     }
 
+    /**
+     * Game overs the game
+     */
     public void gameOverScreen() {
         state = State.GameOverScreen;
         setImage(null);
@@ -114,34 +120,33 @@ public class Game extends KeyAdapter {
     // ------------------------- listeners -------------------------
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyPressed(KeyEvent e) {
         switch (state) {
             case StartScreen:
                 state = State.Playing;
-                window.clearCommand();
                 update();
-                break;
+                return;
             case Playing:
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    // analyze command
-                    final String command = window.getCommand();
-                    window.clearCommand();
-                    parser.onText(command);
-                }
                 break;
             case GameOverScreen:
             case WinScreen:
                 window.clearCommand();
                 startScreen();
-                break;
+                return;
         }
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (state != State.Playing) return;
 
         switch (e.getKeyCode()) {
+
+            // press enter to perform command
+            case KeyEvent.VK_ENTER:
+                window.disableInput();
+                new Thread(() -> {
+                    String command = window.getCommand();
+                    window.clearCommand();
+                    parser.onText(command);
+                    window.enableInput();
+                }).start();
+                break;
 
             // press F6 to save
             case KeyEvent.VK_F6:

@@ -88,6 +88,21 @@ public class Utils {
                 .collect(Collectors.joining("\n"));
     }
 
+    /**
+     * Pauses the thread
+     *
+     * @param milliseconds time to pause
+     */
+    public static void pause(int milliseconds) {
+        synchronized (new Object()) {
+            try {
+                Thread.sleep(milliseconds);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     // ------------------------- -------------------------
 
     /**

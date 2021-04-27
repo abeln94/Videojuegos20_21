@@ -189,6 +189,7 @@ public class Window {
      */
     public void addOutput(String text) {
         commandOutput.setText(commandOutput.getText() + (commandOutput.getText().isEmpty() ? "" : "\n") + text);
+        commandOutput.setCaretPosition(commandOutput.getText().length());
     }
 
     // ------------------------- image -------------------------
@@ -219,4 +220,20 @@ public class Window {
         drawImage(savedImg);
     }
 
+    // ------------------------- behaviour -------------------------
+
+    /**
+     * Disables user inputs
+     */
+    public void disableInput() {
+        commandInput.setEnabled(false);
+    }
+
+    /**
+     * Enables user inputs
+     */
+    public void enableInput() {
+        commandInput.setEnabled(true);
+        commandInput.setCaretPosition(commandInput.getText().length());
+    }
 }

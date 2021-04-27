@@ -26,6 +26,9 @@ public class Engine {
     public Result execute(NPC npc, Command command) {
         System.out.println(npc + " " + command);
 
+        final Element location = npc.getLocation();
+        if (location == null) return Result.error("Estás muerto");
+
         if (command.parseError) {
             if (command.invalidToken != null) {
                 return Result.error("No entiendo '" + command.invalidToken + "'");
@@ -48,14 +51,14 @@ public class Engine {
             return result;
         }
 
-        final List<Element> interactable = npc.getLocation().getInteractable();
+        final List<Element> interactable = location.getInteractable();
         interactable.remove(npc);
 
         switch (command.action) {
             case WAIT:
                 return Result.done("Esperas. El tiempo pasa.");
             case INVENTORY:
-                return Result.error("[obsoleto: tu inventario se muestra ahora a la derecha]");
+                return Result.error("No permito que me hables en la lengua de mordor, tu inventario se muestra ahora a la derecha");
             case SAVE:
                 return Result.error("[obsoleto: pulsa F6 para guardar]");
             case LOAD:
@@ -86,7 +89,7 @@ public class Engine {
                 ).apply("Que quieres abrir?", element -> {
                     // open
                     ((Item) element).openable = Item.OPENABLE.OPENED;
-                    npc.getLocation().notifyNPCs(npc, npc + " abre " + element + ".");
+                    location.notifyNPCs(npc, npc + " abre " + element + ".");
                     return Result.done("Abres " + element + ".");
                 });
             case CLOSE:
@@ -114,7 +117,7 @@ public class Engine {
 
                     // close
                     ((Item) element).openable = Item.OPENABLE.CLOSED;
-                    npc.getLocation().notifyNPCs(npc, npc + " cierra " + element + ".");
+                    location.notifyNPCs(npc, npc + " cierra " + element + ".");
                     return Result.done("Cierras " + element + ".");
                 });
             case UNLOCK:
@@ -149,7 +152,7 @@ public class Engine {
 
                         // unlock
                         ((Item) unlockable).openable = Item.OPENABLE.CLOSED;
-                        npc.getLocation().notifyNPCs(npc, npc + " desbloquea " + unlockable + ".");
+                        location.notifyNPCs(npc, npc + " desbloquea " + unlockable + ".");
                         return Result.done("Desbloqueas " + unlockable + ".");
                     });
                 });
@@ -185,7 +188,7 @@ public class Engine {
 
                         // lock
                         ((Item) lockable).openable = Item.OPENABLE.LOCKED;
-                        npc.getLocation().notifyNPCs(npc, npc + " bloquea " + lockable + ".");
+                        location.notifyNPCs(npc, npc + " bloquea " + lockable + ".");
                         return Result.done("Bloqueas " + lockable + ".");
                     });
                 });
@@ -196,12 +199,12 @@ public class Engine {
                     return Result.moreNeeded("Hacia donde quieres ir?");
                 }
 
-                if (!(npc.getLocation() instanceof Location)) {
+                if (!(location instanceof Location)) {
                     // inside an item
-                    return Result.error("No puedes moverte mientras estás en " + npc.getLocation() + ".");
+                    return Result.error("No puedes moverte mientras estás en " + location + ".");
                 }
 
-                Utils.Pair<Location, Item> le = ((Location) npc.getLocation()).exits.get(command.direction);
+                Utils.Pair<Location, Item> le = ((Location) location).exits.get(command.direction);
 
                 if (le == null) {
                     // no exit
@@ -221,18 +224,18 @@ public class Engine {
                 }
 
                 // notify old npc
-                npc.getLocation().notifyNPCs(npc, npc + " va hacia " + command.direction.description + ".");
+                location.notifyNPCs(npc, npc + " va hacia " + command.direction.description + ".");
 
                 // move
                 npc.moveTo(newLocation);
 
                 // notify new npc
-                npc.getLocation().notifyNPCs(npc, npc + " entra.");
+                location.notifyNPCs(npc, npc + " entra.");
 
                 return Result.done("Te diriges hacia " + command.direction.description);
             case FOLLOW:
                 // check if we are inside something
-                if (!(npc.getLocation() instanceof Location))
+                if (!(location instanceof Location))
                     return Result.error("No puedes seguir a nadie desde aquí.");
 
                 return command.main.require(
@@ -247,13 +250,13 @@ public class Engine {
                         "todos"
                 ).require(
                         // and be in one of the connected exits
-                        otherNPC -> ((Location) npc.getLocation()).exits.entrySet().stream().anyMatch(l -> l.getValue().first.elements.contains(otherNPC)),
+                        otherNPC -> ((Location) location).exits.entrySet().stream().anyMatch(l -> l.getValue().first.elements.contains(otherNPC)),
                         "No veo a {}.",
                         "nadie a quien seguir"
                 ).apply("A quien quieres seguir?", toFollow -> {
 
                     // find direction and follow
-                    for (Map.Entry<Word.Direction, Utils.Pair<Location, Item>> entry : ((Location) npc.getLocation()).exits.entrySet()) {
+                    for (Map.Entry<Word.Direction, Utils.Pair<Location, Item>> entry : ((Location) location).exits.entrySet()) {
                         if (entry.getValue().first.elements.contains(toFollow)) {
                             // execute as a go command
                             Result result = execute(npc, Command.go(entry.getKey()));
@@ -309,7 +312,7 @@ public class Engine {
                         "nada"
                 ).require(
                         // and not be carried by another npc
-                        e -> !(npc.getLocation() instanceof NPC),
+                        e -> !(location instanceof NPC),
                         "No puedes coger {} de otro personaje.",
                         "nada"
                 ).require(
@@ -337,7 +340,7 @@ public class Engine {
                 ).apply("Que quieres tirar?", dropable -> {
 
                     // drop
-                    dropable.moveTo(npc.getLocation());
+                    dropable.moveTo(location);
                     return Result.done("Tiras " + dropable);
                 });
             case EXAMINE:
@@ -510,7 +513,7 @@ public class Engine {
             case LOOK:
 
                 // we must be in a location
-                if (!(npc.getLocation() instanceof Location)) {
+                if (!(location instanceof Location)) {
                     return Result.error("No puedes mirar desde aquí.");
                 }
 
@@ -526,14 +529,14 @@ public class Engine {
                         "nada"
                 ).require(
                         // it must be in an exit
-                        item -> ((Location) npc.getLocation()).exits.values().stream().map(li -> li.second).filter(Objects::nonNull).collect(Collectors.toSet()).contains(item),
+                        item -> ((Location) location).exits.values().stream().map(li -> li.second).filter(Objects::nonNull).collect(Collectors.toSet()).contains(item),
                         "No hay nada hacia {}.",
                         "ningun sitio"
                 ).apply("Hacia donde quieres mirar?", door -> {
 
                     // look
                     return Result.done("Miras hacia " + door + ". Puedes ver " +
-                            ((Location) npc.getLocation()).exits.values().stream().filter(li -> li.second == door).map(li -> li.first).findAny().orElse(null).getDescription()
+                            ((Location) location).exits.values().stream().filter(li -> li.second == door).map(li -> li.first).findAny().orElse(null).getDescription()
                     );
                 });
 
@@ -563,12 +566,12 @@ public class Engine {
                             "nada"
                     ).require(
                             // it must be in an exit
-                            item -> ((Location) npc.getLocation()).exits.values().stream().map(li -> li.second).filter(Objects::nonNull).collect(Collectors.toSet()).contains(item),
+                            item -> ((Location) location).exits.values().stream().map(li -> li.second).filter(Objects::nonNull).collect(Collectors.toSet()).contains(item),
                             "No hay nada hacia {}.",
                             "ningun sitio"
                     ).apply("Hacia donde lo quieres lanzar?", Word.Preposition.ACROSS.alias + " ", throwAcross -> {
 
-                        Location whereToThrow = ((Location) npc.getLocation()).exits.values().stream().filter(li -> li.second == throwAcross).map(li -> li.first).findAny().orElse(null);
+                        Location whereToThrow = ((Location) location).exits.values().stream().filter(li -> li.second == throwAcross).map(li -> li.first).findAny().orElse(null);
 
                         // throw
                         elementToThrow.moveTo(whereToThrow);

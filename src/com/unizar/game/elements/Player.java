@@ -28,6 +28,6 @@ public class Player extends NPC {
 
     @Override
     public void hear(String message) {
-        game.window.addOutput(message);
+        game.addOutput(message);
     }
 }
