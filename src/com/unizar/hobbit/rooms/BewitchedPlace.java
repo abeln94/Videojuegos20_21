@@ -13,7 +13,7 @@ public class BewitchedPlace extends Location {
     @Override
     public void init() {
         exits.put(Word.Direction.EAST, Utils.Pair.of(game.findElementByClassName(WestBlackRiver.class), null));
-        exits.put(Word.Direction.WEST, Utils.Pair.of(game.findElementByClassName(Mirkwood.class), null));
+        exits.put(Word.Direction.WEST, Utils.Pair.of(game.findElementByClassName(ForestGate.class), null));
         super.init();
     }
 }

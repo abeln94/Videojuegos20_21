@@ -18,7 +18,7 @@ public class GoblinDungeon extends Location {
         elements.add(game.findElementByClassName(Sand.class));
 
         exits.put(Word.Direction.NORTH, Utils.Pair.of(game.findElementByClassName(DimValley.class), game.findElementByClassName(GoblinDoor.class)));
-        exits.put(Word.Direction.WEST, Utils.Pair.of(game.findElementByClassName(DimValley.class), game.findElementByClassName(GoblinWindow.class)));
+        exits.put(Word.Direction.WEST, Utils.Pair.of(game.findElementByClassName(DarkWidingPassage_1.class), game.findElementByClassName(GoblinWindow.class)));
         super.init();
     }
 }

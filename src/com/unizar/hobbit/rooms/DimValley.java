@@ -12,8 +12,8 @@ public class DimValley extends Location {
 
     @Override
     public void init() {
-        //exits.put(Word.Direction.EAST, Utils.Pair.of(game.findElementByClassName(), null)); // Ni idea
-        exits.put(Word.Direction.NORTH, Utils.Pair.of(game.findElementByClassName(DryCave.class),null)); //Pantalla 13
+        exits.put(Word.Direction.EAST, Utils.Pair.of(game.findElementByClassName(NarrowDangerousPath.class), null));
+        exits.put(Word.Direction.NORTH, Utils.Pair.of(game.findElementByClassName(DryCave.class),null));
         exits.put(Word.Direction.WEST, Utils.Pair.of(game.findElementByClassName(DangerousPath.class), null));
         super.init();
     }
