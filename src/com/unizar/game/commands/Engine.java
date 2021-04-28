@@ -29,18 +29,6 @@ public class Engine {
         final Element location = npc.getLocation();
         if (location == null) return Result.error("Estás muerto");
 
-        if (command.parseError) {
-            if (command.invalidToken != null) {
-                return Result.error("No entiendo '" + command.invalidToken + "'");
-            } else {
-                return Result.error("Como dices?");
-            }
-        }
-
-        if (command.action == null) {
-            return Result.error("Que quieres que haga?");
-        }
-
         if (command.beforeCommand != null) {
             // multiple commands, run sub first
             final Result result = execute(npc, command.beforeCommand);

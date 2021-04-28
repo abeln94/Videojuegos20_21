@@ -2,6 +2,7 @@ package com.unizar.game.elements;
 
 import com.unizar.Utils;
 import com.unizar.game.commands.Command;
+import com.unizar.game.commands.EngineException;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 
@@ -42,25 +43,27 @@ abstract public class NPC extends Element {
      */
     public void ask(NPC npc, String message) {
 
-        // parse message
-        Command parse = game.parser.parse(message);
-        if (parse.parseError) {
+        try {
+            // parse message
+            Command parse = Command.parse(message, game.world.elements);
+
+            if (Utils.random.nextBoolean()) {
+                // it was valid but...bad luck
+                npc.hear("A " + this + " no le apetece.");
+                return;
+            }
+
+            // execute
+            final Result result = game.engine.execute(this, parse);
+            if (!result.done) {
+                npc.hear(this + " te responde: No puedo hacer eso");
+            } else {
+                hear(result.output);
+            }
+
+        } catch (EngineException e) {
             // bad command
             npc.hear(this + " te responde: Como has dicho?");
-            return;
-        }
-        if (Utils.random.nextBoolean()) {
-            // it was valid but...bad luck
-            npc.hear("A " + this + " no le apetece.");
-            return;
-        }
-
-        // execute
-        final Result result = game.engine.execute(this, parse);
-        if (!result.done) {
-            npc.hear(this + " te responde: No puedo hacer eso");
-        } else {
-            hear(result.output);
         }
     }
 

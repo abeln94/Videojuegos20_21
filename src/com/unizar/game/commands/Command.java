@@ -1,7 +1,9 @@
 package com.unizar.game.commands;
 
+import com.unizar.Utils;
 import com.unizar.game.elements.Element;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,9 +19,6 @@ public class Command {
     public FilterableElements main;
     public FilterableElements secondary;
 
-
-    public String invalidToken = null;
-    public boolean parseError = false;
 
     public Command beforeCommand = null;
 
@@ -74,15 +73,103 @@ public class Command {
     // ------------------------- generation -------------------------
 
     /**
+     * Parse the sentence
+     *
+     * @param sentence user input
+     */
+    public static Command parse(String sentence, Set<Element> elements) throws EngineException {
+        Command command = new Command(elements);
+
+        // extract sequence
+        sentence = sentence.replaceAll("\"\"", "\"");
+        long quotations = sentence.chars().filter(c -> c == '"').count();
+        if (quotations == 1) {
+            // one is missing, just add it (this helps with the 'say what?' extension, which adds a single '"' before asking again)
+            sentence = sentence + '"';
+            quotations++;
+        }
+        if (quotations == 2) {
+            // extract subsequence
+            command.sequence = sentence.substring(sentence.indexOf('"') + 1, sentence.lastIndexOf('"'));
+            sentence = sentence.replaceAll("\".*\"", " ");
+        } else if (quotations != 0) {
+            // invalid number of quotation marks
+            throw new EngineException("Número inválido de comillas");
+        }
+
+        // remove non-alphabetical chars
+        sentence = sentence.replaceAll("[^0-9a-zA-ZñÑáéíóú]", " ");
+
+//        // when you say 'darme el mapa' the 'me' part is replaced by the player // TODO: move to when the command is executed
+//        sentence = sentence.replaceAll("\\b([^ ]*)me\\b", "a " + game.getPlayer().name + " $1");
+
+        // get the words
+        List<String> words = Word.separateWords(sentence);
+        boolean isSecondElement = false;
+        for (String word : words) {
+            if (word.isEmpty()) continue;
+            Utils.Pair<Word.Type, Object> parsing = Word.parse(word, elements);
+            switch (parsing.first) {
+                case ACTION:
+                    if (command.action != null) throw new EngineException("Solo puedes especificar una acción");
+
+                    command.action = (Word.Action) parsing.second;
+                    isSecondElement = false;
+                    break;
+                case DIRECTION:
+                    if (command.direction != null) throw new EngineException("Solo puedes especificar una dirección");
+                    command.direction = (Word.Direction) parsing.second;
+                    break;
+                case MODIFIER:
+                    if (command.modifier != null) throw new EngineException("Solo puedes especificar un modificador");
+                    command.modifier = (Word.Modifier) parsing.second;
+                    break;
+                case PREPOSITION:
+                    // next element will be the second element
+                    isSecondElement = true;
+                    break;
+                case ELEMENT:
+                    if (isSecondElement) command.secondary.addDescriptionWord(word);
+                    else command.main.addDescriptionWord(word);
+                    break;
+
+                case ALL:
+                    if (isSecondElement) command.secondary.markAsAll();
+                    else command.main.markAsAll();
+                    break;
+
+                case AND:
+                    Command newCommand = new Command(elements);
+                    newCommand.beforeCommand = command;
+                    command = newCommand;
+                    break;
+
+                case UNKNOWN:
+                    throw new EngineException("No entiendo '" + word + '"');
+
+                case IGNORE: // ignore
+                    break;
+            }
+        }
+
+        // validate
+        command.validate();
+
+        return command;
+    }
+
+    /**
      * Prepares this command after parsing
      */
-    public void validate() {
+    public void validate() throws EngineException {
 
         // special shortcuts
         if (action == null && direction != null) {
             // a direction without action is a go
             action = Word.Action.GO;
         }
+
+        if (action == null) throw new EngineException("Que quieres que haga?");
 
         // chech merge
         if (beforeCommand != null) {

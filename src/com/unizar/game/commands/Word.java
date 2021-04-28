@@ -162,7 +162,6 @@ public class Word {
         PREPOSITION,
         MODIFIER,
         ELEMENT,
-        MULTIPLE,
         UNKNOWN,
         IGNORE,
         ALL,

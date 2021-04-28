@@ -1,8 +1,7 @@
 package com.unizar.game;
 
 import com.unizar.Utils;
-import com.unizar.game.commands.Engine;
-import com.unizar.game.commands.Parser;
+import com.unizar.game.commands.*;
 import com.unizar.game.elements.Element;
 import com.unizar.game.elements.Location;
 import com.unizar.game.elements.NPC;
@@ -27,7 +26,7 @@ public class Game extends KeyAdapter {
     public Engine engine = new Engine();
 
     private final DataSaver saver = new DataSaver();
-    public final Parser parser = new Parser(this);
+    public final History history = new History(this);
     public final Window window;
 
     // ------------------------- local -------------------------
@@ -143,7 +142,7 @@ public class Game extends KeyAdapter {
                 new Thread(() -> {
                     String command = window.getCommand();
                     window.clearCommand();
-                    parser.onText(command);
+                    run(command);
                     window.enableInput();
                 }).start();
                 break;
@@ -163,7 +162,7 @@ public class Game extends KeyAdapter {
                     world = newWorld;
                     world.register(this);
                     update();
-                    parser.clearHistory();
+                    history.clearHistory();
                 } else {
                     window.addOutput("[No hay datos guardados]");
                 }
@@ -171,16 +170,16 @@ public class Game extends KeyAdapter {
 
             // Press top arrow to repeat input
             case KeyEvent.VK_UP:
-                parser.restoreInput(true);
+                history.restoreInput(true);
                 break;
             case KeyEvent.VK_DOWN:
-                parser.restoreInput(false);
+                history.restoreInput(false);
                 break;
 
             // Press F2 to reset
             case KeyEvent.VK_F2:
                 startScreen();
-                parser.clearHistory();
+                history.clearHistory();
                 break;
 
             // press F1 for help
@@ -196,35 +195,66 @@ public class Game extends KeyAdapter {
         }
     }
 
-    public void afterPlayer() {
-        // act each npc
-        world.elements.stream().filter(e -> e instanceof NPC).forEach(Element::act);
+    public void run(String rawText) { // TODO: move to engine?
+        // skip empty lines
+        if (rawText.isEmpty()) return;
 
-        // update objectives
-        world.elements.forEach(element -> element.pendingObjectives = element.pendingObjectives.stream().filter(objective -> !objective.isCompleted()).collect(Collectors.toSet()));
+        // write command
+        addOutput("> " + rawText);
 
-        // check death
-        if (getPlayer().getLocation() == null) {
-            gameOverScreen();
-            return;
+        try {
+            Command command = Command.parse(rawText, world.elements);
+
+            history.add(rawText);
+
+            // execute
+            Result result = engine.execute(getPlayer(), command);
+
+            // add output
+            if (result.done) {
+                addOutput(result.output);
+            } else {
+                if (result.requiresMore != null)
+                    throw new EngineException(result.output, rawText + " " + result.requiresMore);
+                else throw new EngineException(result.output);
+            }
+
+            // player end
+
+            // act each npc
+            world.elements.stream().filter(e -> e instanceof NPC).forEach(Element::act);
+
+            // update objectives
+            world.elements.forEach(element -> element.pendingObjectives = element.pendingObjectives.stream().filter(objective -> !objective.isCompleted()).collect(Collectors.toSet()));
+
+            // check death
+            if (getPlayer().getLocation() == null) {
+                gameOverScreen();
+                return;
+            }
+
+            // check finalization
+            if (world.playerWon(this)) {
+                winScreen();
+                return;
+            }
+
+            // new turn
+
+            // act each non-NPC
+            world.act();
+            world.elements.stream().filter(e -> !(e instanceof NPC)).forEach(Element::act);
+
+            // update window
+            update();
+
+            // wait again for player
+
+        } catch (EngineException e) {
+            if (e.userError != null) addOutput(e.userError);
+            if (e.newUserInput != null) window.setCommand(e.newUserInput);
         }
 
-        // check finalization
-        if (world.playerWon(this)) {
-            winScreen();
-            return;
-        }
-
-        // new turn
-
-        // act each non-NPC
-        world.act();
-        world.elements.stream().filter(e -> !(e instanceof NPC)).forEach(Element::act);
-
-        // update window
-        update();
-
-        // wait for player
     }
 
     // ------------------------- game commands -------------------------
@@ -278,6 +308,11 @@ public class Game extends KeyAdapter {
      */
     public void addOutput(String output) {
         if (output.isEmpty()) return;
+
+        // spanish is difficult
+        output = output.replaceAll("\\ba el\\b", "al");
+        output = output.replaceAll("\\bde el\\b", "del");
+
         window.addOutput(output);
     }
 
