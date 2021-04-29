@@ -78,6 +78,7 @@ public class Command {
 
     public Command asNPC(NPC npc) {
         this.npc = npc; // TODO: set as a factory or something
+        if (beforeCommand != null) beforeCommand.asNPC(npc);
         return this;
     }
 
@@ -175,15 +176,6 @@ public class Command {
      */
     private void validate() throws EngineException {
 
-        // special shortcuts
-        if (action == null && direction != null) {
-            // a direction without action is a go
-            action = Word.Action.GO;
-        }
-
-        // check no action
-        if (action == null) throw new EngineException("Que quieres que haga?");
-
         // chech merge
         if (beforeCommand != null) {
             // validate first the subcommand if necessary
@@ -193,6 +185,15 @@ public class Command {
             if (modifier == null) modifier = beforeCommand.modifier;
             if (action == null) action = beforeCommand.action;
         }
+
+        // special shortcuts
+        if (action == null && direction != null) {
+            // a direction without action is a go
+            action = Word.Action.GO;
+        }
+
+        // check no action
+        if (action == null) throw new EngineException("Que quieres que haga?");
 
     }
 
