@@ -2,6 +2,7 @@ package com.unizar.hobbit.npcs;
 
 import com.unizar.Utils;
 import com.unizar.game.commands.Command;
+import com.unizar.game.commands.Engine;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Element;
@@ -51,7 +52,7 @@ public class Elrond extends NPC {
             if (food.getLocation() == null && Utils.random.nextBoolean()) {
                 // give the player food
                 food.moveTo(this);
-                result = game.engine.execute(Command.act(Word.Action.GIVE, food, game.getPlayer()).asNPC(this));
+                result = Engine.execute(Command.act(Word.Action.GIVE, food, game.getPlayer()).asNPC(this));
                 if (result.done) {
                     hear(result.output);
                     return;

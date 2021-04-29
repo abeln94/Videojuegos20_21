@@ -2,6 +2,7 @@ package com.unizar.hobbit.npcs;
 
 import com.unizar.Utils;
 import com.unizar.game.commands.Command;
+import com.unizar.game.commands.Engine;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.NPC;
@@ -21,7 +22,7 @@ public class Thorin extends NPC {
 
         // return attack
         if (lastAttackedBy != null) {
-            result = game.engine.execute(Command.act(Word.Action.KILL, lastAttackedBy).asNPC(this));
+            result = Engine.execute(Command.act(Word.Action.KILL, lastAttackedBy).asNPC(this));
             lastAttackedBy = null;
             if (result.done) {
                 hear(result.output);
@@ -31,7 +32,7 @@ public class Thorin extends NPC {
         }
 
         // try following the player
-        result = game.engine.execute(Command.act(Word.Action.FOLLOW, game.getPlayer()).asNPC(this));
+        result = Engine.execute(Command.act(Word.Action.FOLLOW, game.getPlayer()).asNPC(this));
         if (result.done) {
             hear(result.output);
             tiredness = 0;

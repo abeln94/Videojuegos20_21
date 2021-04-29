@@ -1,10 +1,7 @@
 package com.unizar.game.elements;
 
 import com.unizar.Utils;
-import com.unizar.game.commands.Command;
-import com.unizar.game.commands.EngineException;
-import com.unizar.game.commands.Result;
-import com.unizar.game.commands.Word;
+import com.unizar.game.commands.*;
 
 /**
  * A generic NPC
@@ -54,7 +51,7 @@ abstract public class NPC extends Element {
             }
 
             // execute
-            final Result result = game.engine.execute(parse);
+            final Result result = Engine.execute(parse);
             if (!result.done) {
                 npc.hear(this + " te responde: No puedo hacer eso");
             } else {
@@ -69,7 +66,7 @@ abstract public class NPC extends Element {
 
     @Override
     public void act() {
-        Result result = game.engine.execute(Command.simple(Word.Action.WAIT).asNPC(this));
+        Result result = Engine.execute(Command.simple(Word.Action.WAIT).asNPC(this));
         System.out.println(this + ": " + result);
     }
 

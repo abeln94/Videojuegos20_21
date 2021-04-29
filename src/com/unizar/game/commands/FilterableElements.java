@@ -63,10 +63,10 @@ public class FilterableElements {
      * @return the error message, or null if this still contains elements after the filtering
      */
     public FilterableElements require(Predicate<Element> filter, String message, String noDescription) {
-        assert !elements.isEmpty();
-
         // already an error
         if (error != null) return this;
+
+        assert !elements.isEmpty();
 
         // prepare the missed error string
         String missed = elements.size() == 1 ? elements.iterator().next().name // there is one element, use that one

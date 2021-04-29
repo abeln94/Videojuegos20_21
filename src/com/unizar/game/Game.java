@@ -23,7 +23,6 @@ public class Game extends KeyAdapter {
 
     // ------------------------- global -------------------------
     public World world;
-    public Engine engine = new Engine(this);
 
     private final DataSaver saver = new DataSaver();
     public final History history = new History(this);
@@ -208,7 +207,7 @@ public class Game extends KeyAdapter {
             history.add(rawText);
 
             // execute
-            Result result = engine.execute(command);
+            Result result = Engine.execute(command);
 
             // add output
             if (result.done) {

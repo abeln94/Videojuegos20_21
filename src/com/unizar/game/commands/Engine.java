@@ -1,7 +1,6 @@
 package com.unizar.game.commands;
 
 import com.unizar.Utils;
-import com.unizar.game.Game;
 import com.unizar.game.elements.Element;
 import com.unizar.game.elements.Item;
 import com.unizar.game.elements.Location;
@@ -17,19 +16,13 @@ import java.util.stream.Collectors;
  */
 public class Engine {
 
-    private final Game game;
-
-    public Engine(Game game) {
-        this.game = game;
-    }
-
     /**
      * Tries to execute the command
      *
      * @param command which command to process
      * @return A Result whether the command was applied, needs more info, or is wrong
      */
-    public Result execute(Command command) {
+    public static Result execute(Command command) {
         System.out.println(command);
 
         final Element location = command.npc.getLocation();
