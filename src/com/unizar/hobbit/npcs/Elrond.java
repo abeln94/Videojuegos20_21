@@ -51,7 +51,7 @@ public class Elrond extends NPC {
             if (food.getLocation() == null && Utils.random.nextBoolean()) {
                 // give the player food
                 food.moveTo(this);
-                result = game.engine.execute(this, Command.act(Word.Action.GIVE, food, game.getPlayer()));
+                result = game.engine.execute(Command.act(Word.Action.GIVE, food, game.getPlayer()).asNPC(this));
                 if (result.done) {
                     hear(result.output);
                     return;

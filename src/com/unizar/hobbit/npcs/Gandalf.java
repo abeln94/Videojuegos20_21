@@ -26,7 +26,7 @@ public class Gandalf extends NPC {
 
         // return attack
         if (lastAttackedBy != null) {
-            result = game.engine.execute(this, Command.act(Word.Action.KILL, lastAttackedBy));
+            result = game.engine.execute(Command.act(Word.Action.KILL, lastAttackedBy).asNPC(this));
             lastAttackedBy = null;
             if (result.done) {
                 hear(result.output);
@@ -35,7 +35,7 @@ public class Gandalf extends NPC {
         }
 
         // try going in a random direction
-        result = game.engine.execute(this, Command.go(Utils.pickRandom(Word.Direction.values())));
+        result = game.engine.execute(Command.go(Utils.pickRandom(Word.Direction.values())).asNPC(this));
         if (result.done) {
             hear(result.output);
             return;
@@ -43,7 +43,7 @@ public class Gandalf extends NPC {
 
         // try opening the door
         if (Utils.random.nextBoolean()) {
-            result = game.engine.execute(this, Command.act(Word.Action.OPEN, game.findElementByClassName(GreenDoor.class)));
+            result = game.engine.execute(Command.act(Word.Action.OPEN, game.findElementByClassName(GreenDoor.class)).asNPC(this));
             if (result.done) {
                 hear(result.output);
                 return;
@@ -52,7 +52,7 @@ public class Gandalf extends NPC {
 
         // try giving the map to the player
         if (Utils.random.nextBoolean()) {
-            result = game.engine.execute(this, Command.act(Word.Action.GIVE, game.findElementByClassName(Map.class), game.findElementByClassName(Bilbo_Player.class)));
+            result = game.engine.execute(Command.act(Word.Action.GIVE, game.findElementByClassName(Map.class), game.findElementByClassName(Bilbo_Player.class)).asNPC(this));
             if (result.done) {
                 hear(result.output);
                 return;

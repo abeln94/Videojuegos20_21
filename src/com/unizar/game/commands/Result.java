@@ -2,6 +2,7 @@ package com.unizar.game.commands;
 
 /**
  * The result of an execute command
+ * TODO: remove this class
  */
 public class Result {
 

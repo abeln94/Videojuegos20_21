@@ -2,6 +2,7 @@ package com.unizar.game.commands;
 
 import com.unizar.Utils;
 import com.unizar.game.elements.Element;
+import com.unizar.game.elements.NPC;
 
 import java.util.List;
 import java.util.Set;
@@ -10,21 +11,26 @@ import java.util.Set;
  * A processed command, contains the command elements for the engine
  */
 public class Command {
-    public Word.Modifier modifier;
-    public Word.Action action;
-    public Word.Direction direction;
 
-    public String sequence;
+    public NPC npc; // who executes this command
 
-    public FilterableElements main;
-    public FilterableElements secondary;
+    public Word.Modifier modifier; // the modifier
+    public Word.Action action; // the action
 
+    public Word.Direction direction; // a direction
+    public String sequence; // a sequence
 
-    public Command beforeCommand = null;
+    public FilterableElements main; // the main object
+    public FilterableElements secondary; // the secondary object
+
+    public Command beforeCommand = null; // something to run before this one
 
     // ------------------------- constructors -------------------------
 
-    public Command(Word.Modifier modifier, Word.Action action, Word.Direction direction, String sequence, FilterableElements main, FilterableElements secondary) {
+    /**
+     * Internal constructor
+     */
+    private Command(Word.Modifier modifier, Word.Action action, Word.Direction direction, String sequence, FilterableElements main, FilterableElements secondary) {
         this.modifier = modifier;
         this.action = action;
         this.direction = direction;
@@ -70,12 +76,18 @@ public class Command {
         return new Command(null, Word.Action.GO, direction, null, null, null);
     }
 
+    public Command asNPC(NPC npc) {
+        this.npc = npc; // TODO: set as a factory or something
+        return this;
+    }
+
     // ------------------------- generation -------------------------
 
     /**
      * Parse the sentence
      *
      * @param sentence user input
+     * @param elements all the elements in the game
      */
     public static Command parse(String sentence, Set<Element> elements) throws EngineException {
         Command command = new Command(elements);
@@ -139,7 +151,7 @@ public class Command {
                     break;
 
                 case AND:
-                    Command newCommand = new Command(elements);
+                    Command newCommand = new Command(elements).asNPC(command.npc);
                     newCommand.beforeCommand = command;
                     command = newCommand;
                     break;
@@ -161,7 +173,7 @@ public class Command {
     /**
      * Prepares this command after parsing
      */
-    public void validate() throws EngineException {
+    private void validate() throws EngineException {
 
         // special shortcuts
         if (action == null && direction != null) {
@@ -169,6 +181,7 @@ public class Command {
             action = Word.Action.GO;
         }
 
+        // check no action
         if (action == null) throw new EngineException("Que quieres que haga?");
 
         // chech merge
@@ -187,7 +200,7 @@ public class Command {
 
     @Override
     public String toString() {
-        return (modifier == null ? "" : modifier + " - ")
+        return npc + ": " + (modifier == null ? "" : modifier + " - ")
                 + action
                 + (direction == null ? "" : " - " + direction)
                 + (main == null ? "" : " - " + main)

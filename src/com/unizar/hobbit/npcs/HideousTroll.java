@@ -36,7 +36,7 @@ public class HideousTroll extends NPC {
                 return;
             } else {
                 // not first time, eat player
-                result = game.engine.execute(this, Command.act(Word.Action.EAT, game.findElementByClassName(Bilbo_Player.class)));
+                result = game.engine.execute(Command.act(Word.Action.EAT, game.findElementByClassName(Bilbo_Player.class)).asNPC(this));
                 if (result.done) {
                     hear(result.output);
                     return;

@@ -21,7 +21,7 @@ public class History {
     // ------------------------- input history -------------------------
 
     /**
-     * Last entered inputs (ignores 'needsMore')
+     * Last entered inputs
      */
     private final List<String> historyInput = new ArrayList<>();
     private int historyIndex = 0; // the top of the list is a special 'empty' input
@@ -48,17 +48,22 @@ public class History {
     }
 
     /**
-     *
+     * Clears the history
      */
     public void clearHistory() {
         historyInput.clear();
         historyIndex = 0;
     }
 
-    public void add(String rawText) {
+    /**
+     * Adds an command to the history
+     *
+     * @param command to add
+     */
+    public void add(String command) {
         // add to history (if different)
-        if (historyInput.isEmpty() || !rawText.equals(historyInput.get(historyInput.size() - 1))) {
-            historyInput.add(rawText);
+        if (historyInput.isEmpty() || !command.equals(historyInput.get(historyInput.size() - 1))) {
+            historyInput.add(command);
         }
         historyIndex = historyInput.size();
     }

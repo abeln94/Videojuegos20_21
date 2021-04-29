@@ -1,6 +1,7 @@
 package com.unizar.game.commands;
 
 import com.unizar.Utils;
+import com.unizar.game.Game;
 import com.unizar.game.elements.Element;
 import com.unizar.game.elements.Item;
 import com.unizar.game.elements.Location;
@@ -16,31 +17,36 @@ import java.util.stream.Collectors;
  */
 public class Engine {
 
+    private final Game game;
+
+    public Engine(Game game) {
+        this.game = game;
+    }
+
     /**
-     * Tries to execute the command from a specific npc
+     * Tries to execute the command
      *
-     * @param npc     npc who initiated the command
      * @param command which command to process
      * @return A Result whether the command was applied, needs more info, or is wrong
      */
-    public Result execute(NPC npc, Command command) {
-        System.out.println(npc + " " + command);
+    public Result execute(Command command) {
+        System.out.println(command);
 
-        final Element location = npc.getLocation();
+        final Element location = command.npc.getLocation();
         if (location == null) return Result.error("Estás muerto");
 
         if (command.beforeCommand != null) {
             // multiple commands, run sub first
-            final Result result = execute(npc, command.beforeCommand);
+            final Result result = execute(command.beforeCommand);
             // then this
             command.beforeCommand = null;
             // merge and return
-            result.merge(execute(npc, command));
+            result.merge(execute(command));
             return result;
         }
 
         final List<Element> interactable = location.getInteractable();
-        interactable.remove(npc);
+        interactable.remove(command.npc);
 
         switch (command.action) {
             case WAIT:
@@ -77,7 +83,7 @@ public class Engine {
                 ).apply("Que quieres abrir?", element -> {
                     // open
                     ((Item) element).openable = Item.OPENABLE.OPENED;
-                    location.notifyNPCs(npc, npc + " abre " + element + ".");
+                    location.notifyNPCs(command.npc, command.npc + " abre " + element + ".");
                     return Result.done("Abres " + element + ".");
                 });
             case CLOSE:
@@ -105,7 +111,7 @@ public class Engine {
 
                     // close
                     ((Item) element).openable = Item.OPENABLE.CLOSED;
-                    location.notifyNPCs(npc, npc + " cierra " + element + ".");
+                    location.notifyNPCs(command.npc, command.npc + " cierra " + element + ".");
                     return Result.done("Cierras " + element + ".");
                 });
             case UNLOCK:
@@ -128,7 +134,7 @@ public class Engine {
 
                     return command.secondary.require(
                             // we must have it
-                            npc.elements::contains,
+                            command.npc.elements::contains,
                             "No tienes {}.",
                             "nada con lo que desbloquearlo"
                     ).require(
@@ -140,7 +146,7 @@ public class Engine {
 
                         // unlock
                         ((Item) unlockable).openable = Item.OPENABLE.CLOSED;
-                        location.notifyNPCs(npc, npc + " desbloquea " + unlockable + ".");
+                        location.notifyNPCs(command.npc, command.npc + " desbloquea " + unlockable + ".");
                         return Result.done("Desbloqueas " + unlockable + ".");
                     });
                 });
@@ -164,7 +170,7 @@ public class Engine {
 
                     return command.secondary.require(
                             // we must have it
-                            npc.elements::contains,
+                            command.npc.elements::contains,
                             "No tienes {}.",
                             "nada con lo que bloquearlo"
                     ).require(
@@ -176,7 +182,7 @@ public class Engine {
 
                         // lock
                         ((Item) lockable).openable = Item.OPENABLE.LOCKED;
-                        location.notifyNPCs(npc, npc + " bloquea " + lockable + ".");
+                        location.notifyNPCs(command.npc, command.npc + " bloquea " + lockable + ".");
                         return Result.done("Bloqueas " + lockable + ".");
                     });
                 });
@@ -212,13 +218,13 @@ public class Engine {
                 }
 
                 // notify old npc
-                location.notifyNPCs(npc, npc + " va hacia " + command.direction.description + ".");
+                location.notifyNPCs(command.npc, command.npc + " va hacia " + command.direction.description + ".");
 
                 // move
-                npc.moveTo(newLocation);
+                command.npc.moveTo(newLocation);
 
                 // notify new npc
-                location.notifyNPCs(npc, npc + " entra.");
+                location.notifyNPCs(command.npc, command.npc + " entra.");
 
                 return Result.done("Te diriges hacia " + command.direction.description);
             case FOLLOW:
@@ -247,7 +253,7 @@ public class Engine {
                     for (Map.Entry<Word.Direction, Utils.Pair<Location, Item>> entry : ((Location) location).exits.entrySet()) {
                         if (entry.getValue().first.elements.contains(toFollow)) {
                             // execute as a go command
-                            Result result = execute(npc, Command.go(entry.getKey()));
+                            Result result = execute(Command.go(entry.getKey()));
                             if (result.done) {
                                 // ok
                                 return Result.done("Sigues a " + toFollow + ".");
@@ -268,7 +274,7 @@ public class Engine {
                         "nada"
                 ).require(
                         // and also we must have it
-                        npc.elements::contains,
+                        command.npc.elements::contains,
                         "No tienes {}.",
                         "nada que dar"
                 ).apply("Que quieres dar?", elementToGive -> {
@@ -288,7 +294,7 @@ public class Engine {
 
                         // give
                         elementToGive.moveTo(whoToGiveItTo);
-                        whoToGiveItTo.hear(npc + " te da " + elementToGive + ".");
+                        whoToGiveItTo.hear(command.npc + " te da " + elementToGive + ".");
                         return Result.done("Le das " + elementToGive + " a " + whoToGiveItTo + ".\n" + whoToGiveItTo + " te da las gracias.");
                     });
                 });
@@ -310,19 +316,19 @@ public class Engine {
                         "nada"
                 ).require(
                         // it must have less weight
-                        e -> e.weight < npc.weight,
+                        e -> e.weight < command.npc.weight,
                         "{} pesa demasiado.",
                         "todo"
                 ).apply("Que quieres coger?", pickable -> {
 
                     // pick
-                    pickable.moveTo(npc);
+                    pickable.moveTo(command.npc);
                     return Result.done("Coges " + pickable);
                 });
             case DROP:
                 return command.main.require(
                         // You must have it
-                        npc.elements::contains,
+                        command.npc.elements::contains,
                         "No tienes {}.",
                         "nada"
                 ).apply("Que quieres tirar?", dropable -> {
@@ -345,7 +351,7 @@ public class Engine {
                 ).apply("Que quieres examinar?", element -> {
 
                     // examine
-                    return Result.done("Examinas " + element + ".\n" + ((Item) element).examine(npc));
+                    return Result.done("Examinas " + element + ".\n" + ((Item) element).examine(command.npc));
                 });
 
             case SAY:
@@ -367,18 +373,18 @@ public class Engine {
                     }
 
                     // ask to NPC
-                    npc.hear("Hablas con " + toSay);
-                    ((NPC) toSay).ask(npc, command.sequence);
+                    command.npc.hear("Hablas con " + toSay);
+                    ((NPC) toSay).ask(command.npc, command.sequence);
                     return Result.done(""); // the notification is above, otherwise the output order would be wrong
                 });
 //            case HELP:
 //                return Result.done(npc.game.world.requiredObjectives.get(0).first);
             case SCORE:
-                return Result.done(npc.game.getCompletion());
+                return Result.done(command.npc.game.getCompletion());
             case PUT:
                 return command.main.require(
                         // we must have it
-                        npc.elements::contains,
+                        command.npc.elements::contains,
                         "No tienes {}.",
                         "nada para poner"
                 ).apply("Que quieres poner?", elementToGive -> {
@@ -420,19 +426,19 @@ public class Engine {
                 ).apply("A quien quieres atacar?", attack -> {
 
                     // attack
-                    ((NPC) attack).lastAttackedBy = npc;
-                    if (attack.weight > npc.weight) {
+                    ((NPC) attack).lastAttackedBy = command.npc;
+                    if (attack.weight > command.npc.weight) {
                         // stronger, the attack fails
-                        attack.hear(npc + " te ataca pero no te provoca ningún daño.");
+                        attack.hear(command.npc + " te ataca pero no te provoca ningún daño.");
                         return Result.done("Atacas a " + attack + " pero el esfuerzo es en vano. Su defensa es muy fuerte.");
                     }
-                    if (attack.weight == npc.weight) {
+                    if (attack.weight == command.npc.weight) {
                         // same strength, the attack fails
-                        attack.hear(npc + " te ataca pero solo logra hacerte daño.");
+                        attack.hear(command.npc + " te ataca pero solo logra hacerte daño.");
                         return Result.done("Atacas a " + attack + " pero no eres suficientemente fuerte y solo logras hacerle daño.");
                     }
                     // weaker, the attack success
-                    attack.hear(npc + " te ataca. Con un golpe certero, te parte el cráneo.");
+                    attack.hear(command.npc + " te ataca. Con un golpe certero, te parte el cráneo.");
                     attack.moveTo(null);
                     return Result.done("Atacas a " + attack + ". Con un golpe certero le partes el cráneo.");
                 });
@@ -449,14 +455,14 @@ public class Engine {
                         "nada"
                 ).require(
                         // and be lighter
-                        e -> e.weight < npc.weight,
+                        e -> e.weight < command.npc.weight,
                         "{} pesa demasiado para comerlo.",
                         "todo"
                 ).apply("Que quieres comer?", food -> {
 
                     // eat
                     food.moveTo(null);
-                    food.hear(npc + " te come.");
+                    food.hear(command.npc + " te come.");
 
                     return Result.done("Te comes " + food + ".");
                 });
@@ -536,7 +542,7 @@ public class Engine {
                         "nada"
                 ).require(
                         // and also we must have it
-                        npc.elements::contains,
+                        command.npc.elements::contains,
                         "No tienes {}.",
                         "nada que lanzar"
                 ).apply("Que quieres lanzar?", elementToThrow -> {
@@ -563,7 +569,7 @@ public class Engine {
 
                         // throw
                         elementToThrow.moveTo(whereToThrow);
-                        whereToThrow.notifyNPCs(npc, npc + " lanza " + elementToThrow + ".");
+                        whereToThrow.notifyNPCs(command.npc, command.npc + " lanza " + elementToThrow + ".");
                         return Result.done("Lanzas " + elementToThrow + " al otro lado de " + throwAcross + ".");
                     });
                 });
@@ -595,7 +601,7 @@ public class Engine {
                     // "TIRAR something" means DROP
                     command.action = Word.Action.DROP;
                 }
-                return execute(npc, command);
+                return execute(command);
         }
 
         return Result.error("Aún no se hacer eso!");

@@ -23,7 +23,7 @@ public class Game extends KeyAdapter {
 
     // ------------------------- global -------------------------
     public World world;
-    public Engine engine = new Engine();
+    public Engine engine = new Engine(this);
 
     private final DataSaver saver = new DataSaver();
     public final History history = new History(this);
@@ -203,12 +203,12 @@ public class Game extends KeyAdapter {
         addOutput("> " + rawText);
 
         try {
-            Command command = Command.parse(rawText, world.elements);
+            Command command = Command.parse(rawText, world.elements).asNPC(getPlayer());
 
             history.add(rawText);
 
             // execute
-            Result result = engine.execute(getPlayer(), command);
+            Result result = engine.execute(command);
 
             // add output
             if (result.done) {

@@ -3,6 +3,9 @@ package com.unizar.game.elements;
 import com.unizar.Utils;
 import com.unizar.game.Game;
 import com.unizar.game.Objective;
+import com.unizar.game.commands.Command;
+import com.unizar.game.commands.EngineException;
+import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 
 import java.io.Serializable;
@@ -161,5 +164,13 @@ abstract public class Element implements Serializable {
      * Initializes this element.
      */
     public void init() {
+    }
+
+    public boolean canExecute(Command command) {
+        return false;
+    }
+
+    public Result execute(Command command) throws EngineException {
+        throw new EngineException("No puedo hacer eso");
     }
 }

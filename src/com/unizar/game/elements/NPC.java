@@ -45,7 +45,7 @@ abstract public class NPC extends Element {
 
         try {
             // parse message
-            Command parse = Command.parse(message, game.world.elements);
+            Command parse = Command.parse(message, game.world.elements).asNPC(this);
 
             if (Utils.random.nextBoolean()) {
                 // it was valid but...bad luck
@@ -54,7 +54,7 @@ abstract public class NPC extends Element {
             }
 
             // execute
-            final Result result = game.engine.execute(this, parse);
+            final Result result = game.engine.execute(parse);
             if (!result.done) {
                 npc.hear(this + " te responde: No puedo hacer eso");
             } else {
@@ -69,7 +69,7 @@ abstract public class NPC extends Element {
 
     @Override
     public void act() {
-        Result result = game.engine.execute(this, Command.simple(Word.Action.WAIT));
+        Result result = game.engine.execute(Command.simple(Word.Action.WAIT).asNPC(this));
         System.out.println(this + ": " + result);
     }
 

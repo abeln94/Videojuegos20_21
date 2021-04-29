@@ -73,6 +73,11 @@ public class Word {
         }
 
         public final String alias;
+
+        @Override
+        public String toString() {
+            return alias.split(" ")[0];
+        }
     }
 
     /**
