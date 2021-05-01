@@ -25,6 +25,8 @@ abstract public class Properties implements Serializable {
      */
     abstract public String getImagePath(String label);
 
+    public abstract String getSoundPath(String label);
+
     /**
      * @return the font to use
      */
@@ -49,4 +51,5 @@ abstract public class Properties implements Serializable {
      * @return the description of the win screen
      */
     public abstract String getWinDescription();
+
 }

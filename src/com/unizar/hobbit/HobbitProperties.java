@@ -17,6 +17,11 @@ public class HobbitProperties extends Properties {
     }
 
     @Override
+    public String getSoundPath(String label) {
+        return "/music/" + label + ".wav";
+    }
+
+    @Override
     public String getFontName() {
         return "/fonts/MorrisRoman-Black.ttf";
     }

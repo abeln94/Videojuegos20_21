@@ -8,6 +8,8 @@ import com.unizar.game.elements.NPC;
 import com.unizar.game.elements.Player;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -24,6 +26,7 @@ public class Game extends KeyAdapter {
     // ------------------------- global -------------------------
     public World world;
     public Engine engine = new Engine();
+    public Sound sound = new Sound();
 
     private final DataSaver saver = new DataSaver();
     public final History history = new History(this);
@@ -52,6 +55,7 @@ public class Game extends KeyAdapter {
         window = new Window(world.properties.getTitle(), world.properties.getImageRatio(), world.properties.getFontName());
         window.setKeyListener(this);
         startScreen();
+        setMusic("prelude");
     }
 
     /**
@@ -289,6 +293,19 @@ public class Game extends KeyAdapter {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void setMusic(String label) {
+        try {
+            final String path = world.properties.getSoundPath(label);
+            final URL resource = Game.class.getResource(path);
+            if (resource == null) {
+                throw new IOException("The music '" + path + "' doesn't exist.");
+            }
+            sound.playMusic(AudioSystem.getAudioInputStream(resource));
+        } catch (UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
         }
     }
 
