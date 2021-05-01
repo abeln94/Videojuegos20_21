@@ -12,7 +12,6 @@ public class EmptyPlace extends Location {
 
     @Override
     public void init() {
-        //exits.put(Word.Direction.NORTH, Utils.Pair.of(game.findElementByClassName(.class), null)); //TODO:
         exits.put(Word.Direction.SOUTH, Utils.Pair.of(game.findElementByClassName(Sidedoor.class), null));
         exits.put(Word.Direction.UP, Utils.Pair.of(game.findElementByClassName(LonelyMountain.class), null));
         super.init();
