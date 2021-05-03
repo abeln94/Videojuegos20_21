@@ -39,11 +39,6 @@ abstract public class Element implements Serializable {
      */
     public boolean alive = true;
 
-    /**
-     * The position of an object permanent like doors
-     */
-    public Element posicion = null;
-
     // ------------------------- functions -------------------------
 
     public Element(String name) {

@@ -1,7 +1,10 @@
 package com.unizar.hobbit.npcs;
 
 import com.unizar.game.elements.NPC;
+import com.unizar.hobbit.items.Bow;
 import com.unizar.hobbit.items.RedKey;
+
+import java.util.ArrayList;
 
 public class Butler extends NPC {
 
@@ -9,16 +12,35 @@ public class Butler extends NPC {
 
     public Butler() {
         super("El mayordomo");
-        weight = 50;
+        weight = 40;
+        id = 2;
+        lastAttackedBy = null;
+        autonomo = false;
+        inmortal = false;
+        puedeDormir = true;
+        puedeTP = false;
+        puedeLeer = false;
+        puedeMatarAJugador = true;
+        lugares = new ArrayList<>();
+        dormido = false;
+        primerEncuentroJugador = false;
+        saludos = new ArrayList<>();
+        frases = new ArrayList<>();
+        sitioTP = null;
+        elementoAbrir = null;
+        elementoLeer = null;
+        arma = "espada";
+        orden = null;
     }
 
     @Override
     public void init() {
-        elements.add(game.findElementByClassName(RedKey.class));
+        elements.add(game.findElementByClassName(Bow.class));
         super.init();
     }
 
-    //TODO: bebe vino
-    //TODO: esperar a que duerma y quitarle la llave
-    //TODO:
+    @Override
+    public void act() {
+        super.act();
+    }
 }
