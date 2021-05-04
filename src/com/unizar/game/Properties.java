@@ -25,7 +25,13 @@ abstract public class Properties implements Serializable {
      */
     abstract public String getImagePath(String label);
 
-    public abstract String getSoundPath(String label);
+    /**
+     * Return the path of a music
+     *
+     * @param label the label of the music
+     * @return the path of the music
+     */
+    public abstract String getMusicPath(String label);
 
     /**
      * @return the font to use

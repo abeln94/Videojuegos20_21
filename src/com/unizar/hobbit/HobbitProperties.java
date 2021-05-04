@@ -17,7 +17,7 @@ public class HobbitProperties extends Properties {
     }
 
     @Override
-    public String getSoundPath(String label) {
+    public String getMusicPath(String label) {
         return "/music/" + label + ".wav";
     }
 

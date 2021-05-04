@@ -9,6 +9,7 @@ public class EmptyLand extends Location {
 
     public EmptyLand() {
         super("una tierra sombría y yerma con lúgubres colinas en la lejanía", "EmptyLand");
+        music = "prelude";
     }
 
     @Override

@@ -13,6 +13,7 @@ public class StartLocation extends Location {
 
     public StartLocation() {
         super("una sala alargada y cálida", "StartLocation");
+        music = "tale";
     }
 
     @Override

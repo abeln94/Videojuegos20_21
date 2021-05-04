@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -100,6 +101,21 @@ public class Utils {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private static final int TIME = 250;
+    private static final int STEPS = 50;
+
+    /**
+     * Runs the function with the parameter bewteen 0 and 1
+     *
+     * @param function input: 0-1 float
+     */
+    public static void smoothing(Consumer<Float> function) {
+        for (int step = 0; step < STEPS; ++step) {
+            function.accept((float) step / (STEPS - 1));
+            pause(TIME / STEPS);
         }
     }
 

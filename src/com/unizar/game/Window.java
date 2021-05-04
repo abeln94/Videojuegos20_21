@@ -1,5 +1,8 @@
 package com.unizar.game;
 
+import com.unizar.AlphaIcon;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -7,6 +10,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Manages the window of the game.
@@ -197,21 +201,50 @@ public class Window {
     /**
      * Draws an image
      *
-     * @param img image to draw
+     * @param path image to draw
      */
-    public void drawImage(Image img) {
-        savedImg = img;
-        if (img == null) {
+    public void drawImage(String path) {
+        savedImg = path;
+
+        if (path == null) {
             image.setIcon(null);
-        } else {
-            image.setIcon(new ImageIcon(
+            return;
+        }
+
+        try {
+
+            // read image
+            final URL resource = Game.class.getResource(path);
+            if (resource == null) {
+                throw new IOException("The image '" + path + "' doesn't exist.");
+            }
+            Image img = ImageIO.read(resource);
+
+            // show image
+            final float alpha = image.getIcon() != null ? ((AlphaIcon) image.getIcon()).getAlpha() : 1f;
+            image.setIcon(new AlphaIcon(new ImageIcon(
                     img.getScaledInstance(image.getWidth(), image.getHeight(),
-                            Image.SCALE_SMOOTH)
+                            Image.SCALE_SMOOTH)), alpha
             ));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private Image savedImg = null;
+    /**
+     * Sets the transparency of the image
+     *
+     * @param transparency between 0 (invisible) to 1 (opaque)
+     */
+    public void setImageTransparency(float transparency) {
+        final Icon icon = image.getIcon();
+        if (icon != null) {
+            ((AlphaIcon) icon).setAlpha(transparency);
+            image.updateUI();
+        }
+    }
+
+    private String savedImg = null;
 
     /**
      * Redraws the previous image. Internal use

@@ -18,6 +18,11 @@ abstract public class Location extends Element {
     public String image;
 
     /**
+     * The music of this location (from the game's data music folder)
+     */
+    public String music;
+
+    /**
      * List of exits from this location. A map of
      * key -> the direction
      * value -> the new location + null, if you can travel freely, or the new location + an item that you need to traverse

@@ -7,15 +7,11 @@ import com.unizar.game.elements.Location;
 import com.unizar.game.elements.NPC;
 import com.unizar.game.elements.Player;
 
-import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -55,7 +51,6 @@ public class Game extends KeyAdapter {
         window = new Window(world.properties.getTitle(), world.properties.getImageRatio(), world.properties.getFontName());
         window.setKeyListener(this);
         startScreen();
-        setMusic("prelude");
     }
 
     /**
@@ -127,7 +122,11 @@ public class Game extends KeyAdapter {
         switch (state) {
             case StartScreen:
                 state = State.Playing;
-                update();
+                window.disableInput();
+                new Thread(() -> {
+                    update();
+                    window.enableInput();
+                }).start();
                 return;
             case Playing:
                 break;
@@ -263,12 +262,32 @@ public class Game extends KeyAdapter {
 
     // ------------------------- game commands -------------------------
 
+    private String lastImage = null;
+
     public void update() {
         window.clearDescription();
 
-        // describe current room
         Element location = getPlayer().getLocation();
-        setImage(location instanceof Location ? ((Location) location).image : null);
+        final String image = location instanceof Location ? ((Location) location).image : null;
+        final String music = location instanceof Location ? ((Location) location).music : null;
+
+        if (!Objects.equals(lastImage, image)) {
+            // smooth update image (and sound)
+            Utils.smoothing(f -> {
+                sound.setVolume(1 - f);
+                window.setImageTransparency(1 - f);
+            });
+
+            setMusic(music);
+            setImage(image);
+
+            Utils.smoothing(f -> {
+                sound.setVolume(f);
+                window.setImageTransparency(f);
+            });
+        }
+
+        // describe current room
         addDescription("Te encuentras en " + location.getDescription());
         addDescription("");
         addDescription(getPlayer().getDescription());
@@ -280,37 +299,22 @@ public class Game extends KeyAdapter {
      * @param label name of the image (from the images folder)
      */
     public void setImage(String label) {
-        if (label == null) {
-            window.drawImage(null);
-        } else {
-            try {
-                final String path = world.properties.getImagePath(label);
-                final URL resource = Game.class.getResource(path);
-                if (resource == null) {
-                    throw new IOException("The image '" + path + "' doesn't exist.");
-                }
-                window.drawImage(ImageIO.read(resource));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        window.drawImage(label == null ? null : world.properties.getImagePath(label));
+        lastImage = label;
     }
 
+    /**
+     * Sets a music
+     *
+     * @param label name of the image (from the musics folder)
+     */
     public void setMusic(String label) {
-        try {
-            final String path = world.properties.getSoundPath(label);
-            final URL resource = Game.class.getResource(path);
-            if (resource == null) {
-                throw new IOException("The music '" + path + "' doesn't exist.");
-            }
-            sound.playMusic(AudioSystem.getAudioInputStream(resource));
-        } catch (UnsupportedAudioFileException | IOException e) {
-            e.printStackTrace();
-        }
+        sound.backgroundMusic(label == null ? null : world.properties.getMusicPath(label));
     }
 
     /**
      * Adds a description line
+     * TODO: replace with setDescription
      *
      * @param description text to add
      */
