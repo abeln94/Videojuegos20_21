@@ -44,7 +44,7 @@ public class History {
             historyIndex++;
         }
         // set
-        game.window.setCommand(historyIndex == historyInput.size() ? "" : historyInput.get(historyIndex));
+        game.window.setCommand(historyIndex == historyInput.size() ? "" : historyInput.get(historyIndex)); // TODO: return this string and remove the game field
     }
 
     /**

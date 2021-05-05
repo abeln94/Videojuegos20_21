@@ -6,6 +6,9 @@ import javax.sound.sampled.Clip;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * Manages the game sounds
+ */
 public class Sound {
 
     private Clip playingClip = null;
@@ -18,8 +21,7 @@ public class Sound {
     public void backgroundMusic(String path) {
 
         // stop if playing
-        if (playingClip != null)
-            playingClip.stop();
+        stop();
 
         if (path == null) {
             // nothing to play
@@ -70,4 +72,11 @@ public class Sound {
 //        }
     }
 
+    /**
+     * Stops the playing music (if any)
+     */
+    public void stop() {
+        if (playingClip != null)
+            playingClip.stop();
+    }
 }

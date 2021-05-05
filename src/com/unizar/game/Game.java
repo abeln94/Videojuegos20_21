@@ -17,12 +17,13 @@ import java.util.stream.Collectors;
 /**
  * The game main class.
  */
-public class Game extends KeyAdapter {
+public class Game extends KeyAdapter implements Runnable {
 
     // ------------------------- global -------------------------
     public World world;
     public Engine engine = new Engine();
     public Sound sound = new Sound();
+    public Scheduling autoWait = new Scheduling(this, 10 * 1000);
 
     private final DataSaver saver = new DataSaver();
     public final History history = new History(this);
@@ -103,6 +104,10 @@ public class Game extends KeyAdapter {
      * Resets the game
      */
     public void reset() {
+        // reset utils
+        autoWait.cancel();
+        sound.stop();
+
         // recreate the data object
         try {
             world = world.getClass().getConstructor().newInstance();
@@ -117,6 +122,21 @@ public class Game extends KeyAdapter {
 
     // ------------------------- listeners -------------------------
 
+    /**
+     * Called periodically to run the 'wait' command
+     */
+    @Override
+    public void run() {
+        window.disableInput();
+        new Thread(() -> {
+            run("esperar");
+            window.enableInput();
+        }).start();
+    }
+
+    /**
+     * Called when the user presses any key in the input box
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         switch (state) {
@@ -125,6 +145,7 @@ public class Game extends KeyAdapter {
                 window.disableInput();
                 new Thread(() -> {
                     update();
+                    autoWait.schedule();
                     window.enableInput();
                 }).start();
                 return;
@@ -203,7 +224,7 @@ public class Game extends KeyAdapter {
         if (rawText.isEmpty()) return;
 
         // write command
-        addOutput("> " + rawText);
+        addOutput("\n> " + rawText);
 
         try {
             Command command = Command.parse(rawText, world.elements);
@@ -251,6 +272,9 @@ public class Game extends KeyAdapter {
             // update window
             update();
 
+            // schedule next wait command
+            autoWait.schedule();
+
             // wait again for player
 
         } catch (EngineException e) {
@@ -264,6 +288,9 @@ public class Game extends KeyAdapter {
 
     private String lastImage = null;
 
+    /**
+     * Updates the ui with the new image/sound/description
+     */
     public void update() {
         window.clearDescription();
 
@@ -345,16 +372,22 @@ public class Game extends KeyAdapter {
                 .filter(name::isInstance).findFirst().orElseThrow(() -> new NoSuchElementException("Element " + name + " not found. Did you forgot to register it in the World?"));
     }
 
+    /**
+     * @return the player element
+     */
     public Player getPlayer() {
         return findElementByClassName(Player.class);
     }
 
+    /**
+     * @return the completion string
+     */
     public String getCompletion() {
         double percentage = world.elements.stream()
                 .filter(element -> element.totalObjectives != 0)
                 .mapToInt(element -> 100 - 100 * element.pendingObjectives.size() / element.totalObjectives)
                 .average().orElse(0);
 
-        return "Has completado el " + percentage + "% de tu aventura.";
+        return String.format("Has completado el %.2f %% de tu aventura.", percentage);
     }
 }
