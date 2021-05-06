@@ -1,5 +1,8 @@
 package com.unizar.game.elements;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * An item.
  * Can be closeable
@@ -37,4 +40,19 @@ public abstract class Item extends Element {
         return "Es " + getDescription();
     }
 
+    @Override
+    public List<Element> getInteractable() {
+        if (openable == null || openable == OPENABLE.OPENED)
+            return super.getInteractable();
+        else
+            return Collections.emptyList();
+    }
+
+    @Override
+    public String describeContents(String ifEmpty, String prefix) {
+        if (openable == null || openable == OPENABLE.OPENED)
+            return super.describeContents(ifEmpty, prefix);
+        else
+            return ifEmpty;
+    }
 }

@@ -81,7 +81,7 @@ public class Engine {
                     // open
                     ((Item) element).openable = Item.OPENABLE.OPENED;
                     location.notifyNPCs(npc, npc + " abre " + element + ".");
-                    return Result.done("Abres " + element + ".");
+                    return Result.done("Abres " + element.getDescription());
                 });
             case CLOSE:
                 return command.main.require(
