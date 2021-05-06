@@ -175,8 +175,8 @@ public class Window {
      *
      * @param text line to add
      */
-    public void addDescription(String text) {
-        description.setText(description.getText() + (description.getText().isEmpty() ? "" : "\n") + text);
+    public void setDescription(String text) {
+        description.setText(text);
     }
 
     // ------------------------- output -------------------------

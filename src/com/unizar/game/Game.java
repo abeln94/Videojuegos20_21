@@ -65,9 +65,11 @@ public class Game extends KeyAdapter implements Runnable {
         addOutput("Escribe aquí los comandos y pulsa enter para introducirlos.");
         addOutput("También puedes pulsar F6/F9 para guardar/cargar la partida. Y pulsar F2 para resetear. Si necesitas ayuda sobre el juego puedes pulsar F1.");
         window.clearDescription();
-        addDescription(world.properties.getStartDescription());
-        addDescription("");
-        addDescription("Pulsa cualquier tecla para empezar.");
+        setDescription(
+                world.properties.getStartDescription(),
+                "",
+                "Pulsa cualquier tecla para empezar."
+        );
     }
 
     /**
@@ -78,11 +80,13 @@ public class Game extends KeyAdapter implements Runnable {
         setImage(world.properties.getWinScreen());
         addOutput("Enhorabuena, has completado el juego.");
         window.clearDescription();
-        addDescription(world.properties.getWinDescription());
-        addDescription("");
-//        addDescription(getCompletion());
-//        addDescription("");
-        addDescription("Pulsa cualquier tecla para volver a empezar.");
+        setDescription(
+                world.properties.getWinDescription(),
+                "",
+                getCompletion(),
+                "",
+                "Pulsa cualquier tecla para volver a empezar."
+        );
     }
 
     /**
@@ -93,11 +97,13 @@ public class Game extends KeyAdapter implements Runnable {
         setImage(null);
         addOutput("Has muerto.");
         window.clearDescription();
-        addDescription("Estás muerto.");
-        addDescription("");
-        addDescription(getCompletion());
-        addDescription("");
-        addDescription("Pulsa cualquier tecla para volver a empezar.");
+        setDescription(
+                "Estás muerto.",
+                "",
+                getCompletion(),
+                "",
+                "Pulsa cualquier tecla para volver a empezar."
+        );
     }
 
     /**
@@ -315,9 +321,11 @@ public class Game extends KeyAdapter implements Runnable {
         }
 
         // describe current room
-        addDescription("Te encuentras en " + location.getDescription());
-        addDescription("");
-        addDescription(getPlayer().getDescription());
+        setDescription(
+                "Te encuentras en " + location.getDescription(),
+                "",
+                getPlayer().getDescription()
+        );
     }
 
     /**
@@ -340,13 +348,12 @@ public class Game extends KeyAdapter implements Runnable {
     }
 
     /**
-     * Adds a description line
-     * TODO: replace with setDescription
+     * Adds a description text
      *
-     * @param description text to add
+     * @param description each description will be on a different line
      */
-    public void addDescription(String description) {
-        window.addDescription(description);
+    public void setDescription(String... description) {
+        window.setDescription(String.join("\n", description));
     }
 
     /**
