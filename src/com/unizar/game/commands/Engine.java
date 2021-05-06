@@ -608,6 +608,33 @@ public class Engine {
                     command.action = Word.Action.DROP;
                 }
                 return execute(npc, command);
+
+            case WEAR:
+                return command.main.require(
+                        // You must have it
+                        npc.elements::contains,
+                        "No tienes {}.",
+                        "nada"
+                ).apply("Que quieres ponerte?", wearable -> {
+
+                    // wear
+                    npc.elements.remove(wearable);
+                    npc.wearables.add(wearable);
+                    return Result.done("Te pones " + wearable);
+                });
+            case UNWEAR:
+                return command.main.require(
+                        // You must wear it
+                        npc.wearables::contains,
+                        "No llevas puesto {}.",
+                        "nada"
+                ).apply("Que quieres quitarte?", wearable -> {
+
+                    // unwear
+                    npc.wearables.remove(wearable);
+                    npc.elements.add(wearable);
+                    return Result.done("Te quitas " + wearable);
+                });
         }
 
         return Result.error("Aún no se hacer eso!");

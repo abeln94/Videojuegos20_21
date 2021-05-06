@@ -1,6 +1,9 @@
 package com.unizar.game.elements;
 
+import com.unizar.Utils;
 import com.unizar.game.Game;
+
+import java.util.stream.Collectors;
 
 /**
  * Represents the player
@@ -23,7 +26,15 @@ public class Player extends NPC {
 
     @Override
     public String getDescription() {
-        return describeContents("No llevas nada encima", "Llevas:");
+        String elements = describeContents("No llevas nada encima.", "Llevas:");
+        String contents = wearables.stream()
+                .map(Element::getDescription)
+                .map(v -> "-" + v)
+                .map(Utils::increasePadding)
+                .collect(Collectors.joining("\n"));
+        contents = wearables.isEmpty() ? "No llevas nada puesto." : "Llevas puesto:\n" + contents;
+
+        return elements + "\n" + contents;
     }
 
     @Override

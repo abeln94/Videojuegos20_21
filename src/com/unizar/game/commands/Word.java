@@ -48,12 +48,13 @@ public class Word {
         TURN("girar"),
         UNLOCK("desbloquear"),
         UNTIE("desatar"),
-        WEAR("vestir"),
+        WEAR("ponerse ponerte vestir"),
+        UNWEAR("quitarse quitarte desvestir"), // the original is TAKE OFF
 
         // special
         EXAMINE("examinar leer"),
         HELP("ayuda"),
-//        INVENTORY("inventario"),
+        //        INVENTORY("inventario"),
         LOAD("cargar"),
         LOOK("mirar"),
         NOPRINT("noimprimir"),

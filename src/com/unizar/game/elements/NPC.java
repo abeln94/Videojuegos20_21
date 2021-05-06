@@ -6,6 +6,9 @@ import com.unizar.game.commands.EngineException;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * A generic NPC
  */
@@ -15,6 +18,11 @@ abstract public class NPC extends Element {
      * The last npc that attacked this one
      */
     public NPC lastAttackedBy = null;
+
+    /**
+     * The wearable elements
+     */
+    public final Set<Element> wearables = new HashSet<>();
 
     public NPC(String name) {
         super(name);
