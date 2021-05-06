@@ -10,6 +10,7 @@ import com.unizar.game.elements.Player;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -365,7 +366,18 @@ public class Game extends KeyAdapter implements Runnable {
      */
     public <T> T findElementByClassName(Class<T> name) {
         return (T) world.elements.stream()
-                .filter(name::isInstance).findFirst().orElseThrow(() -> new NoSuchElementException("Element " + name + " not found. Did you forgot to register it in the World?"));
+                .filter(name::isInstance)
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Element " + name + " not found. Did you forgot to register it in the World?"));
+    }
+
+    /**
+     * Returns the elements associated with the given class
+     */
+    public <T> List<T> findElementsByClassName(Class<T> name) {
+        return (List<T>) world.elements.stream()
+                .filter(name::isInstance)
+                .collect(Collectors.toList());
     }
 
     /**

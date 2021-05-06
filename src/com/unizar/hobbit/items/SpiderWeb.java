@@ -1,5 +1,6 @@
 package com.unizar.hobbit.items;
 
+import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Item;
 
 public class SpiderWeb extends Item {
@@ -9,7 +10,8 @@ public class SpiderWeb extends Item {
 
     @Override
     public void init() {
-        openable = OPENABLE.CLOSED; // can not be unlocked
+        openable = OPENABLE.LOCKED; // can not be unlocked
+        hiddenElements.put(Word.Action.BREAK, game.findElementByClassName(SpiderWeb_Broken.class));
         super.init();
     }
 }

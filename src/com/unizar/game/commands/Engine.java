@@ -495,10 +495,19 @@ public class Engine {
                 ).apply("Que quieres romper?", breakItem -> {
 
                     // break
+
+                    // move the unhidden element to the same parent
                     final Element found = breakItem.hiddenElements.remove(Word.Action.BREAK);
-                    found.moveTo(breakItem.getLocation());
+                    if (found != null) found.moveTo(breakItem.getLocation());
+                    // replace also in location exits
+                    breakItem.game.findElementsByClassName(Location.class).forEach(testLocation ->
+                            testLocation.exits.forEach((__, testExit) -> {
+                                if (testExit.second == breakItem) testExit.second = (Item) found;
+                            })
+                    );
+                    // remove the broken element
                     breakItem.moveTo(null);
-                    return Result.done("Rompes " + breakItem + ". Descubres " + found + ".");
+                    return Result.done("Rompes " + breakItem + "." + (found == null ? "" : " Descubres " + found + "."));
                 });
 
             case LOOK:

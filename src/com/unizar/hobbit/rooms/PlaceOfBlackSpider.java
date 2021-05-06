@@ -13,8 +13,8 @@ public class PlaceOfBlackSpider extends Location {
 
     @Override
     public void init() {
-        exits.put(Word.Direction.NORTHEAST, Utils.Pair.of(game.findElementByClassName(ElvishClearing.class), game.findElementByClassName(SpiderWeb.class))); //TODO: romper para pasar
-        exits.put(Word.Direction.SOUTHWEST, Utils.Pair.of(game.findElementByClassName(GreenForest.class), game.findElementByClassName(SpiderWeb.class))); //TODO: debes ver la tela de araña rota
+        exits.put(Word.Direction.NORTHEAST, Utils.Pair.of(game.findElementByClassName(ElvishClearing.class), game.findElementByClassName(SpiderWeb.class)));
+        exits.put(Word.Direction.SOUTHWEST, Utils.Pair.of(game.findElementByClassName(GreenForest.class), game.findElementByClassName(SpiderWeb.class)));
         super.init();
     }
 }

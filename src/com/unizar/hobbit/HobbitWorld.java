@@ -111,6 +111,7 @@ public class HobbitWorld extends World {
         elements.add(new GoblinGate());
         elements.add(new Cupboard());
         elements.add(new SpiderWeb());
+        elements.add(new SpiderWeb_Broken());
         elements.add(new MagicDoor());
         elements.add(new RedDoor());
         elements.add(new LargeTrapDoor());
