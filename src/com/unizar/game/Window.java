@@ -156,6 +156,8 @@ public class Window {
      * Sets the command input text
      */
     public void setCommand(String command) {
+        if (command == null) return;
+
         commandInput.setText(command);
     }
 

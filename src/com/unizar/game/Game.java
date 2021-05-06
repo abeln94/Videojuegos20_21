@@ -26,7 +26,7 @@ public class Game extends KeyAdapter implements Runnable {
     public Scheduling autoWait = new Scheduling(this, 10 * 1000);
 
     private final DataSaver saver = new DataSaver();
-    public final History history = new History(this);
+    public final History history = new History();
     public final Window window;
 
     // ------------------------- local -------------------------
@@ -194,10 +194,10 @@ public class Game extends KeyAdapter implements Runnable {
 
             // Press top arrow to repeat input
             case KeyEvent.VK_UP:
-                history.restoreInput(true);
+                window.setCommand(history.getPreviousInput(true));
                 break;
             case KeyEvent.VK_DOWN:
-                history.restoreInput(false);
+                window.setCommand(history.getPreviousInput(false));
                 break;
 
             // Press F2 to reset
