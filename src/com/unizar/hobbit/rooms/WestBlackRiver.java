@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.Gold;
 public class WestBlackRiver extends Location {
 
     public WestBlackRiver() {
-        super("en la orilla oesta del río Negro", "WestBlackRiver");
+        super("en la orilla oesta del río Negro", "WestBlackRiver", "water");
     }
 
     @Override

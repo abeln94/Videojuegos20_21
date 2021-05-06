@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class FrontGate extends Location {
 
     public FrontGate() {
-        super("en la puerta principal de la Montaña Solitaria.", "FrontGate");
+        super("en la puerta principal de la Montaña Solitaria.", "FrontGate", "wind");
     }
 
     @Override

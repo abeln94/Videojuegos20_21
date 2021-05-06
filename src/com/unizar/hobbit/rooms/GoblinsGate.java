@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.GoblinGate;
 public class GoblinsGate extends Location {
 
     public GoblinsGate() {
-        super("en la entrada a la goblinera", "GoblinsGate");
+        super("en la entrada a la goblinera", "GoblinsGate", "forest");
     }
 
     @Override

@@ -4,13 +4,12 @@ import com.unizar.Utils;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Location;
 import com.unizar.hobbit.items.GoldenRing;
-import com.unizar.hobbit.items.StartChest;
 import com.unizar.hobbit.npcs.Gollum;
 
 public class DarkWidingPassage_6 extends Location {
 
     public DarkWidingPassage_6() {
-        super("en un pasaje oscuro y cerrado", "DarkWidingPassage");
+        super("en un pasaje oscuro y cerrado", "DarkWidingPassage", "cave");
     }
 
     @Override

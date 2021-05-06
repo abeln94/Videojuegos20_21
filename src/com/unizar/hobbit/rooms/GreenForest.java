@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.SpiderWeb;
 public class GreenForest extends Location {
 
     public GreenForest() {
-        super("en un bosque verde", "EastBlackRiver");
+        super("en un bosque verde", "EastBlackRiver", "forest");
     }
 
     @Override

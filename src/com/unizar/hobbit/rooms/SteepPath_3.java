@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class SteepPath_3 extends Location {
 
     public SteepPath_3() {
-        super("en un empinado camino, empiezas a oir agua", "SteepPath");
+        super("en un empinado camino, empiezas a oir agua", "SteepPath", "wind");
     }
 
     @Override

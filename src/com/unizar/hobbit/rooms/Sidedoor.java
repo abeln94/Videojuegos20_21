@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.SideDoorLonelyMountain;
 public class Sidedoor extends Location {
 
     public Sidedoor() {
-        super("en una pequeña bahía empinada, tranquila y silenciosa, con un acantilado que sobresale.", "Sidedoor");
+        super("en una pequeña bahía empinada, tranquila y silenciosa, con un acantilado que sobresale.", "Sidedoor", "wind");
     }
 
     @Override

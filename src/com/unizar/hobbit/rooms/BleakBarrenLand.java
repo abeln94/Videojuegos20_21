@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class BleakBarrenLand extends Location {
 
     public BleakBarrenLand() {
-        super(" en una tierra desolada y yerma que alguna vez fue verde. ", "BleakBarrenLand");
+        super(" en una tierra desolada y yerma que alguna vez fue verde. ", "BleakBarrenLand", "wind");
     }
 
     @Override

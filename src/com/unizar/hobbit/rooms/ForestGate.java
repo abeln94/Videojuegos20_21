@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class ForestGate extends Location {
 
     public ForestGate() {
-        super("en la puerta del bosque", "ForestRoad_2");
+        super("en la puerta del bosque", "ForestRoad_2", "forest");
     }
 
     @Override

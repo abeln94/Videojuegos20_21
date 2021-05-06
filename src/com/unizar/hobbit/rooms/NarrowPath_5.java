@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class NarrowPath_5 extends Location {
 
     public NarrowPath_5() {
-        super("en un estrecho camino, empiezas a divisar el final de la montaña", "DangerousPath");
+        super("en un estrecho camino, empiezas a divisar el final de la montaña", "DangerousPath", "wind");
     }
 
     @Override

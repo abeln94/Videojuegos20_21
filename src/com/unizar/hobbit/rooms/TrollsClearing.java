@@ -9,7 +9,7 @@ import com.unizar.hobbit.npcs.ViciousTroll;
 
 public class TrollsClearing extends Location {
     public TrollsClearing() {
-        super("el claro de los trolls", "TrollsClearingNight"); //noche
+        super("el claro de los trolls", "TrollsClearingNight", "forest"); //noche
     }
 
     @Override

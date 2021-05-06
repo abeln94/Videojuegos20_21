@@ -5,6 +5,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 
 /**
  * Manages the game sounds
@@ -13,12 +14,17 @@ public class Sound {
 
     private Clip playingClip = null;
 
+    private String playingFile = null;
+
     /**
      * Plays a background music
      *
      * @param path music to play
      */
     public void backgroundMusic(String path) {
+        if (Objects.equals(playingFile, path)) return;
+        playingFile = path;
+
 
         // stop if playing
         stop();
@@ -44,32 +50,11 @@ public class Sound {
             playingClip.loop(playingClip.LOOP_CONTINUOUSLY);
 
             // play
-            setVolume(volume);
             playingClip.start();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private float volume = 1;
-
-    /**
-     * Changes the volume of the music...or it should
-     *
-     * @param volume
-     */
-    public void setVolume(float volume) {
-        // java is NOT a good language for games
-
-//        this.volume = volume;
-//        if (playingClip != null) {
-//            FloatControl gainControl = (FloatControl) playingClip.getControl(FloatControl.Type.MASTER_GAIN);
-//            float range = gainControl.getMaximum() - gainControl.getMinimum();
-//            final double pow = Math.pow(volume, 5.0 / 1.0);
-//            System.out.println(pow);
-//            gainControl.setValue((float) (gainControl.getMinimum() + range * pow));
-//        }
     }
 
     /**

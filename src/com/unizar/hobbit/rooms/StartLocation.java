@@ -12,8 +12,7 @@ import com.unizar.hobbit.npcs.Thorin;
 public class StartLocation extends Location {
 
     public StartLocation() {
-        super("una sala alargada y cálida", "StartLocation");
-        music = "tale";
+        super("una sala alargada y cálida", "StartLocation", "startLocation");
     }
 
     @Override

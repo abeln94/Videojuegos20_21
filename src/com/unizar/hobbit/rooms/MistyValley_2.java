@@ -4,12 +4,11 @@ import com.unizar.Utils;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Location;
 import com.unizar.hobbit.items.GoldenKey;
-import com.unizar.hobbit.items.StartChest;
 
 public class MistyValley_2 extends Location {
 
     public MistyValley_2() {
-        super("en un profundo valle con resto de niebla", "MistyValley");
+        super("en un profundo valle con resto de niebla", "MistyValley", "wind");
     }
 
     @Override

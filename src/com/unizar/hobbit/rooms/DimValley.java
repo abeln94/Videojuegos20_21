@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class DimValley extends Location {
 
     public DimValley() {
-        super("en un estrecho camino al borde de un barranco oscuro y profundo", "DimValley");
+        super("en un estrecho camino al borde de un barranco oscuro y profundo", "DimValley", "wind");
     }
 
     @Override

@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class Ravenhill extends Location {
 
     public Ravenhill() {
-        super(" en el lado oeste de La Colina de los Cuervos. ", "Ravenhill");
+        super(" en el lado oeste de La Colina de los Cuervos. ", "Ravenhill", "wind");
     }
 
     @Override

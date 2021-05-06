@@ -9,7 +9,7 @@ import com.unizar.hobbit.items.TheValuableTreasure;
 public class DragonsHalls extends Location {
 
     public DragonsHalls() {
-        super("en la Cueva de Smaug.", "DragonsHalls");
+        super("en la Cueva de Smaug.", "DragonsHalls", "cave");
     }
 
     @Override

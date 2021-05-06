@@ -295,9 +295,8 @@ public class Game extends KeyAdapter implements Runnable {
         final String music = location instanceof Location ? ((Location) location).music : null;
 
         if (!Objects.equals(lastImage, image)) {
-            // smooth update image (and sound)
+            // smooth update image
             Utils.smoothing(f -> {
-                sound.setVolume(1 - f);
                 window.setImageTransparency(1 - f);
             });
 
@@ -305,7 +304,6 @@ public class Game extends KeyAdapter implements Runnable {
             setImage(image);
 
             Utils.smoothing(f -> {
-                sound.setVolume(f);
                 window.setImageTransparency(f);
             });
         }

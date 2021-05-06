@@ -3,13 +3,12 @@ package com.unizar.hobbit.rooms;
 import com.unizar.Utils;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Location;
-import com.unizar.hobbit.items.GreenDoor;
 import com.unizar.hobbit.items.RockDoor;
 
 public class HiddenPath extends Location {
 
     public HiddenPath() {
-        super("un camino oculto con pisadas de troll", "HiddenPath");
+        super("un camino oculto con pisadas de troll", "HiddenPath", "forest");
     }
 
     @Override

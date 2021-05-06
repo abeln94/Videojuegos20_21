@@ -9,7 +9,7 @@ import com.unizar.hobbit.items.SpiderWeb;
 public class ElvishClearing extends Location {
 
     public ElvishClearing() {
-        super("en un claro élfico con desniveles en el terreno y troncos.", "ElvishClearing");
+        super("en un claro élfico con desniveles en el terreno y troncos.", "ElvishClearing", "forest");
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.unizar.hobbit.npcs.Bardo;
 public class LakeTown extends Location {
 
     public LakeTown() {
-        super(" en la ciudad de madera en medio del Gran Lago. Ciudad del lago. ", "LakeTown");
+        super(" en la ciudad de madera en medio del Gran Lago. Ciudad del lago. ", "LakeTown", "people");
     }
 
     @Override

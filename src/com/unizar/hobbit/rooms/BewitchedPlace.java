@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class BewitchedPlace extends Location {
 
     public BewitchedPlace() {
-        super("en un lugar tenebroso, incluso parece embrujado", "BewitchedPlace");
+        super("en un lugar tenebroso, incluso parece embrujado", "BewitchedPlace", "calm");
     }
 
     @Override

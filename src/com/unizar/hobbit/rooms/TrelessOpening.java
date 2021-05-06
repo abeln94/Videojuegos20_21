@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class TrelessOpening extends Location {
 
     public TrelessOpening() {
-        super("en un claro del bosque", "TrelessOpening");
+        super("en un claro del bosque", "TrelessOpening", "forest");
     }
 
     @Override

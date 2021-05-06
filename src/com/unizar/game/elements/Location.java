@@ -29,9 +29,10 @@ abstract public class Location extends Element {
      */
     public Map<Word.Direction, Utils.Pair<Location, Item>> exits = new HashMap<>();
 
-    public Location(String name, String image) {
+    public Location(String name, String image, String music) {
         super(name);
         this.image = image;
+        this.music = music;
     }
 
     @Override

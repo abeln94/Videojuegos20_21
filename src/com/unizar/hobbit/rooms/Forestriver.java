@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.LargeTrapDoor;
 public class Forestriver extends Location {
 
     public Forestriver() {
-        super(" en el río que atraviesa el bosque. ", "Forestriver");
+        super(" en el río que atraviesa el bosque. ", "Forestriver", "water");
     }
 
     @Override

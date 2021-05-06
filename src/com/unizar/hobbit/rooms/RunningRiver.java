@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class RunningRiver extends Location {
 
     public RunningRiver() {
-        super("en un río con rápidos", "RunningRiver");
+        super("en un río con rápidos", "RunningRiver", "water");
     }
 
     @Override

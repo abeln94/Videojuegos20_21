@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class DeadlyPath extends Location {
 
     public DeadlyPath() {
-        super("en un estrecho camino, no puedes ver apenas por la niebla", "DangerousPath");
+        super("en un estrecho camino, no puedes ver apenas por la niebla", "DangerousPath", "wind");
     }
 
     @Override

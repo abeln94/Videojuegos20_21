@@ -10,7 +10,7 @@ import com.unizar.hobbit.items.Sword;
 public class TrollsCave extends Location {
 
     public TrollsCave() {
-        super("la cueva de los trolls", "TrollsCave");
+        super("la cueva de los trolls", "TrollsCave", "cave");
     }
 
     @Override

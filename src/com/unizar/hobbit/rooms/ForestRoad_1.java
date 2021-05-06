@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class ForestRoad_1 extends Location {
 
     public ForestRoad_1() {
-        super("en un camino forestal", "ForestRoad_1");
+        super("en un camino forestal", "ForestRoad_1", "forest");
     }
 
     @Override

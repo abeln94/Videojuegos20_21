@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.Cupboard;
 public class BeornsHouse extends Location {
 
     public BeornsHouse() {
-        super("en la casa de Beorn", "BeornsHouse");
+        super("en la casa de Beorn", "BeornsHouse", "fire");
     }
 
     @Override

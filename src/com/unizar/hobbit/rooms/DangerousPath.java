@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class DangerousPath extends Location {
 
     public DangerousPath() {
-        super("en un sinuoso y peligroso camino en las montañas brumosas", "DangerousPath");
+        super("en un sinuoso y peligroso camino en las montañas brumosas", "DangerousPath", "wind");
     }
 
     @Override

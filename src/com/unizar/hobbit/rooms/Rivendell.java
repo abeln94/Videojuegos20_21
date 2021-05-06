@@ -8,7 +8,7 @@ import com.unizar.hobbit.npcs.Elrond;
 public class Rivendell extends Location {
 
     public Rivendell() {
-        super("en Rivendell", "Rivendell");
+        super("en Rivendell", "Rivendell", "rivendell");
     }
 
     @Override

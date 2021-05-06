@@ -8,8 +8,7 @@ import com.unizar.hobbit.items.GreenDoor;
 public class EmptyLand extends Location {
 
     public EmptyLand() {
-        super("una tierra sombría y yerma con lúgubres colinas en la lejanía", "EmptyLand");
-        music = "prelude";
+        super("una tierra sombría y yerma con lúgubres colinas en la lejanía", "EmptyLand", "wind");
     }
 
     @Override

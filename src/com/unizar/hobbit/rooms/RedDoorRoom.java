@@ -3,13 +3,12 @@ package com.unizar.hobbit.rooms;
 import com.unizar.Utils;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Location;
-import com.unizar.hobbit.items.LargeTrapDoor;
 import com.unizar.hobbit.items.RedDoor;
 
 public class RedDoorRoom extends Location {
 
     public RedDoorRoom() {
-        super(" una pequeña sala con más barriles de vino.", "CellarOfWine");
+        super(" una pequeña sala con más barriles de vino.", "CellarOfWine", "fire");
     }
 
     @Override

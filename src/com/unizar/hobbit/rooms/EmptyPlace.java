@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class EmptyPlace extends Location {
 
     public EmptyPlace() {
-        super("en una lugar vacío.", "EmptyPlace");
+        super("en un lugar vacío.", "EmptyPlace", "calm");
     }
 
     @Override

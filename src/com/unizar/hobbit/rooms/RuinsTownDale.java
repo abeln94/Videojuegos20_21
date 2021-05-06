@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class RuinsTownDale extends Location {
 
     public RuinsTownDale() {
-        super(" en las ruinas del pueblo de Dale. ", "RuinsTownDale");
+        super(" en las ruinas del pueblo de Dale. ", "RuinsTownDale", "calm");
     }
 
     @Override

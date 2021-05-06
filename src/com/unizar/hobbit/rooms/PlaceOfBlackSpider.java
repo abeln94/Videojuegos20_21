@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.SpiderWeb;
 public class PlaceOfBlackSpider extends Location {
 
     public PlaceOfBlackSpider() {
-        super("en la guarida de las arañas", "PlaceBlackSpider");
+        super("en la guarida de las arañas", "PlaceBlackSpider", "cave");
     }
 
     @Override
