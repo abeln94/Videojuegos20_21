@@ -218,7 +218,7 @@ public class Engine {
                 npc.moveTo(newLocation);
 
                 // notify new npc
-                location.notifyNPCs(npc, npc + " entra.");
+                newLocation.notifyNPCs(npc, npc + " entra.");
 
                 return Result.done("Te diriges hacia " + command.direction.description);
             case FOLLOW:

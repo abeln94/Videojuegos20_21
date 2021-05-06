@@ -44,6 +44,11 @@ abstract public class NPC extends Element {
     public void ask(NPC npc, String message) {
 
         try {
+
+            // convert message
+            // when you say 'darme el mapa' the 'me' part is replaced by the npc
+            message = message.replaceAll("\\b([^ ]*)me\\b", "a " + npc.name + " $1");
+
             // parse message
             Command parse = Command.parse(message, game.world.elements);
 

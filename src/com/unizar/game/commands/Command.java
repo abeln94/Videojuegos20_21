@@ -100,9 +100,6 @@ public class Command {
         // remove non-alphabetical chars
         sentence = sentence.replaceAll("[^0-9a-zA-ZñÑáéíóú]", " ");
 
-//        // when you say 'darme el mapa' the 'me' part is replaced by the player // TODO: move to when the command is executed
-//        sentence = sentence.replaceAll("\\b([^ ]*)me\\b", "a " + game.getPlayer().name + " $1");
-
         // get the words
         List<String> words = Word.separateWords(sentence);
         boolean isSecondElement = false;
