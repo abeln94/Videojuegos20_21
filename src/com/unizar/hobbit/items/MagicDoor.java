@@ -2,7 +2,6 @@ package com.unizar.hobbit.items;
 
 import com.unizar.game.elements.Item;
 import com.unizar.game.elements.NPC;
-import com.unizar.hobbit.npcs.Elrond;
 
 public class MagicDoor extends Item {
     public MagicDoor() {
@@ -11,7 +10,7 @@ public class MagicDoor extends Item {
 
     @Override
     public void init() {
-        openable = Item.OPENABLE.CLOSED;
+        openable = OPENABLE.CLOSED;
         super.init();
     }
 

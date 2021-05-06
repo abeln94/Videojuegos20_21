@@ -13,7 +13,6 @@ public class GreenForest extends Location {
 
     @Override
     public void init() {
-        //TODO: añadir temas de smash web
         exits.put(Word.Direction.WEST, Utils.Pair.of(game.findElementByClassName(EastBlackRiver.class), null));
         exits.put(Word.Direction.NORTHEAST, Utils.Pair.of(game.findElementByClassName(PlaceOfBlackSpider.class), game.findElementByClassName(SpiderWeb.class)));
         super.init();
