@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -19,10 +20,12 @@ import java.net.URL;
 public class Window {
 
     public interface InputListener {
+
         void onText(String text);
     }
 
     // ------------------------- elements -------------------------
+    private final JFrame frame;
     private final JTextArea commandOutput;
     private final JTextField commandInput;
     private final JTextArea description;
@@ -31,7 +34,7 @@ public class Window {
     public Window(String title, int imageRatio, String fontName) {
 
         // frame
-        JFrame frame = new JFrame(title);
+        frame = new JFrame(title);
         frame.setLayout(null);
         frame.addComponentListener(new ComponentAdapter() {
 
@@ -121,7 +124,7 @@ public class Window {
         // show
         frame.setSize(640, 480);
         frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        frame.setResizable(false); // noooooo
         frame.setVisible(true);
         commandInput.grabFocus();
@@ -270,5 +273,12 @@ public class Window {
     public void enableInput() {
         commandInput.setEnabled(true);
         commandInput.setCaretPosition(commandInput.getText().length());
+    }
+
+    /**
+     * Closes the window
+     */
+    public void close() {
+        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     }
 }

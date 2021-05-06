@@ -45,14 +45,17 @@ public class Engine {
         switch (command.action) {
             case WAIT:
                 return Result.done("Esperas. El tiempo pasa.");
-            case INVENTORY:
-                return Result.error("No permito que me hables en la lengua de mordor, tu inventario se muestra ahora a la derecha");
+//            case INVENTORY:
+//                return Result.error("Tu inventario se muestra ahora a la derecha");
             case SAVE:
-                return Result.error("[obsoleto: pulsa F6 para guardar]");
+                npc.game.save();
+                return Result.done("[también puedes usar F6 para guardar]");
             case LOAD:
-                return Result.error("[obsoleto: pulsa F9 para cargar]");
+                npc.game.load();
+                return Result.done("[también puedes usar F9 para guardar]");
             case QUIT:
-                return Result.error("[obsoleto: pulsa la X de la ventana si quieres cerrar el juego]");
+                npc.game.exit();
+                return Result.done("[también puedes pulsar la X de la ventana]");
             case OPEN:
                 return command.main.require(
                         // you must see the element

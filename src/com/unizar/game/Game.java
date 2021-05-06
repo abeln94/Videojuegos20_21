@@ -179,23 +179,12 @@ public class Game extends KeyAdapter implements Runnable {
 
             // press F6 to save
             case KeyEvent.VK_F6:
-                window.addOutput("[guardado]");
-                saver.saveData(world);
+                save();
                 break;
 
             // Press F9 to load
             case KeyEvent.VK_F9:
-                World newWorld = saver.loadData();
-                if (newWorld != null) {
-                    window.clearOutput();
-                    window.addOutput("[cargado]");
-                    world = newWorld;
-                    world.register(this);
-                    update();
-                    history.clearHistory();
-                } else {
-                    window.addOutput("[No hay datos guardados]");
-                }
+                load();
                 break;
 
             // Press top arrow to repeat input
@@ -396,5 +385,38 @@ public class Game extends KeyAdapter implements Runnable {
                 .average().orElse(0);
 
         return String.format("Has completado el %.2f %% de tu aventura.", percentage);
+    }
+
+
+    /**
+     * Saves the game
+     */
+    public void save() {
+        window.addOutput("[guardado]");
+        saver.saveData(world);
+    }
+
+    /**
+     * Loads the game
+     */
+    public void load() {
+        World newWorld = saver.loadData();
+        if (newWorld != null) {
+            window.clearOutput();
+            window.addOutput("[cargado]");
+            world = newWorld;
+            world.register(this);
+            update();
+            history.clearHistory();
+        } else {
+            window.addOutput("[No hay datos guardados]");
+        }
+    }
+
+    /**
+     * Exits the game
+     */
+    public void exit() {
+        window.close();
     }
 }

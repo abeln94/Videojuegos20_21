@@ -53,11 +53,11 @@ public class Word {
         // special
         EXAMINE("examinar leer"),
         HELP("ayuda"),
-        INVENTORY("inventario"),
+//        INVENTORY("inventario"),
         LOAD("cargar"),
         LOOK("mirar"),
         NOPRINT("noimprimir"),
-        PAUSE("pausar"),
+        //        PAUSE("pausar"),
         PRINT("imprimir"),
         QUIT("salir"),
         SAVE("guardar"),
