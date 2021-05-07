@@ -1,19 +1,10 @@
 package com.unizar.game.elements;
 
 import com.unizar.Utils;
-import com.unizar.game.commands.Command;
-import com.unizar.game.commands.EngineException;
-import com.unizar.game.commands.Result;
-import com.unizar.game.commands.Word;
-import com.unizar.game.commands.Behaviour;
+import com.unizar.game.commands.*;
 import com.unizar.hobbit.npcs.Bilbo_Player;
-import com.unizar.hobbit.npcs.Thorin;
-import com.unizar.hobbit.rooms.GoblinDungeon;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * A generic NPC
@@ -84,23 +75,25 @@ abstract public class NPC extends Element {
         message = message.replaceAll("\\b([^ ]*)me\\b", "a " + npc.name + " $1");
 
 
-        orden = message; }
+        orden = message;
+    }
 
     @Override
     public void act() {
         //se pasa este NPC y el game.getPlayer()
         int intAction = behaviour.nextAction(this, game.getPlayer(), game.world.night);
         Result result = null;
-        switch (intAction){
+        switch (intAction) {
             case 0: //Atacar NPC
-                Command parse = game.parser.parse(orden);
-                if (parse.parseError) {
+                try {
+                    // execute
+                    Command parse = Command.parse(orden, game.world.elements);
+                    result = game.engine.execute(this, parse);
+                } catch (EngineException e) {
                     // bad command
                     this.hear(this + " te responde: Como has dicho?");
                     return;
                 }
-                // execute
-                result = game.engine.execute(this, parse);
                 break;
             case 1: //Atacar jug
                 result = game.engine.execute(this, Command.act(Word.Action.KILL, game.getPlayer()));
@@ -110,9 +103,6 @@ abstract public class NPC extends Element {
                 break;
             case 3: //Ir a
                 result = game.engine.execute(this, Command.go(Utils.pickRandom(Word.Direction.values()))); //TODO: limitar a las salas a las que pueden ir según su lista
-                break;
-            case 4: //Morir
-                Result.done(this.name + " muere.");
                 break;
             case 5: //Dormir
                 dormido = true;
@@ -145,10 +135,6 @@ abstract public class NPC extends Element {
             case 9: //Leer
                 //getLocation().notifyNPCs(this, this + " dice: Ve hacia el este desde el Gran Lago para llegar a Ciudad del lago");
                 //leer uno de los objetos de su inventario
-                break;
-            case 10: //Matar
-                result = game.engine.execute(this, Command.act(Word.Action.KILL, game.getPlayer()));
-                alive = false;
                 break;
             case 11: //Abrir
                 //result = game.engine.execute(this, Command.act(Word.Action.OPEN, game.findElementByClassName(elementoAbrir), game.findElementByClassName(Bilbo_Player.class)));

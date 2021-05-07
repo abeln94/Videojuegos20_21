@@ -1,8 +1,6 @@
 package com.unizar.game.commands;
 
 import com.unizar.game.elements.Element;
-import com.unizar.game.elements.Item;
-import com.unizar.game.elements.Location;
 import com.unizar.game.elements.NPC;
 import com.unizar.hobbit.items.GoldenRing;
 import com.unizar.hobbit.items.RedKey;
@@ -61,11 +59,10 @@ public class Behaviour {
         List<Boolean> pj = pjArray();
         //si hay algún 2, se devuelve el 2, sino...
         List<Integer> integerForm = productBooltoInt(general, pj);
-        if(integerForm.contains(2)){
+        if (integerForm.contains(2)) {
             //se devuelve la accion del 2
             return indexMax(integerForm);
-        }
-        else{ //solo 0 y 1
+        } else { //solo 0 y 1
             //se multiplican con el de pesos
             List<Integer> withPesos = productInt(integerForm, pesos);
             //se genera el aleatorio y se multiplican
@@ -75,8 +72,7 @@ public class Behaviour {
         }
     }
 
-    private List<Boolean> generalArray(NPC jugador)
-    {
+    private List<Boolean> generalArray(NPC jugador) {
         List<Boolean> general = new ArrayList<Boolean>();
         //0 ARMA != NULL && ORDEN=KILL
         general.add(armaEnUso != null && orden != null);
@@ -90,9 +86,6 @@ public class Behaviour {
         //3 AUTONOMO
         general.add(seguirA == null);
 
-        //4 !INMORTAL && ATAQUE != NULL
-        general.add(lastAttackedBy != null);
-
         //5 PUEDE_DORMIR
         general.add(!puedeDormir);
 
@@ -103,38 +96,35 @@ public class Behaviour {
         general.add(frases != null);
 
         //8 INVENTARIO_NPC != NULL
-        general.add(inventarioNPC!= null);
+        general.add(inventarioNPC != null);
 
         //9 PUEDE_LEER && ORDEN==LEER && INVENTARIO contains el_leer
         general.add(idiomas != null); //si sabe algún idioma
-
-        //10 MATAR_JUGADOR &&  ATAQUE.quien == JUGADOR
-        general.add(lastAttackedBy.equals(jugador));
 
         //11 EL_ABRIR != NULL
         general.add(true); //en principio todos pueden abrir
         return general;
     }
 
-    private List<Boolean> pjArray(){
-        if(id == 2)
+    private List<Boolean> pjArray() {
+        if (id == 2)
             return butlerArray();
-        if(id == 5)
+        if (id == 5)
             return gollumArray();
-        if(id == 7)
+        if (id == 7)
             return dragonArray();
-        if(id >= 20 && id <= 29)
+        if (id >= 20 && id <= 29)
             return trollArray();
         return Arrays.asList(true, true, true, true, true, true, true, true, true, true, true, true);
     }
 
-    private List<Integer> productBooltoInt(List<Boolean> g, List<Boolean> pj){
+    private List<Integer> productBooltoInt(List<Boolean> g, List<Boolean> pj) {
         List<Integer> prodInt = new ArrayList<Integer>();
-        for(int i = 0; i < g.size(); i++){
+        for (int i = 0; i < g.size(); i++) {
             boolean first = g.get(i);
             boolean second = pj.get(i);
             boolean res = first && second;
-            if(i == 4 || i == 10){
+            if (i == 4 || i == 10) {
                 prodInt.add(res ? 2 : 0);
             }
             prodInt.add(res ? 1 : 0);
@@ -142,9 +132,9 @@ public class Behaviour {
         return prodInt;
     }
 
-    private List<Integer> productInt(List<Integer> g, List<Integer> pj){
+    private List<Integer> productInt(List<Integer> g, List<Integer> pj) {
         List<Integer> prodInt = new ArrayList<Integer>();
-        for(int i = 0; i < g.size(); i++){
+        for (int i = 0; i < g.size(); i++) {
             int first = g.get(i);
             int second = pj.get(i);
             int res = first * second;
@@ -153,31 +143,31 @@ public class Behaviour {
         return prodInt;
     }
 
-    private List<Integer> randomArray(List<Integer> g){
+    private List<Integer> randomArray(List<Integer> g) {
         List<Integer> prodInt = new ArrayList<Integer>();
-        for(int i = 0; i < g.size(); i++){
-            int num = (int) (Math.random()*9 + 1);
+        for (int i = 0; i < g.size(); i++) {
+            int num = (int) (Math.random() * 9 + 1);
             prodInt.add(num);
         }
         return prodInt;
     }
 
-    private int indexMax(List<Integer> g){
+    private int indexMax(List<Integer> g) {
         int max = 0;
         int pos = 0;
-        for(int i = 0; i < g.size(); i++){
-            if(g.get(i) > max){
+        for (int i = 0; i < g.size(); i++) {
+            if (g.get(i) > max) {
                 max = g.get(i);
                 pos = i;
             }
         }
-        if(max == 0)
+        if (max == 0)
             return -1;
         return pos;
     }
 
     //Funciones propias
-    private List<Boolean> butlerArray(){
+    private List<Boolean> butlerArray() {
         List<Boolean> pj = new ArrayList<Boolean>();
         //los que no tienen restricciones extra se ponen a true, para que primen el resto
         pj.add(true);
@@ -197,7 +187,7 @@ public class Behaviour {
         return pj;
     }
 
-    private List<Boolean> gollumArray(){
+    private List<Boolean> gollumArray() {
         List<Boolean> pj = new ArrayList<Boolean>();
         //los que no tienen restricciones extra se ponen a true, para que primen el resto
         pj.add(true);
@@ -217,7 +207,7 @@ public class Behaviour {
         return pj;
     }
 
-    private List<Boolean> dragonArray(){
+    private List<Boolean> dragonArray() {
         List<Boolean> pj = new ArrayList<Boolean>();
         //los que no tienen restricciones extra se ponen a true, para que primen el resto
         pj.add(true);
@@ -239,7 +229,7 @@ public class Behaviour {
         return pj;
     }
 
-    private List<Boolean> trollArray(){
+    private List<Boolean> trollArray() { // TODO maybe extract isStoneAtNight behaviour
         List<Boolean> pj = new ArrayList<Boolean>();
         //los que no tienen restricciones extra se ponen a true, para que primen el resto
         pj.add(true);
