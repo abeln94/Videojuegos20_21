@@ -13,7 +13,7 @@ public class ViciousTroll extends NPC {
         weight = 50;
         id = 20;
         lastAttackedBy = null;
-        autonomo = false;
+  /*      autonomo = false;
         inmortal = false;
         puedeDormir = false;
         puedeTP = false;
@@ -29,7 +29,7 @@ public class ViciousTroll extends NPC {
         orden = null;
         saludos.add("Mirah so hobis");
         frases.add("Me lo voi a hamar");
-        frases.add("Eeeeeeeh miniyo, qeres una mini empanadilla?");
+        frases.add("Eeeeeeeh miniyo, qeres una mini empanadilla?");*/
     }
 
     @Override

@@ -17,60 +17,43 @@ public class Behaviour {
     final int tam = 12;
 
     //parametros que se tienen en cuenta a la hora de tomar una decision
-    private NPC lastAttackedBy = null;
     private int id = -1;
-    private boolean autonomo = false;
-    private boolean inmortal = false;
-    private boolean puedeDormir = false;
-    private boolean puedeTP = false;
-    private boolean puedeLeer = false;
-    private boolean puedeMatarAJugador = false;
-    private List<Element> lugares = new ArrayList<>();
-    private boolean dormido = false;
-    private boolean primerEncuentroJugador = false;
-    public List<String> saludos = new ArrayList<>();
-    public List<String> frases = new ArrayList<>();
-    private int cansancio = 0;
-    public Class<Location> sitioTP = null;
-    public Class<Item> elementoAbrir = null;
-    public Class<Item> elementoLeer = null;
-    private String arma = null;
-    private String orden = null;
-    private Element posicionNPC = null;
-    private boolean noche = false;
-    private Set<Element> inventarioNPC = new HashSet<>();
-    private String name = null;
-
+    public NPC lastAttackedBy = null;
+    public String seguirA = null; //hace comparación por name, si null es autonomo
+    public boolean puedeDormir = false;
+    public List<String> lugares = new ArrayList<>();
+    public boolean dormido = false;
+    public int nEncuentros = 0;
+    public Map<String, Integer> frases = new LinkedHashMap<>(); //frase acompañada de en que momento del juego la puede decir en base al número de apariciones
+    public List<String> sitioTeletransportar = null;
+    public String armaEnUso = null;
+    public String orden = null;
+    public List<String> idiomas = new ArrayList<>(); //lista de idiomas que conoce, si un objeto está escrito en ese lo puede leer
     //necesitamos a Bilbo para tener los siguientes datos
     private Set<Element> inventarioJugador = new HashSet<>();
+    private Set<Element> inventarioNPC = new HashSet<>();
+    boolean noche = false;
 
 
     //matriz de pesos
     //0 (Atacar NPC) 1 (Atacar jug)	2 (Seguir jug) 3 (Ir a)	4 (Morir) 5 (Dormir) 6 (Teletransportar) 7 (Hablar)	8 (Dar)	9 (Leer) 10( Matar)	11 (Abrir)
-    List<Integer> pesos = Arrays.asList(2, 2, 3, 3, 3, 1, 2, 1, 2, 2, 3, 2);
+    List<Integer> pesos = Arrays.asList(2, 2, 3, 3, 3, 1, 2, 1, 2, 2, 3, 2); //TODO:uno por NPC
 
     public int nextAction(NPC npc, NPC jugador, boolean night) {
         inventarioJugador = jugador.elements;
         lastAttackedBy = npc.lastAttackedBy;
-        autonomo = npc.autonomo;
-        inmortal = npc.inmortal;
         puedeDormir = npc.puedeDormir;
-        puedeTP = npc.puedeTP;
-        puedeLeer = npc.puedeLeer;
-        puedeMatarAJugador = npc.puedeMatarAJugador;
         dormido = npc.dormido;
-        primerEncuentroJugador = npc.primerEncuentroJugador;
         frases = npc.frases;
-        saludos = npc.saludos;
-        sitioTP = npc.sitioTP;
-        elementoAbrir = npc.elementoAbrir;
-        elementoLeer = npc.elementoLeer;
-        arma = npc.arma;
         orden = npc.orden;
-        noche = night;
-        inventarioNPC = npc.elements;
-        name = npc.name;
         id = npc.id;
+        seguirA = npc.seguirA;
+        lugares = npc.lugares;
+        nEncuentros = npc.nEncuentros;
+        sitioTeletransportar = npc.sitioTeletransportar;
+        armaEnUso = npc.armaEnUso;
+        inventarioNPC = npc.elements;
+        noche = night;
 
         //se calcula el array general
         List<Boolean> general = generalArray(jugador);
@@ -96,40 +79,40 @@ public class Behaviour {
     {
         List<Boolean> general = new ArrayList<Boolean>();
         //0 ARMA != NULL && ORDEN=KILL
-        general.add(arma != null && orden != null);
+        general.add(armaEnUso != null && orden != null);
 
         //1 ARMA != NULL
-        general.add(arma != null);
+        general.add(armaEnUso != null);
 
         //2 !AUTONOMO
-        general.add(!autonomo);
+        general.add(seguirA != null);
 
         //3 AUTONOMO
-        general.add(autonomo);
+        general.add(seguirA == null);
 
         //4 !INMORTAL && ATAQUE != NULL
-        general.add(!inmortal && lastAttackedBy != null);
+        general.add(lastAttackedBy != null);
 
         //5 PUEDE_DORMIR
         general.add(!puedeDormir);
 
         //6 TP && SITIO != NULL
-        general.add(!puedeTP && sitioTP != null);
+        general.add(sitioTeletransportar != null);
 
         //7 FRASES != NULL
         general.add(frases != null);
 
         //8 INVENTARIO_NPC != NULL
-        general.add(inventarioNPC != null);
+        general.add(inventarioNPC!= null);
 
         //9 PUEDE_LEER && ORDEN==LEER && INVENTARIO contains el_leer
-        general.add(puedeLeer && orden != null && inventarioNPC.contains(elementoLeer));
+        general.add(idiomas != null); //si sabe algún idioma
 
         //10 MATAR_JUGADOR &&  ATAQUE.quien == JUGADOR
-        general.add(puedeMatarAJugador && lastAttackedBy.equals(jugador));
+        general.add(lastAttackedBy.equals(jugador));
 
         //11 EL_ABRIR != NULL
-        general.add(elementoAbrir != null);
+        general.add(true); //en principio todos pueden abrir
         return general;
     }
 
@@ -261,7 +244,7 @@ public class Behaviour {
         //los que no tienen restricciones extra se ponen a true, para que primen el resto
         pj.add(true);
         //1 && NOCHE && !PRIMER_ENCUENTRO
-        pj.add(noche && !primerEncuentroJugador);
+        pj.add(noche && nEncuentros > 0);
         //2-6
         pj.add(true);
         pj.add(true);

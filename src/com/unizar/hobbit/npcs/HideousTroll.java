@@ -16,7 +16,7 @@ public class HideousTroll extends NPC {
         super("Un Troll horrendo");
         weight = 50;
         id = 21;
-        lastAttackedBy = null;
+  /*      lastAttackedBy = null;
         autonomo = false;
         inmortal = false;
         puedeDormir = false;
@@ -33,7 +33,7 @@ public class HideousTroll extends NPC {
         orden = null;
         saludos.add("Pixa, pue son bien canijo");
         frases.add("E vito peazo de maíz en mi mierdah ma grande que este tío!");
-        frases.add("Qero su bebeee.... asao, asao, asao, asao con ensalaaada, su bebe, su bebe, su bebe o me cago aqui joer");
+        frases.add("Qero su bebeee.... asao, asao, asao, asao con ensalaaada, su bebe, su bebe, su bebe o me cago aqui joer");*/
 
     }
 

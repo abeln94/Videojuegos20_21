@@ -17,7 +17,7 @@ public class Thorin extends NPC {
         weight = 30;
         id = 6;
         lastAttackedBy = null;
-        autonomo = false;
+  /*      autonomo = false;
         inmortal = true;
         puedeDormir = false;
         puedeTP = false;
@@ -33,7 +33,7 @@ public class Thorin extends NPC {
         orden = null;
         saludos.add("Hola");
         frases.add("Date prisa");
-        frases.add("La cacharra si, la cacharra no, la cacharra madre la que traigo yo");
+        frases.add("La cacharra si, la cacharra no, la cacharra madre la que traigo yo");*/
     }
 
     @Override

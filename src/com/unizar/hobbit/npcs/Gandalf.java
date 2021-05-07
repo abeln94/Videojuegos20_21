@@ -16,7 +16,7 @@ public class Gandalf extends NPC {
         super("Gandalf");
         weight = 100;
         id = 4;
-        lastAttackedBy = null;
+/*        lastAttackedBy = null;
         autonomo = true;
         inmortal = true;
         puedeDormir = false;
@@ -32,7 +32,7 @@ public class Gandalf extends NPC {
         //elementoAbrir = GreenDoor.class; //TODO:
         elementoLeer = null;
         arma = "baston";
-        orden = null;
+        orden = null;*/
     }
 
     @Override

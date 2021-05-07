@@ -27,6 +27,12 @@ public abstract class Item extends Element {
      */
     public Element lockedWith = null;
 
+    //la fuerza del objeto
+    public int fuerza = 0; //modificador del daño que hace, la flecha por ejemplo será un 1000, el resto debería ser de 1 a 5
+
+    //idioma en que está escrito
+    public String idioma = null;
+
     public Item(String name) {
         super(name);
     }

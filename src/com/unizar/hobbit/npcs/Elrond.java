@@ -21,7 +21,7 @@ public class Elrond extends NPC {
         super("Elrond");
         weight = 100;
         id = 3;
-        lastAttackedBy = null;
+/*        lastAttackedBy = null;
         autonomo = false;
         inmortal = true;
         puedeDormir = false;
@@ -38,7 +38,7 @@ public class Elrond extends NPC {
         orden = null;
         saludos.add("Hola");
         frases.add("Bienvenido de nuevo a estas tierras");
-        frases.add("Grata es su visita");
+        frases.add("Grata es su visita");*/
     }
 
     @Override

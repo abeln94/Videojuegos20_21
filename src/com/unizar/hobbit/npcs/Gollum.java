@@ -13,7 +13,7 @@ public class Gollum extends NPC {
         super("Gollum");
         weight = 40;
         id = 5;
-        lastAttackedBy = null;
+ /*       lastAttackedBy = null;
         autonomo = false;
         inmortal = false;
         puedeDormir = false;
@@ -29,7 +29,7 @@ public class Gollum extends NPC {
         elementoAbrir = null;
         elementoLeer = null;
         arma = "puños";
-        orden = null;
+        orden = null;*/
     }
 
     @Override

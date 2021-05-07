@@ -14,7 +14,7 @@ public class Butler extends NPC {
         super("El mayordomo");
         weight = 40;
         id = 2;
-        lastAttackedBy = null;
+/*        lastAttackedBy = null;
         autonomo = false;
         inmortal = false;
         puedeDormir = true;
@@ -30,7 +30,7 @@ public class Butler extends NPC {
         elementoAbrir = null;
         elementoLeer = null;
         arma = "espada";
-        orden = null;
+        orden = null;*/
     }
 
     @Override

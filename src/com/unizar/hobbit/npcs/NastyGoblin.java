@@ -16,7 +16,7 @@ public class NastyGoblin extends NPC {
         weight = 40;
         id = 8;
         lastAttackedBy = null;
-        autonomo = false;
+ /*       autonomo = false;
         inmortal = false;
         puedeDormir = false;
         puedeTP = true;
@@ -31,7 +31,7 @@ public class NastyGoblin extends NPC {
         elementoAbrir = null;
         elementoLeer = null;
         arma = null;
-        orden = null;
+        orden = null;*/
     }
 
     @Override

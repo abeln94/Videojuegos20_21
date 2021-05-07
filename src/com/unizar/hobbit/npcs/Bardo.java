@@ -16,21 +16,9 @@ public class Bardo extends NPC {
         weight = 500;
         id = 1;
         lastAttackedBy = null;
-        autonomo = false;
-        inmortal = false;
         puedeDormir = false;
-        puedeTP = false;
-        puedeLeer = false;
-        puedeMatarAJugador = false;
         lugares = new ArrayList<>();
         dormido = false;
-        primerEncuentroJugador = false;
-        saludos = new ArrayList<>();
-        frases = new ArrayList<>();
-        sitioTP = null;
-        elementoAbrir = null;
-        elementoLeer = null;
-        arma = "Bow";
         orden = null;
     }
 

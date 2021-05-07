@@ -11,7 +11,7 @@ public class RedGoldenDragon extends NPC {
         weight = 200;
         id = 7;
         lastAttackedBy = null;
-        autonomo = true;
+ /*       autonomo = true;
         inmortal = false;
         puedeDormir = false;
         puedeTP = false;
@@ -26,7 +26,7 @@ public class RedGoldenDragon extends NPC {
         elementoAbrir = null;
         elementoLeer = null;
         arma = "fuego";
-        orden = null;
+        orden = null;*/
     }
 
     @Override
