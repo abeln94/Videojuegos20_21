@@ -302,6 +302,11 @@ public class Engine {
                         "No veo {} por aquí.",
                         "nada"
                 ).require(
+                        // and not be in yout inventory
+                        e -> !npc.elements.contains(e),
+                        "Ya tienes {}.",
+                        "todo"
+                ).require(
                         // and not be carried by another npc
                         e -> !(location instanceof NPC),
                         "No puedes coger {} de otro personaje.",

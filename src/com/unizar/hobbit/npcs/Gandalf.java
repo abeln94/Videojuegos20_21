@@ -1,15 +1,7 @@
 package com.unizar.hobbit.npcs;
 
-import com.unizar.Utils;
-import com.unizar.game.commands.Command;
-import com.unizar.game.commands.Result;
-import com.unizar.game.commands.Word;
-import com.unizar.game.elements.Item;
 import com.unizar.game.elements.NPC;
-import com.unizar.hobbit.items.GreenDoor;
 import com.unizar.hobbit.items.Map;
-
-import java.util.ArrayList;
 
 public class Gandalf extends NPC {
     public Gandalf() {
@@ -36,7 +28,10 @@ public class Gandalf extends NPC {
     }
 
     @Override
-    public void init() { super.init(); }
+    public void init() {
+        elements.add(game.findElementByClassName(Map.class));
+        super.init();
+    }
 
     @Override
     public void act() {
