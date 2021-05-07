@@ -17,7 +17,6 @@ public class DragonsHalls extends Location {
         elements.add(game.findElementByClassName(TheValuableTreasure.class));
 
         exits.put(Word.Direction.WEST, Utils.Pair.of(game.findElementByClassName(SmoothPassage.class), null));
-        //exits.put(Word.Direction.SOUTH, Utils.Pair.of(game.findElementByClassName(.class), game.findElementByClassName(.class))); //TODO:
         exits.put(Word.Direction.UP, Utils.Pair.of(game.findElementByClassName(LonelyMountain.class), game.findElementByClassName(SideDoorLonelyMountain.class)));
         super.init();
     }

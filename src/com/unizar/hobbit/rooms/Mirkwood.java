@@ -14,7 +14,7 @@ public class Mirkwood extends Location {
     public void init() {
         exits.put(Word.Direction.EAST, Utils.Pair.of(game.findElementByClassName(BewitchedPlace.class), null));
         exits.put(Word.Direction.WEST, Utils.Pair.of(game.findElementByClassName(BeornsHouse.class), null));
-        exits.put(Word.Direction.SOUTH, Utils.Pair.of(game.findElementByClassName(ForestGate.class), null)); //TODO
+        exits.put(Word.Direction.SOUTH, Utils.Pair.of(game.findElementByClassName(ForestGate.class), null));
         super.init();
     }
 }

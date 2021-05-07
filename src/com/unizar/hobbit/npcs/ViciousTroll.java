@@ -2,29 +2,41 @@ package com.unizar.hobbit.npcs;
 
 import com.unizar.game.elements.NPC;
 
+import java.util.ArrayList;
+
 public class ViciousTroll extends NPC {
 
     private boolean playerSaw = false;
 
     public ViciousTroll() {
         super("Un Troll pendenciero");
-        weight = 200;
+        weight = 50;
+        id = 20;
+        lastAttackedBy = null;
+  /*      autonomo = false;
+        inmortal = false;
+        puedeDormir = false;
+        puedeTP = false;
+        puedeLeer = false;
+        puedeMatarAJugador = false;
+        lugares = new ArrayList<>();
+        dormido = false;
+        primerEncuentroJugador = false;
+        sitioTP = null;
+        elementoAbrir = null;
+        elementoLeer = null;
+        arma = "piedra";
+        orden = null;
+        saludos.add("Mirah so hobis");
+        frases.add("Me lo voi a hamar");
+        frases.add("Eeeeeeeh miniyo, qeres una mini empanadilla?");*/
     }
 
     @Override
+    public void init() { super.init(); }
+
+    @Override
     public void act() {
-        if (!game.world.night) return; // is a rock
-
-        if (getLocation().elements.contains(game.getPlayer())) {
-            // the player is there
-            if (!playerSaw) {
-                // first time
-                getLocation().notifyNPCs(this, this + " dice: Puedo proba, pero no dan pa na");
-                playerSaw = true;
-                return;
-            }
-        }
-
         super.act();
     }
 }

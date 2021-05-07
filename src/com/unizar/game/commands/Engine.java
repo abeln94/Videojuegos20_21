@@ -196,7 +196,7 @@ public class Engine {
                 }
 
                 Utils.Pair<Location, Item> le = ((Location) location).exits.get(command.direction);
-
+                //TODO: Comparar con la lista de lugares del npc
                 if (le == null) {
                     // no exit
                     return Result.error("No puedes ir hacia " + command.direction.description + ".");

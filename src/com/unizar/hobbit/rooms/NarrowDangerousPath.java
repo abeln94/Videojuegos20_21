@@ -14,7 +14,6 @@ public class NarrowDangerousPath extends Location {
     public void init() {
 
         exits.put(Word.Direction.WEST, Utils.Pair.of(game.findElementByClassName(DimValley.class), null));
-        //exits.put(Word.Direction.EAST, Utils.Pair.of(game.findElementByClassName(.class), null)); //TODO:
         super.init();
     }
 }

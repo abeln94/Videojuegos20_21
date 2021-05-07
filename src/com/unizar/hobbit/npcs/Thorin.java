@@ -6,13 +6,34 @@ import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.NPC;
 
+import java.util.ArrayList;
+
 public class Thorin extends NPC {
 
     private int tiredness = 0;
 
     public Thorin() {
         super("Thorin");
-        weight = 26;
+        weight = 30;
+        id = 6;
+        lastAttackedBy = null;
+  /*      autonomo = false;
+        inmortal = true;
+        puedeDormir = false;
+        puedeTP = false;
+        puedeLeer = false;
+        puedeMatarAJugador = true;
+        lugares = new ArrayList<>();
+        dormido = false;
+        primerEncuentroJugador = false;
+        sitioTP = null;
+        elementoAbrir = null;
+        elementoLeer = null;
+        arma = null;
+        orden = null;
+        saludos.add("Hola");
+        frases.add("Date prisa");
+        frases.add("La cacharra si, la cacharra no, la cacharra madre la que traigo yo");*/
     }
 
     @Override

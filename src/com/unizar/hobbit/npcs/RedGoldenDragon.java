@@ -2,20 +2,38 @@ package com.unizar.hobbit.npcs;
 
 import com.unizar.game.elements.NPC;
 
+import java.util.ArrayList;
+
 public class RedGoldenDragon extends NPC {
 
     public RedGoldenDragon() {
         super("El dorado dragón rojo");
-        weight = 50;
+        weight = 200;
+        id = 7;
+        lastAttackedBy = null;
+ /*       autonomo = true;
+        inmortal = false;
+        puedeDormir = false;
+        puedeTP = false;
+        puedeLeer = false;
+        puedeMatarAJugador = true;
+        lugares = new ArrayList<>();
+        dormido = false;
+        primerEncuentroJugador = false;
+        saludos = new ArrayList<>();
+        frases = new ArrayList<>();
+        sitioTP = null;
+        elementoAbrir = null;
+        elementoLeer = null;
+        arma = "fuego";
+        orden = null;*/
     }
 
     @Override
-    public void init() {
-        super.init();
-    }
+    public void init() { super.init(); }
 
-    //TODO: se mueve aleatoriamente entre las tres direcciones
-    //TODO: solo te ataca si entras al hall
-    //TODO: solo se le puede matar con el arco y la flecha
-    //TODO: al morir no desaparece y queda como el dragón muerto
+    @Override
+    public void act() {
+        super.act();
+    }
 }

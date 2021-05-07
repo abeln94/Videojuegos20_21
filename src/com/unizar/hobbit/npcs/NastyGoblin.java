@@ -7,27 +7,38 @@ import com.unizar.game.commands.Word;
 import com.unizar.game.elements.NPC;
 import com.unizar.hobbit.rooms.GoblinDungeon;
 
+import java.util.ArrayList;
+
 public class NastyGoblin extends NPC {
 
     public NastyGoblin() {
         super("Un goblin repugnante");
-        weight = 50;
+        weight = 40;
+        id = 8;
+        lastAttackedBy = null;
+ /*       autonomo = false;
+        inmortal = false;
+        puedeDormir = false;
+        puedeTP = true;
+        puedeLeer = false;
+        puedeMatarAJugador = false;
+        lugares = new ArrayList<>();
+        dormido = false;
+        primerEncuentroJugador = false;
+        saludos = new ArrayList<>();
+        frases = new ArrayList<>();
+        //sitioTP = GoblinDungeon.class; TODO:
+        elementoAbrir = null;
+        elementoLeer = null;
+        arma = null;
+        orden = null;*/
     }
 
     @Override
-    public void init() {
-        super.init();
-    }
+    public void init() { super.init(); }
 
     @Override
     public void act() {
-        Result result;
-        //se mueven a la ubicacion
-        if (getLocation().elements.contains(game.getPlayer()) && Utils.random.nextBoolean()) {
-            getLocation().notifyNPCs(this, this + " dice: To de cave");
-            game.getPlayer().moveTo(game.findElementByClassName(GoblinDungeon.class));
-            game.findElementByClassName(Thorin.class).moveTo(game.findElementByClassName(GoblinDungeon.class));
-        }
         super.act();
     }
 }

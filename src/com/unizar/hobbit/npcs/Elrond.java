@@ -5,9 +5,13 @@ import com.unizar.game.commands.Command;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.Element;
+import com.unizar.game.elements.Item;
 import com.unizar.game.elements.NPC;
+import com.unizar.hobbit.items.Bow;
 import com.unizar.hobbit.items.Food;
 import com.unizar.hobbit.items.Map;
+
+import java.util.ArrayList;
 
 public class Elrond extends NPC {
 
@@ -15,52 +19,33 @@ public class Elrond extends NPC {
 
     public Elrond() {
         super("Elrond");
-        weight = 50;
+        weight = 100;
+        id = 3;
+/*        lastAttackedBy = null;
+        autonomo = false;
+        inmortal = true;
+        puedeDormir = false;
+        puedeTP = false;
+        puedeLeer = true;
+        puedeMatarAJugador = true;
+        lugares = new ArrayList<>();
+        dormido = false;
+        primerEncuentroJugador = true;
+        sitioTP = null;
+        elementoAbrir = null;
+        //elementoLeer = Map.class; TODO:
+        arma = "espada";
+        orden = null;
+        saludos.add("Hola");
+        frases.add("Bienvenido de nuevo a estas tierras");
+        frases.add("Grata es su visita");*/
     }
 
     @Override
-    public void init() {
-        super.init();
-    }
-
-    @Override
-    public void hear(String message) {
-        if (message.contains(Map.ELROND_REPLY)) {
-            // we examined the map, only the player can ask us to do it
-            getLocation().notifyNPCs(this, this + " dice: Ve hacia el este desde el Gran Lago para llegar a Ciudad del lago");
-            // TODO: add that link from Long Lake to Lake Town
-            return;
-        }
-        super.hear(message);
-    }
+    public void init() { super.init(); }
 
     @Override
     public void act() {
-        Result result;
-
-        if (getLocation().elements.contains(game.getPlayer())) {
-            // the player is there
-            if (!playerSaw) {
-                // first time
-                getLocation().notifyNPCs(this, this + " dice: Hola");
-                playerSaw = true;
-                return;
-            }
-
-            final Element food = game.findElementByClassName(Food.ElrondFood.class);
-            if (food.getLocation() == null && Utils.random.nextBoolean()) {
-                // give the player food
-                food.moveTo(this);
-                result = game.engine.execute(this, Command.act(Word.Action.GIVE, food, game.getPlayer()));
-                if (result.done) {
-                    hear(result.output);
-                    return;
-                }
-            }
-
-        }
-
-
         super.act();
     }
 }
