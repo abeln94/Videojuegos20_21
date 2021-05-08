@@ -16,6 +16,8 @@ abstract public class Element implements Serializable {
 
     // ------------------------- properties -------------------------
 
+    public String id = null;
+
     /**
      * This element's name
      */
@@ -58,7 +60,7 @@ abstract public class Element implements Serializable {
     }
 
     public String getId() {
-        return this.getClass().getSimpleName();
+        return id != null ? id : getClass().getSimpleName();
     }
 
     /**

@@ -67,11 +67,13 @@
     "id": "GoblinWindow"
   },
   {
+    "hidden": {"DIG": "TrapDoor"},
     "name": "algo de arena",
     "location": "GoblinDungeon",
     "id": "Sand"
   },
   {
+    "hidden": {"BREAK": "SmallKey"},
     "name": "una trampilla",
     "id": "TrapDoor"
   },
@@ -104,6 +106,7 @@
     "id": "Cupboard"
   },
   {
+    "hidden": {"BREAK": "SpiderWeb_Broken"},
     "openable": "LOCKED",
     "name": "una tela de araña",
     "id": "SpiderWeb"
