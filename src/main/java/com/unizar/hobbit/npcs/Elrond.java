@@ -1,17 +1,6 @@
 package com.unizar.hobbit.npcs;
 
-import com.unizar.Utils;
-import com.unizar.game.commands.Command;
-import com.unizar.game.commands.Result;
-import com.unizar.game.commands.Word;
-import com.unizar.game.elements.Element;
-import com.unizar.game.elements.Item;
 import com.unizar.game.elements.NPC;
-import com.unizar.hobbit.items.Bow;
-import com.unizar.hobbit.items.Food;
-import com.unizar.hobbit.items.Map;
-
-import java.util.ArrayList;
 
 public class Elrond extends NPC {
 

@@ -1,23 +1,17 @@
 package com.unizar.hobbit.npcs;
 
-import com.unizar.game.commands.Command;
-import com.unizar.game.commands.Result;
-import com.unizar.game.commands.Word;
 import com.unizar.game.elements.NPC;
-import com.unizar.hobbit.items.LargeKey;
 
-import java.util.ArrayList;
-
-public class HideousTroll extends NPC {
+public class ViciousTroll extends NPC {
 
     private boolean playerSaw = false;
 
-    public HideousTroll() {
-        super("Un Troll horrendo");
+    public ViciousTroll() {
+        super("Un Troll pendenciero");
         weight = 50;
-        id = 21;
-  /*      lastAttackedBy = null;
-        autonomo = false;
+        id = 20;
+        lastAttackedBy = null;
+  /*      autonomo = false;
         inmortal = false;
         puedeDormir = false;
         puedeTP = false;
@@ -31,10 +25,9 @@ public class HideousTroll extends NPC {
         elementoLeer = null;
         arma = "piedra";
         orden = null;
-        saludos.add("Pixa, pue son bien canijo");
-        frases.add("E vito peazo de maíz en mi mierdah ma grande que este tío!");
-        frases.add("Qero su bebeee.... asao, asao, asao, asao con ensalaaada, su bebe, su bebe, su bebe o me cago aqui joer");*/
-
+        saludos.add("Mirah so hobis");
+        frases.add("Me lo voi a hamar");
+        frases.add("Eeeeeeeh miniyo, qeres una mini empanadilla?");*/
     }
 
     @Override

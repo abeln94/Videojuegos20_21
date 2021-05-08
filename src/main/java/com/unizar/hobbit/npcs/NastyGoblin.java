@@ -2,34 +2,29 @@ package com.unizar.hobbit.npcs;
 
 import com.unizar.game.elements.NPC;
 
-import java.util.ArrayList;
+public class NastyGoblin extends NPC {
 
-public class ViciousTroll extends NPC {
-
-    private boolean playerSaw = false;
-
-    public ViciousTroll() {
-        super("Un Troll pendenciero");
-        weight = 50;
-        id = 20;
+    public NastyGoblin() {
+        super("Un goblin repugnante");
+        weight = 40;
+        id = 8;
         lastAttackedBy = null;
-  /*      autonomo = false;
+ /*       autonomo = false;
         inmortal = false;
         puedeDormir = false;
-        puedeTP = false;
+        puedeTP = true;
         puedeLeer = false;
         puedeMatarAJugador = false;
         lugares = new ArrayList<>();
         dormido = false;
         primerEncuentroJugador = false;
-        sitioTP = null;
+        saludos = new ArrayList<>();
+        frases = new ArrayList<>();
+        //sitioTP = GoblinDungeon.class; TODO:
         elementoAbrir = null;
         elementoLeer = null;
-        arma = "piedra";
-        orden = null;
-        saludos.add("Mirah so hobis");
-        frases.add("Me lo voi a hamar");
-        frases.add("Eeeeeeeh miniyo, qeres una mini empanadilla?");*/
+        arma = null;
+        orden = null;*/
     }
 
     @Override

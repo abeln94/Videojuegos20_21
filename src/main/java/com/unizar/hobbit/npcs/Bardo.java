@@ -1,13 +1,9 @@
 package com.unizar.hobbit.npcs;
 
-import com.unizar.game.elements.Element;
-import com.unizar.game.elements.Location;
 import com.unizar.game.elements.NPC;
 import com.unizar.hobbit.items.Bow;
-import com.unizar.hobbit.items.Map;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Bardo extends NPC {
 

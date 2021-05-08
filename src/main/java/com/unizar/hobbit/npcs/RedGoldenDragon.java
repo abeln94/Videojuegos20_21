@@ -2,8 +2,6 @@ package com.unizar.hobbit.npcs;
 
 import com.unizar.game.elements.NPC;
 
-import java.util.ArrayList;
-
 public class RedGoldenDragon extends NPC {
 
     public RedGoldenDragon() {

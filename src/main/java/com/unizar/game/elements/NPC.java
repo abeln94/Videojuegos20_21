@@ -80,6 +80,8 @@ abstract public class NPC extends Element {
 
     @Override
     public void act() {
+        if (true) return;
+
         //se pasa este NPC y el game.getPlayer()
         int intAction = behaviour.nextAction(this, game.getPlayer(), game.world.night);
         Result result = null;

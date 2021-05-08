@@ -1,36 +1,29 @@
 package com.unizar.hobbit.npcs;
 
-import com.unizar.Utils;
-import com.unizar.game.commands.Command;
-import com.unizar.game.commands.Result;
-import com.unizar.game.commands.Word;
 import com.unizar.game.elements.NPC;
-import com.unizar.hobbit.rooms.GoblinDungeon;
 
-import java.util.ArrayList;
+public class Gollum extends NPC {
 
-public class NastyGoblin extends NPC {
-
-    public NastyGoblin() {
-        super("Un goblin repugnante");
+    public Gollum() {
+        super("Gollum");
         weight = 40;
-        id = 8;
-        lastAttackedBy = null;
- /*       autonomo = false;
+        id = 5;
+ /*       lastAttackedBy = null;
+        autonomo = false;
         inmortal = false;
         puedeDormir = false;
-        puedeTP = true;
+        puedeTP = false;
         puedeLeer = false;
-        puedeMatarAJugador = false;
+        puedeMatarAJugador = true;
         lugares = new ArrayList<>();
         dormido = false;
         primerEncuentroJugador = false;
         saludos = new ArrayList<>();
         frases = new ArrayList<>();
-        //sitioTP = GoblinDungeon.class; TODO:
+        sitioTP = null;
         elementoAbrir = null;
         elementoLeer = null;
-        arma = null;
+        arma = "puños";
         orden = null;*/
     }
 

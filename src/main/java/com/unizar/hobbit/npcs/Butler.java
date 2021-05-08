@@ -2,9 +2,6 @@ package com.unizar.hobbit.npcs;
 
 import com.unizar.game.elements.NPC;
 import com.unizar.hobbit.items.Bow;
-import com.unizar.hobbit.items.RedKey;
-
-import java.util.ArrayList;
 
 public class Butler extends NPC {
 

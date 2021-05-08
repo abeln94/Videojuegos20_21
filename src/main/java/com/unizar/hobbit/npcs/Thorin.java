@@ -6,8 +6,6 @@ import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.NPC;
 
-import java.util.ArrayList;
-
 public class Thorin extends NPC {
 
     private int tiredness = 0;
