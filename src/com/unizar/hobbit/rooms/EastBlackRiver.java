@@ -12,7 +12,6 @@ public class EastBlackRiver extends Location {
 
     @Override
     public void init() {
-        //TODO: añadir temas del bote
         exits.put(Word.Direction.EAST, Utils.Pair.of(game.findElementByClassName(GreenForest.class), null));
         super.init();
     }

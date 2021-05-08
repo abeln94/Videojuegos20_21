@@ -20,7 +20,7 @@ public class CellarOfWine extends Location {
         elements.add(game.findElementByClassName(Butler.class));
 
         exits.put(Word.Direction.NORTHEAST, Utils.Pair.of(game.findElementByClassName(RedDoorRoom.class), game.findElementByClassName(RedDoor.class)));
-        exits.put(Word.Direction.DOWN, Utils.Pair.of(game.findElementByClassName(Forestriver.class), game.findElementByClassName(LargeTrapDoor.class))); //TODO: solo se puede atravesar yendo en un barril
+        exits.put(Word.Direction.DOWN, Utils.Pair.of(game.findElementByClassName(Forestriver.class), game.findElementByClassName(LargeTrapDoor.class)));
         exits.put(Word.Direction.NORTH, Utils.Pair.of(game.findElementByClassName(Elvenkings.class), null));
         super.init();
     }

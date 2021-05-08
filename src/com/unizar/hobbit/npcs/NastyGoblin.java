@@ -27,7 +27,7 @@ public class NastyGoblin extends NPC {
         primerEncuentroJugador = false;
         saludos = new ArrayList<>();
         frases = new ArrayList<>();
-        //sitioTP = GoblinDungeon.class; TODO:
+        //sitioTP = GoblinDungeon.class;
         elementoAbrir = null;
         elementoLeer = null;
         arma = null;

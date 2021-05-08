@@ -33,7 +33,7 @@ public class Elrond extends NPC {
         primerEncuentroJugador = true;
         sitioTP = null;
         elementoAbrir = null;
-        //elementoLeer = Map.class; TODO:
+        //elementoLeer = Map.class;
         arma = "espada";
         orden = null;
         saludos.add("Hola");

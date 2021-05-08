@@ -14,7 +14,7 @@ public class ElvishClearing extends Location {
 
     @Override
     public void init() {
-        exits.put(Word.Direction.NORTHEAST, Utils.Pair.of(game.findElementByClassName(Elvenkings.class), game.findElementByClassName(MagicDoor.class))); //TODO: hay que esperar a que los elfos abran la puerta
+        exits.put(Word.Direction.NORTHEAST, Utils.Pair.of(game.findElementByClassName(Elvenkings.class), game.findElementByClassName(MagicDoor.class)));
         exits.put(Word.Direction.EAST, Utils.Pair.of(game.findElementByClassName(PlaceOfBlackSpider.class), game.findElementByClassName(SpiderWeb.class)));
         super.init();
     }

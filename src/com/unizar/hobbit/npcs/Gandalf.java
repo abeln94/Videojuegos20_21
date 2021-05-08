@@ -21,7 +21,7 @@ public class Gandalf extends NPC {
         saludos = new ArrayList<>();
         frases = new ArrayList<>();
         sitioTP = null;
-        //elementoAbrir = GreenDoor.class; //TODO:
+        //elementoAbrir = GreenDoor.class;
         elementoLeer = null;
         arma = "baston";
         orden = null;*/

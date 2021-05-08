@@ -13,7 +13,6 @@ public class RedDoorRoom extends Location {
 
     @Override
     public void init() {
-        //TODO: aqui teletransporta el Butler a los secuestrados -> Thorin o Galdalf
         exits.put(Word.Direction.SOUTHWEST, Utils.Pair.of(game.findElementByClassName(CellarOfWine.class), game.findElementByClassName(RedDoor.class)));
         super.init();
     }
