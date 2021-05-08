@@ -43,6 +43,9 @@ abstract public class NPC extends Element {
      */
     public final Set<Element> wearables = new HashSet<>();
 
+    public NPC() {
+    }
+
     public NPC(String name) {
         super(name);
     }

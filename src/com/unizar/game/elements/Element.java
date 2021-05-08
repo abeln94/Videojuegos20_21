@@ -50,6 +50,9 @@ abstract public class Element implements Serializable {
 
     // ------------------------- functions -------------------------
 
+    public Element() {
+    }
+
     public Element(String name) {
         this.name = name;
     }
