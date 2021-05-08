@@ -196,8 +196,7 @@ public class Engine {
                 }
 
                 Utils.Pair<Location, Item> le = ((Location) location).exits.get(command.direction);
-                //TODO: Comparar con la lista de lugares del npc
-                if (le == null) {
+                if (le == null || !npc.lugares.contains(le.first)) { //TODO: comprobar
                     // no exit
                     return Result.error("No puedes ir hacia " + command.direction.description + ".");
                 }
@@ -426,23 +425,33 @@ public class Engine {
                         "No veo a {} por aquí.",
                         "nadie"
                 ).apply("A quien quieres atacar?", attack -> {
+                    //npc ataca, attack defiende
+                    int damage = 0;
+                    int dice = (int) Math.floor(Math.random()*20);
 
-                    // attack
-                    ((NPC) attack).lastAttackedBy = npc;
-                    if (attack.weight > npc.weight) {
-                        // stronger, the attack fails
+                    if(dice == 20) { //critico, mata
+                        damage = 1000000;
+                    } else if (dice == 0){ //pifia, no hace daño
+                        damage = 0;
+                    } else { //normal
+                        damage = npc.fuerza + dice;
+                    }
+
+                    ((NPC) attack).vida = ((NPC) attack).vida - damage;
+
+                    if(damage == 0) {
                         attack.hear(npc + " te ataca pero no te provoca ningún daño.");
                         return Result.done("Atacas a " + attack + " pero el esfuerzo es en vano. Su defensa es muy fuerte.");
                     }
-                    if (attack.weight == npc.weight) {
-                        // same strength, the attack fails
-                        attack.hear(npc + " te ataca pero solo logra hacerte daño.");
-                        return Result.done("Atacas a " + attack + " pero no eres suficientemente fuerte y solo logras hacerle daño.");
+
+                    if(((NPC) attack).vida <= 0) { //muere
+                        attack.hear(npc + " te ataca. Con un golpe certero, te parte el cráneo.");
+                        attack.moveTo(null);
+                        return Result.done("Atacas a " + attack + ". Con un golpe certero le partes el cráneo.");
                     }
-                    // weaker, the attack success
-                    attack.hear(npc + " te ataca. Con un golpe certero, te parte el cráneo.");
-                    attack.moveTo(null);
-                    return Result.done("Atacas a " + attack + ". Con un golpe certero le partes el cráneo.");
+                    //ha sufrido daño pero no ha muerto
+                    attack.hear(npc + " te ataca pero solo logra hacerte daño.");
+                    return Result.done("Atacas a " + attack + " pero no eres suficientemente fuerte y solo logras hacerle daño.");
                 });
             case EAT:
                 return command.main.require(
