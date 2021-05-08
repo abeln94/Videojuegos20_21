@@ -11,7 +11,7 @@ import com.unizar.hobbit.npcs.Butler;
 public class CellarOfWine extends Location {
 
     public CellarOfWine() {
-        super(" en la bodega donde el rey guarda sus toneles de vino.", "CellarOfWine", "fire");
+        super("en la bodega donde el rey guarda sus toneles de vino", "CellarOfWine", "calm");
     }
 
     @Override

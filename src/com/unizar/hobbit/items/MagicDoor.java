@@ -10,7 +10,8 @@ public class MagicDoor extends Item {
 
     @Override
     public void init() {
-        openable = OPENABLE.CLOSED;
+        openable = OPENABLE.LOCKED;
+        lockedWith = game.findElementByClassName(MagicKey.class);
         super.init();
     }
 

@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class Mirkwood extends Location {
 
     public Mirkwood() {
-        super("en la entrada de Mirkwood", "Mirkwood", "forest");
+        super("en la entrada de Mirkwood", "Mirkwood", "DistantMemory");
     }
 
     @Override

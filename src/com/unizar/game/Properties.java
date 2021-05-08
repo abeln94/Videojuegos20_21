@@ -58,4 +58,14 @@ abstract public class Properties implements Serializable {
      */
     public abstract String getWinDescription();
 
+    /**
+     * @return the music of the win screen
+     */
+    public abstract String getWinMusic();
+
+    /**
+     * @return the description of the game over screen
+     */
+    public abstract String getGameOverMusic();
+
 }

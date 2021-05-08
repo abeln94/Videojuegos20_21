@@ -33,7 +33,7 @@ public class HobbitProperties extends Properties {
 
     @Override
     public String getWinScreen() {
-        return "48";
+        return "WinScreen";
     }
 
     @Override
@@ -44,5 +44,15 @@ public class HobbitProperties extends Properties {
     @Override
     public String getWinDescription() {
         return "Has conseguido derrotar al dragón y te has llevado su oro (que si, de verdad)!";
+    }
+
+    @Override
+    public String getWinMusic() {
+        return "tale";
+    }
+
+    @Override
+    public String getGameOverMusic() {
+        return "Final";
     }
 }

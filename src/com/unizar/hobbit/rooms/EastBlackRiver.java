@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class EastBlackRiver extends Location {
 
     public EastBlackRiver() {
-        super("en la orilla esta del río Negro", "EastBlackRiver", "river");
+        super("en la orilla esta del río Negro", "EastBlackRiver", "water");
     }
 
     @Override

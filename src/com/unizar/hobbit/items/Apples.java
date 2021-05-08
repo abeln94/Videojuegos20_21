@@ -2,9 +2,9 @@ package com.unizar.hobbit.items;
 
 import com.unizar.game.elements.Item;
 
-public class Arrow extends Item {
-    public Arrow() {
-        super("una flecha poderosa");
+public class Apples extends Item {
+    public Apples() {
+        super("manzanas");
         weight = 1;
     }
 }

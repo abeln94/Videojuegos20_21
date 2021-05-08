@@ -9,7 +9,7 @@ import com.unizar.hobbit.items.RedDoor;
 public class Elvenkings extends Location {
 
     public Elvenkings() {
-        super(" en los grandes salones del reino de los elfos.", "Elvenkings", "ommmm");
+        super(" en los grandes salones del reino de los elfos", "Elvenkings", "calm");
     }
 
     @Override

@@ -97,9 +97,8 @@ public class HobbitWorld extends World {
         elements.add(new LargeKey());
         elements.add(new RockDoor());
         elements.add(new Sword());
-        elements.add(new Rope());
-        elements.add(new Food.CupboardFood());
-        elements.add(new Food.ElrondFood());
+        elements.add(new Apples());
+        elements.add(new Food());
         elements.add(new GoldenKey());
         elements.add(new GoblinDoor());
         elements.add(new GoblinWindow());
@@ -107,7 +106,6 @@ public class HobbitWorld extends World {
         elements.add(new TrapDoor());
         elements.add(new SmallKey());
         elements.add(new GoldenRing());
-        elements.add(new Gold());
         elements.add(new GoblinGate());
         elements.add(new Cupboard());
         elements.add(new SpiderWeb());
@@ -116,14 +114,13 @@ public class HobbitWorld extends World {
         elements.add(new RedDoor());
         elements.add(new LargeTrapDoor());
         elements.add(new Barrel());
-        elements.add(new Wine());
         elements.add(new RedKey());
         elements.add(new StrongPortcullis());
         elements.add(new Bow());
-        elements.add(new Arrow());
         elements.add(new SideDoorLonelyMountain());
         elements.add(new TheValuableTreasure());
         elements.add(new RunningRiver());
+        elements.add(new MagicKey());
 
         // npcs
         elements.add(new Gandalf());
@@ -136,11 +133,10 @@ public class HobbitWorld extends World {
         elements.add(new Butler());
         elements.add(new Bardo());
         elements.add(new RedGoldenDragon());
-
     }
 
     @Override
     public boolean playerWon(Game game) {
-        return game.findElementByClassName(StartChest.class).elements.contains(game.findElementByClassName(Gold.class));
+        return game.findElementByClassName(StartChest.class).elements.contains(game.findElementByClassName(TheValuableTreasure.class));
     }
 }

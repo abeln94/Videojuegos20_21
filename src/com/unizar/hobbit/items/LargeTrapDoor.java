@@ -5,7 +5,7 @@ import com.unizar.game.elements.Item;
 
 public class LargeTrapDoor extends Item {
     public LargeTrapDoor() {
-        super("un gran trampilla");
+        super("una gran trampilla");
     }
 
     @Override

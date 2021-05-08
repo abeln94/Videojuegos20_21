@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class Forest extends Location {
 
     public Forest() {
-        super("en un bosque", "Forest", "forest");
+        super("en un bosque", "Forest", "DangerForest");
     }
 
     @Override

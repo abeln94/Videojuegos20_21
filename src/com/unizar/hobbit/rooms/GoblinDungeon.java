@@ -10,7 +10,7 @@ import com.unizar.hobbit.items.Sand;
 public class GoblinDungeon extends Location {
 
     public GoblinDungeon() {
-        super("en la mazmorra de los goblins. Te han secuestrado", "GoblinDungeon", "cave");
+        super("en la mazmorra goblinera. Te han secuestrado", "GoblinDungeon", "CourtJesters");
     }
 
     @Override

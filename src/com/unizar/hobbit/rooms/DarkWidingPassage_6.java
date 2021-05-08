@@ -9,7 +9,7 @@ import com.unizar.hobbit.npcs.Gollum;
 public class DarkWidingPassage_6 extends Location {
 
     public DarkWidingPassage_6() {
-        super("en un pasaje oscuro y cerrado", "DarkWidingPassage", "cave");
+        super("en un pasaje oscuro y cerrado", "DarkWidingPassage", "RingSong");
     }
 
     @Override

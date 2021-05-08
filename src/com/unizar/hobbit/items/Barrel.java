@@ -12,7 +12,6 @@ public class Barrel extends Item {
     @Override
     public void init() {
         openable = OPENABLE.CLOSED;
-        elements.add(game.findElementByClassName(Wine.class));
         super.init();
     }
 }

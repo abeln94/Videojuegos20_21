@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.RockDoor;
 public class HiddenPath extends Location {
 
     public HiddenPath() {
-        super("un camino oculto con pisadas de troll", "HiddenPath", "forest");
+        super("un camino oculto con pisadas de troll", "HiddenPath", "CamoAlla");
     }
 
     @Override

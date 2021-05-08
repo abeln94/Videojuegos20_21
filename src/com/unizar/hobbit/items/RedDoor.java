@@ -9,7 +9,7 @@ public class RedDoor extends Item {
 
     @Override
     public void init() {
-        openable = OPENABLE.CLOSED;
+        openable = OPENABLE.LOCKED;
         lockedWith = game.findElementByClassName(RedKey.class);
         super.init();
     }

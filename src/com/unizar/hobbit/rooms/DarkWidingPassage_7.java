@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class DarkWidingPassage_7 extends Location {
 
     public DarkWidingPassage_7() {
-        super("en un pasaje ancho y oscuro", "DarkWidingPassage", "cave");
+        super("en un pasaje ancho y oscuro", "DarkWidingPassage", "CourtJesters");
     }
 
     @Override

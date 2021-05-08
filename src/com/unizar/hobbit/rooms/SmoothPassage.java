@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.SideDoorLonelyMountain;
 public class SmoothPassage extends Location {
 
     public SmoothPassage() {
-        super("en una pasaje recto y liso.", "SmoothPassage", "chimney");
+        super("en una pasaje recto y liso.", "SmoothPassage", "ommmm");
     }
 
     @Override

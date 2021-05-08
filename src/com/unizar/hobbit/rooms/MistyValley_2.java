@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.GoldenKey;
 public class MistyValley_2 extends Location {
 
     public MistyValley_2() {
-        super("en un profundo valle con resto de niebla", "MistyValley", "wind");
+        super("en un profundo valle con resto de niebla", "MistyValley", "iceCavern");
     }
 
     @Override

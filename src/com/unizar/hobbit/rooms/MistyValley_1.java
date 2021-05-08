@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class MistyValley_1 extends Location {
 
     public MistyValley_1() {
-        super("en un profundo valle con resto de niebla", "MistyValley", "wind");
+        super("en un profundo valle con resto de niebla", "MistyValley", "iceCavern");
     }
 
     @Override

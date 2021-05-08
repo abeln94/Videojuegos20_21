@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.GoblinGate;
 public class OutsideGoblinsGate extends Location {
 
     public OutsideGoblinsGate() {
-        super("fuera de la goblinera", "OutsideGoblinsGate", "wind");
+        super("fuera de la goblinera", "OutsideGoblinsGate", "forest");
     }
 
     @Override

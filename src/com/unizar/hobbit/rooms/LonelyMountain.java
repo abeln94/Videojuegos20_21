@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class LonelyMountain extends Location {
 
     public LonelyMountain() {
-        super("en la Montaña Solitaria.", "LonelyMountain", "wind");
+        super("en la Montaña Solitaria", "LonelyMountain", "ommmm");
     }
 
     @Override

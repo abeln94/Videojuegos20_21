@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.StrongPortcullis;
 public class LongLake extends Location {
 
     public LongLake() {
-        super(" en el Gran Lago. ", "LongLake", "water");
+        super(" en el Gran Lago", "LongLake", "shores");
     }
 
     @Override

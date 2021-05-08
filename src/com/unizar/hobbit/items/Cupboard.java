@@ -11,20 +11,12 @@ public class Cupboard extends Item {
     @Override
     public void init() {
         openable = OPENABLE.CLOSED;
-        elements.add(game.findElementByClassName(Food.CupboardFood.class));
+        elements.add(game.findElementByClassName(Apples.class));
         super.init();
     }
 
     @Override
     public String getDescription() {
         return "Una pesada cortina. Tras ella una pared. En la pared hay " + super.getDescription();
-    }
-
-    @Override
-    public void act() {
-        final Element food = game.findElementByClassName(Food.CupboardFood.class);
-        if (food.getLocation() == null) {
-            food.moveTo(this);
-        }
     }
 }

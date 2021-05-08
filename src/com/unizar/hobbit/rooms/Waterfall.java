@@ -7,7 +7,7 @@ import com.unizar.game.elements.Location;
 public class Waterfall extends Location {
 
     public Waterfall() {
-        super("en las cascadas.", "Waterfall", "water");
+        super("en las cascadas. Las leyendas dicen que si esperas, podrás oir a las hadas de la cascada", "Waterfall", "waterfalls");
     }
 
     @Override

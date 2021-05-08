@@ -9,7 +9,7 @@ public class StrongPortcullis extends Item {
 
     @Override
     public void init() {
-        openable = OPENABLE.CLOSED;
+        openable = OPENABLE.LOCKED;
         super.init();
     }
 }

@@ -8,7 +8,7 @@ import com.unizar.hobbit.items.RedDoor;
 public class RedDoorRoom extends Location {
 
     public RedDoorRoom() {
-        super(" una pequeña sala con más barriles de vino.", "CellarOfWine", "fire");
+        super("una pequeña sala con más barriles de vino", "CellarOfWine", "calm");
     }
 
     @Override
