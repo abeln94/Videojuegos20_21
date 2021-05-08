@@ -38,6 +38,8 @@ abstract public class NPC extends Element {
     public List<String> idiomas = new ArrayList<>(); //lista de idiomas que conoce, si un objeto está escrito en ese lo puede leer
     //inventario de npc son sus elements
 
+    public String stoneAt;
+
     /**
      * The wearable elements
      */
@@ -52,7 +54,7 @@ abstract public class NPC extends Element {
 
     @Override
     public String getDescription() {
-        return name + describeContents(".", ". Lleva:");
+        return name + (isStone() ? " de piedra" : "") + describeContents(".", ". Lleva:");
     }
 
     /**
@@ -81,9 +83,23 @@ abstract public class NPC extends Element {
         orden = message;
     }
 
+    public boolean isStone() {
+        if (stoneAt == null)
+            return false;
+        if (stoneAt.equalsIgnoreCase("night") && game.world.night)
+            return true;
+        if (stoneAt.equalsIgnoreCase("day") && !game.world.night)
+            return true;
+
+        return false;
+    }
+
     @Override
     public void act() {
         if (true) return;
+
+
+        if (isStone()) return;
 
         //se pasa este NPC y el game.getPlayer()
         int intAction = behaviour.nextAction(this, game.getPlayer(), game.world.night);
@@ -157,10 +173,5 @@ abstract public class NPC extends Element {
         } else {
             hear(result.output);
         }
-    }
-
-    @Override
-    public void init() {
-        super.init();
     }
 }

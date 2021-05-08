@@ -25,12 +25,20 @@
     "id": "EmptyLand"
   },
   {
-    "image": "TrollsClearingNight",
+    "image": "TrollsClearingDay|TrollsClearingNight",
     "exits": {
-      "NORTH": {"location": "HiddenPath"},
-      "SOUTHEAST": {"location": "Rivendell"},
-      "WEST": {"location": "EmptyLand"},
-      "SOUTHWEST": {"location": "EmptyLand"}
+      "NORTH": {
+        "location": "HiddenPath"
+      },
+      "SOUTHEAST": {
+        "location": "Rivendell"
+      },
+      "WEST": {
+        "location": "EmptyLand"
+      },
+      "SOUTHWEST": {
+        "location": "EmptyLand"
+      }
     },
     "music": "forest",
     "name": "el claro de los trolls",

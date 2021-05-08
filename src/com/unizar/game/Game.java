@@ -299,8 +299,8 @@ public class Game extends KeyAdapter implements Runnable {
         window.clearDescription();
 
         Element location = getPlayer().getLocation();
-        final String image = location instanceof Location ? ((Location) location).image : null;
-        final String music = location instanceof Location ? ((Location) location).music : null;
+        final String image = location instanceof Location ? ((Location) location).getImage() : null;
+        final String music = location instanceof Location ? ((Location) location).getMusic() : null;
 
         if (!Objects.equals(lastImage, image)) {
             // smooth update image

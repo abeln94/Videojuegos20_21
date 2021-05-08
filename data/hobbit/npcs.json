@@ -21,13 +21,15 @@
     "name": "Un Troll horrendo",
     "weight": 50,
     "location": "TrollsClearing",
-    "id": "HideousTroll"
+    "id": "HideousTroll",
+    "stoneAt": "day"
   },
   {
     "name": "Un Troll pendenciero",
     "weight": 50,
     "location": "TrollsClearing",
-    "id": "ViciousTroll"
+    "id": "ViciousTroll",
+    "stoneAt": "day"
   },
   {
     "name": "Elrond",
