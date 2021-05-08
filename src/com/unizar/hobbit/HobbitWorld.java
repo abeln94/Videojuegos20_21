@@ -141,6 +141,6 @@ public class HobbitWorld extends World {
 
     @Override
     public boolean playerWon(Game game) {
-        return false;//game.findElementByClassName(StartChest.class).elements.contains(game.findElementByClassName(Gold.class));
+        return game.findElementByClassName(StartChest.class).elements.contains(game.findElementByClassName(Gold.class));
     }
 }

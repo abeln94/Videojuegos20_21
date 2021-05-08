@@ -15,6 +15,7 @@ public class Main {
             Game game = new Game(new HobbitWorld());
             game.reset();
             DataLoader.saveElements("hobbit", game.world.elements);
+            DataLoader.saveProperties("hobbit", game.world.properties);
             game.exit();
         }
 

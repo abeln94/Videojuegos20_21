@@ -7,20 +7,18 @@ import com.unizar.game.World;
 import java.io.IOException;
 
 /**
- * This should be better with annotations, but from now lets use it explicitly
+ * Look! I can use JSON!
  */
 public class HobbitWorldJson extends World {
 
     public HobbitWorldJson() throws IOException {
         // properties
-        properties = new HobbitProperties();
-
+        properties = DataLoader.loadProperties("hobbit");
         elements = DataLoader.loadElements("hobbit");
-
     }
 
     @Override
     public boolean playerWon(Game game) {
-        return false;//game.findElementByClassName(StartChest.class).elements.contains(game.findElementByClassName(Gold.class));
+        return false;
     }
 }

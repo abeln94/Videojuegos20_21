@@ -21,6 +21,7 @@ public class DataLoader {
     public static final String FILE_NPCS = "npcs.json";
     public static final String FILE_ITEMS = "items.json";
     public static final String FILE_LOCATIONS = "locations.json";
+    private static final String FILE_PROPERTIES = "properties.json";
 
     public static Set<Element> loadElements(String path) throws IOException {
 
@@ -108,6 +109,58 @@ public class DataLoader {
         return new HashSet<>(elements.values());
     }
 
+    public static Properties loadProperties(String path) throws IOException {
+        final JSONObject properties = new JSONObject(String.join("\n", Files.readAllLines(Paths.get(path, FILE_PROPERTIES))));
+
+        return new Properties() {
+            @Override
+            public String getTitle() {
+                return properties.getString("title");
+            }
+
+            @Override
+            public int getImageRatio() {
+                return properties.getInt("imageRatio");
+            }
+
+            @Override
+            public String getImagePath(String label) {
+                return properties.getString("imagePath").replace("{}", label);
+            }
+
+            @Override
+            public String getMusicPath(String label) {
+                return properties.getString("musicPath").replace("{}", label);
+            }
+
+            @Override
+            public String getFontName() {
+                return properties.getString("fontName");
+            }
+
+            @Override
+            public String getStartScreen() {
+                return properties.getString("startScreen");
+            }
+
+            @Override
+            public String getWinScreen() {
+                return properties.getString("winScreen");
+            }
+
+            @Override
+            public String getStartDescription() {
+                return properties.getString("startDescription");
+            }
+
+            @Override
+            public String getWinDescription() {
+                return properties.getString("winDescription");
+            }
+        };
+
+    }
+
     public static void saveElements(String path, Set<Element> elements) throws IOException {
 
 
@@ -169,6 +222,25 @@ public class DataLoader {
         save(folder, FILE_NPCS, npcs);
         save(folder, FILE_ITEMS, items);
         save(folder, FILE_LOCATIONS, locations);
+    }
+
+    public static void saveProperties(String path, Properties properties) throws IOException {
+        final JSONObject json_properties = new JSONObject();
+        json_properties.put("title", properties.getTitle());
+        json_properties.put("imageRatio", properties.getImageRatio());
+        json_properties.put("imagePath", properties.getImagePath("{}"));
+        json_properties.put("musicPath", properties.getMusicPath("{}"));
+        json_properties.put("fontName", properties.getFontName());
+        json_properties.put("startScreen", properties.getStartScreen());
+        json_properties.put("winScreen", properties.getWinScreen());
+        json_properties.put("startDescription", properties.getStartDescription());
+        json_properties.put("winDescription", properties.getWinDescription());
+
+        File file = new File(path, FILE_PROPERTIES);
+        file.createNewFile();
+        FileWriter writer = new FileWriter(file);
+        writer.write(json_properties.toString(2));
+        writer.close();
     }
 
     private static void save(File folder, String filename, JSONArray jsonArray) throws IOException {
