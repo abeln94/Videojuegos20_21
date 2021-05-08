@@ -58,5 +58,5 @@ abstract public class Properties implements Serializable {
      */
     public abstract String getWinDescription();
 
-    public abstract String getHelpPath();
+    public abstract String getHelpFile();
 }

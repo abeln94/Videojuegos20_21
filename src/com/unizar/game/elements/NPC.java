@@ -2,7 +2,6 @@ package com.unizar.game.elements;
 
 import com.unizar.Utils;
 import com.unizar.game.commands.*;
-import com.unizar.hobbit.npcs.Bilbo_Player;
 
 import java.util.*;
 
@@ -151,7 +150,7 @@ abstract public class NPC extends Element {
                 for (Iterator<Element> it = elements.iterator(); it.hasNext(); ) {
                     f = it.next();
                 }
-                result = game.engine.execute(this, Command.act(Word.Action.GIVE, f, game.findElementByClassName(Bilbo_Player.class)));
+//                result = game.engine.execute(this, Command.act(Word.Action.GIVE, f, game.findElementByClassName(Bilbo_Player.class)));
                 break;
             case 9: //Leer
                 //getLocation().notifyNPCs(this, this + " dice: Ve hacia el este desde el Gran Lago para llegar a Ciudad del lago");

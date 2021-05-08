@@ -1,12 +1,8 @@
 package com.unizar;
 
-import com.unizar.generic.DataLoader;
 import com.unizar.game.Game;
-import com.unizar.hobbit.HobbitWorld;
-import com.unizar.generic.JSONWorld;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {

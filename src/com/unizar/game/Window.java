@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 /**
  * Manages the window of the game.
@@ -88,11 +87,13 @@ public class Window {
 
         // load font
         Font font = null;
-        try {
-            InputStream is = new FileInputStream(fontFile);
-            font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(20f); // TODO: hacer mas grandes
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
+        if (fontFile != null) {
+            try {
+                InputStream is = new FileInputStream(fontFile);
+                font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(20f); // TODO: hacer mas grandes
+            } catch (FontFormatException | IOException e) {
+                e.printStackTrace();
+            }
         }
 
         // image
@@ -106,7 +107,7 @@ public class Window {
         commandOutput.setLineWrap(true);
         commandOutput.setWrapStyleWord(true);
         commandOutput.setFocusable(false);
-        commandOutput.setFont(font);
+        if (font != null) commandOutput.setFont(font);
         frame.add(new JScrollPane(commandOutput, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 
         // command input

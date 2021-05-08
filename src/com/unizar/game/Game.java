@@ -209,7 +209,7 @@ public class Game extends KeyAdapter implements Runnable {
             // press F1 for help
             case KeyEvent.VK_F1:
                 try {
-                    Utils.showMessage("Ayuda", Utils.readFile(world.properties.getHelpPath()));
+                    Utils.showMessage("Ayuda", Utils.readFile(world.properties.getHelpFile()));
                 } catch (IOException ioException) {
                     Utils.showMessage("Ayuda", ioException.toString());
                 }
