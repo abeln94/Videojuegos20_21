@@ -51,7 +51,7 @@ public class Game extends KeyAdapter implements Runnable {
      *
      * @param root root folder of the data
      */
-    public Game(String root) {
+    public Game(String root) throws IOException {
         this.root = root;
         this.world = new JSONWorld(root);
         window = new Window(world.properties.getTitle(), world.properties.getImageRatio(), world.properties.getFontFile());
@@ -208,11 +208,7 @@ public class Game extends KeyAdapter implements Runnable {
 
             // press F1 for help
             case KeyEvent.VK_F1:
-                try {
-                    Utils.showMessage("Ayuda", Utils.readFile(world.properties.getHelpFile()));
-                } catch (IOException ioException) {
-                    Utils.showMessage("Ayuda", ioException.toString());
-                }
+                help();
                 break;
 
             // press F12 for debug
@@ -436,5 +432,16 @@ public class Game extends KeyAdapter implements Runnable {
      */
     public void exit() {
         window.close();
+    }
+
+    /**
+     * Shows the help file
+     */
+    public void help() {
+        try {
+            Utils.showMessage("Ayuda", Utils.readFile(world.properties.getHelpFile()));
+        } catch (IOException ioException) {
+            Utils.showMessage("Ayuda", ioException.toString());
+        }
     }
 }

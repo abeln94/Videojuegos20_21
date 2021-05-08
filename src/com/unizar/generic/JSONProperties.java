@@ -3,25 +3,25 @@ package com.unizar.generic;
 import com.unizar.game.Properties;
 import org.json.JSONObject;
 
+/**
+ * A properties file generated from a JSON object
+ */
 public class JSONProperties extends Properties {
 
     // TODO: use internally a JSONObject instead of a serializable field
 
-    private String root;
-
-    private String title;
-    private int imageRatio;
-    private String imagePath;
-    private String musicPath;
-    private String fontFile;
-    private String startScreen;
-    private String winScreen;
-    private String startDescription;
-    private String winDescription;
-    private String helpFile;
+    private final String title;
+    private final int imageRatio;
+    private final String imagePath;
+    private final String musicPath;
+    private final String fontFile;
+    private final String startScreen;
+    private final String winScreen;
+    private final String startDescription;
+    private final String winDescription;
+    private final String helpFile;
 
     public JSONProperties(String root, JSONObject properties) {
-        this.root = root;
 
         title = properties.getString("title");
         imageRatio = properties.getInt("imageRatio");
