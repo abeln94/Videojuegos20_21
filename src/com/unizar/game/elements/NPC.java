@@ -11,7 +11,7 @@ import java.util.*;
  */
 abstract public class NPC extends Element {
 
-    Behaviour behaviour = new Behaviour();
+    transient Behaviour behaviour = new Behaviour();
     /**
      * List of parameters that de machine use to select the next action of the npc
      */
@@ -83,6 +83,8 @@ abstract public class NPC extends Element {
 
     @Override
     public void act() {
+        if (true) return;
+
         //se pasa este NPC y el game.getPlayer()
         int intAction = behaviour.nextAction(this, game.getPlayer(), game.world.night);
         Result result = null;

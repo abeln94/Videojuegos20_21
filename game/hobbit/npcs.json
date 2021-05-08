@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Bilbo",
+    "weight": 50,
+    "location": "StartLocation",
+    "id": "Bilbo_Player"
+  },
+  {
+    "name": "Gandalf",
+    "weight": 100,
+    "location": "StartLocation",
+    "id": "Gandalf"
+  },
+  {
+    "name": "Thorin",
+    "weight": 30,
+    "location": "StartLocation",
+    "id": "Thorin"
+  },
+  {
+    "name": "Un Troll horrendo",
+    "weight": 50,
+    "location": "TrollsClearing",
+    "id": "HideousTroll"
+  },
+  {
+    "name": "Un Troll pendenciero",
+    "weight": 50,
+    "location": "TrollsClearing",
+    "id": "ViciousTroll"
+  },
+  {
+    "name": "Elrond",
+    "weight": 100,
+    "location": "Rivendell",
+    "id": "Elrond"
+  },
+  {
+    "name": "Un goblin repugnante",
+    "weight": 40,
+    "location": "DryCave",
+    "id": "NastyGoblin"
+  },
+  {
+    "name": "Gollum",
+    "weight": 40,
+    "location": "DarkWidingPassage_6",
+    "id": "Gollum"
+  },
+  {
+    "name": "El mayordomo",
+    "weight": 40,
+    "location": "CellarOfWine",
+    "id": "Butler"
+  },
+  {
+    "name": "Bardo, el Bardo",
+    "weight": 500,
+    "location": "LakeTown",
+    "id": "Bardo"
+  },
+  {
+    "name": "El dorado dragón rojo",
+    "weight": 200,
+    "id": "RedGoldenDragon"
+  }
+]

@@ -57,6 +57,10 @@ abstract public class Element implements Serializable {
         this.name = name;
     }
 
+    public String getId() {
+        return this.getClass().getSimpleName();
+    }
+
     /**
      * Returns the description of this element (from the perspective of the player)
      *
