@@ -22,7 +22,7 @@ public class HobbitProperties extends Properties {
     }
 
     @Override
-    public String getFontName() {
+    public String getFontFile() {
         return "/fonts/MorrisRoman-Black.ttf";
     }
 
@@ -44,5 +44,10 @@ public class HobbitProperties extends Properties {
     @Override
     public String getWinDescription() {
         return "Has conseguido derrotar al dragón y te has llevado su oro (que si, de verdad)!";
+    }
+
+    @Override
+    public String getHelpPath() {
+        return null;
     }
 }

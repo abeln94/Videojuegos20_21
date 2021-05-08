@@ -3,10 +3,9 @@ package com.unizar;
 import com.unizar.game.Game;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Serializable;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -56,13 +55,8 @@ public class Utils {
      * @param title window title
      * @param path  path to the file with the message text
      */
-    public static void showMessage(String title, String path) {
+    public static void showMessage(String title, String message) {
         // read message
-        final InputStream resource = Game.class.getResourceAsStream(path);
-        if (resource == null) {
-            throw new RuntimeException("The file '" + path + "' doesn't exist.");
-        }
-        final String message = new BufferedReader(new InputStreamReader(resource)).lines().collect(Collectors.joining("\n"));
 
         // create window
         JTextArea textArea = new JTextArea(25, 50);
@@ -117,6 +111,17 @@ public class Utils {
             function.accept((float) step / (STEPS - 1));
             pause(TIME / STEPS);
         }
+    }
+
+    /**
+     * Reads a file and returns its content
+     * @param folder folder path
+     * @param fileName file path
+     * @return the content as string
+     * @throws IOException if can't read file
+     */
+    public static String readFile(String path) throws IOException {
+        return String.join("\n", Files.readAllLines(Paths.get(path)));
     }
 
     // ------------------------- -------------------------

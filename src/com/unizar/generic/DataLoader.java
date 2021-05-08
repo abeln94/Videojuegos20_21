@@ -1,6 +1,7 @@
-package com.unizar.game;
+package com.unizar.generic;
 
 import com.unizar.Utils;
+import com.unizar.game.Properties;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.*;
 import org.json.JSONArray;
@@ -9,8 +10,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -18,16 +17,16 @@ import java.util.Set;
 
 public class DataLoader {
 
-    public static final String FILE_NPCS = "npcs.json";
-    public static final String FILE_ITEMS = "items.json";
-    public static final String FILE_LOCATIONS = "locations.json";
-    private static final String FILE_PROPERTIES = "properties.json";
+    public static final String FILE_NPCS = "/npcs.json";
+    public static final String FILE_ITEMS = "/items.json";
+    public static final String FILE_LOCATIONS = "/locations.json";
+    private static final String FILE_PROPERTIES = "/properties.json";
 
     public static Set<Element> loadElements(String path) throws IOException {
 
-        final JSONArray npcs = new JSONArray(String.join("\n", Files.readAllLines(Paths.get(path, FILE_NPCS))));
-        final JSONArray items = new JSONArray(String.join("\n", Files.readAllLines(Paths.get(path, FILE_ITEMS))));
-        final JSONArray locations = new JSONArray(String.join("\n", Files.readAllLines(Paths.get(path, FILE_LOCATIONS))));
+        final JSONArray npcs = new JSONArray(Utils.readFile(path + FILE_NPCS));
+        final JSONArray items = new JSONArray(Utils.readFile(path + FILE_ITEMS));
+        final JSONArray locations = new JSONArray(Utils.readFile(path + FILE_LOCATIONS));
 
         Map<String, Element> elements = new HashMap<>();
 
@@ -204,8 +203,8 @@ public class DataLoader {
 
     // ------------------------- properties -------------------------
 
-    public static Properties loadProperties(String path) throws IOException {
-        final JSONObject properties = new JSONObject(String.join("\n", Files.readAllLines(Paths.get(path, FILE_PROPERTIES))));
+    public static Properties loadProperties(String root) throws IOException {
+        final JSONObject properties = new JSONObject(Utils.readFile(root + FILE_PROPERTIES));
 
         return new Properties() {
             @Override
@@ -220,17 +219,17 @@ public class DataLoader {
 
             @Override
             public String getImagePath(String label) {
-                return properties.getString("imagePath").replace("{}", label);
+                return root + properties.getString("imagePath").replace("{}", label);
             }
 
             @Override
             public String getMusicPath(String label) {
-                return properties.getString("musicPath").replace("{}", label);
+                return root + properties.getString("musicPath").replace("{}", label);
             }
 
             @Override
-            public String getFontName() {
-                return properties.getString("fontName");
+            public String getFontFile() {
+                return root + properties.getString("fontFile");
             }
 
             @Override
@@ -252,6 +251,11 @@ public class DataLoader {
             public String getWinDescription() {
                 return properties.getString("winDescription");
             }
+
+            @Override
+            public String getHelpPath() {
+                return root + properties.getString("help");
+            }
         };
 
     }
@@ -262,7 +266,7 @@ public class DataLoader {
         json_properties.put("imageRatio", properties.getImageRatio());
         json_properties.put("imagePath", properties.getImagePath("{}"));
         json_properties.put("musicPath", properties.getMusicPath("{}"));
-        json_properties.put("fontName", properties.getFontName());
+        json_properties.put("fontFile", properties.getFontFile());
         json_properties.put("startScreen", properties.getStartScreen());
         json_properties.put("winScreen", properties.getWinScreen());
         json_properties.put("startDescription", properties.getStartDescription());

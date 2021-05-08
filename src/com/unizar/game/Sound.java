@@ -3,6 +3,7 @@ package com.unizar.game;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -38,11 +39,7 @@ public class Sound {
         try {
 
             // find file
-            URL resource = Game.class.getResource(path);
-            if (resource == null) {
-                throw new IOException("The music '" + path + "' doesn't exist.");
-            }
-            final AudioInputStream stream = AudioSystem.getAudioInputStream(resource);
+            final AudioInputStream stream = AudioSystem.getAudioInputStream(new File(path));
 
             // create player
             playingClip = AudioSystem.getClip();

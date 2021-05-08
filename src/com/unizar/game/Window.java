@@ -9,6 +9,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -31,7 +33,7 @@ public class Window {
     private final JTextArea description;
     private final JLabel image;
 
-    public Window(String title, int imageRatio, String fontName) {
+    public Window(String title, int imageRatio, String fontFile) {
 
         // frame
         frame = new JFrame(title);
@@ -87,7 +89,7 @@ public class Window {
         // load font
         Font font = null;
         try {
-            InputStream is = this.getClass().getResourceAsStream(fontName);
+            InputStream is = new FileInputStream(fontFile);
             font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(20f); // TODO: hacer mas grandes
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
@@ -219,11 +221,7 @@ public class Window {
         try {
 
             // read image
-            final URL resource = Game.class.getResource(path);
-            if (resource == null) {
-                throw new IOException("The image '" + path + "' doesn't exist.");
-            }
-            Image img = ImageIO.read(resource);
+            Image img = ImageIO.read(new File(path));
 
             // show image
             final float alpha = image.getIcon() != null ? ((AlphaIcon) image.getIcon()).getAlpha() : 1f;
