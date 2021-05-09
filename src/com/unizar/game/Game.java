@@ -83,6 +83,7 @@ public class Game extends KeyAdapter implements Runnable {
     public void winScreen() {
         state = State.WinScreen;
         setImage(world.properties.getWinScreen());
+        setMusic(world.properties.getWinMusic());
         addOutput("Enhorabuena, has completado el juego.");
         window.clearDescription();
         setDescription(
@@ -100,6 +101,7 @@ public class Game extends KeyAdapter implements Runnable {
     public void gameOverScreen() {
         state = State.GameOverScreen;
         setImage(null);
+        setMusic(world.properties.getGameOverMusic());
         addOutput("Has muerto.");
         window.clearDescription();
         setDescription(

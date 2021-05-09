@@ -84,4 +84,14 @@ public class JSONProperties extends Properties {
     public String getHelpFile() {
         return helpFile;
     }
+
+    @Override
+    public String getWinMusic() {
+        return "tale"; // TODO: load from file
+    }
+
+    @Override
+    public String getGameOverMusic() {
+        return "Final"; // TODO: load from file
+    }
 }

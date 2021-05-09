@@ -116,6 +116,9 @@
     "hidden": {
       "BREAK": "SpiderWeb_Broken"
     },
+    "hidden": {
+      "BREAK": "SpiderWeb_Broken"
+    },
     "openable": "LOCKED",
     "name": "una tela de araña",
     "id": "SpiderWeb"
