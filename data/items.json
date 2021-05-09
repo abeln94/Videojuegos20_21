@@ -4,7 +4,7 @@
     "weight": 1,
     "location": "Gandalf",
     "id": "Map",
-    "description": "Ve hacia el este desde el Gran Lago para llegar a Ciudad del lago",
+    "description": "En el mapa pone: Ve hacia el este desde el Gran Lago para llegar a Ciudad del lago",
     "language": "elfo"
   },
   {
@@ -127,7 +127,8 @@
   {
     "openable": "CLOSED",
     "name": "la puerta mágica",
-    "id": "MagicDoor"
+    "id": "MagicDoor",
+    "description": "La puerta mágica te advierte de que se acercan los elfos."
   },
   {
     "openable": "CLOSED",

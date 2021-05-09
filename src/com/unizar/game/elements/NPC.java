@@ -30,8 +30,8 @@ abstract public class NPC extends Element {
 
     // ------------------------- engine properties -------------------------
 
-    public Set<Element> allowedLocations = null;
-    public Set<Element> disallowedLocations = null;
+    public Set<Element> navigateLocations = null;
+    public boolean navigateLocationsAreAllowed = false;
 
     public int fuerza = 0; //como de fuerte pega el golpe. Para calcular golpe es fuerza + aleatorio d10 + bonificador arma
     public int constitucion = 0; //lo robusto del pj
@@ -42,9 +42,10 @@ abstract public class NPC extends Element {
     // ------------------------- ia -------------------------
 
     public enum ACTION {
-        ATACK_NPC,
-        FOLLOW_PLAYER,
-        GOTO,
+        ATACK_ITEM,
+        ATACK_PLAYER,
+        FOLLOW_NPCS,
+        NAVIGATE,
         TALK,
         GIVE,
         OPEN,
@@ -54,7 +55,8 @@ abstract public class NPC extends Element {
     // parameters
     public boolean canFollowOrders = false;
     public String sleepAt;
-    public Set<Element> attackNPCs = null;
+    public Set<Element> attackItems = null;
+    public int pacificTurns = Integer.MAX_VALUE;
     public Set<Element> followNPCs = null;
     public Element moveNPCsTo = null;
     public Set<Utils.Pair<Integer, String>> talkPlayer = null;
@@ -63,7 +65,7 @@ abstract public class NPC extends Element {
     // weights
     public int attackWeight = 0;
     public int followWeight = 0;
-    public int gotoWeight = 0;
+    public int navigateWeight = 0;
     public int talkWeight = 0;
     public int giveWeight = 0;
     public int openWeight = 0;
@@ -158,21 +160,25 @@ abstract public class NPC extends Element {
 
         // tp player
         if (moveNPCsTo != null) {
-            getLocation().elements.stream().filter(e -> e instanceof NPC).forEach(npc -> {
-                npc.moveTo(moveNPCsTo);
-                npc.hear(this + " te lleva hasta " + moveNPCsTo + ".");
-            });
+            getLocation().elements.stream()
+                    .filter(e -> e instanceof NPC)
+                    .filter(e -> e != this)
+                    .collect(Collectors.toSet())
+                    .forEach(npc -> {
+                        npc.moveTo(moveNPCsTo);
+                        npc.hear(this + " te lleva hasta " + moveNPCsTo + ".");
+                    });
         }
 
         int retry = 10;
         while (retry-- > 0) {
             Command possibleCommand = getPossibleCommand();
-            if (possibleCommand == null) return;
+            if (possibleCommand == null) continue;
 
             Result result = game.engine.execute(this, possibleCommand);
             if (result.done) {
                 hear(result.output);
-                return;
+                break;
             }
         }
 
@@ -181,9 +187,10 @@ abstract public class NPC extends Element {
     private Command getPossibleCommand() {
 
         Set<Utils.Pair<ACTION, Integer>> actions = new HashSet<>();
-        actions.add(Utils.Pair.of(ACTION.ATACK_NPC, attackWeight));
-        actions.add(Utils.Pair.of(ACTION.FOLLOW_PLAYER, followWeight));
-        actions.add(Utils.Pair.of(ACTION.GOTO, gotoWeight));
+        actions.add(Utils.Pair.of(ACTION.ATACK_ITEM, attackWeight));
+        actions.add(Utils.Pair.of(ACTION.ATACK_PLAYER, attackWeight));
+        actions.add(Utils.Pair.of(ACTION.FOLLOW_NPCS, followWeight));
+        actions.add(Utils.Pair.of(ACTION.NAVIGATE, navigateWeight));
         actions.add(Utils.Pair.of(ACTION.TALK, talkWeight));
         actions.add(Utils.Pair.of(ACTION.GIVE, giveWeight));
         actions.add(Utils.Pair.of(ACTION.OPEN, openWeight));
@@ -193,25 +200,44 @@ abstract public class NPC extends Element {
         if (action == null) return null;
 
         switch (action) {
-            case ATACK_NPC:
-                if (attackNPCs.isEmpty()) return null;
-                return Command.act(Word.Action.KILL, Utils.pickRandom(attackNPCs));
+            case ATACK_ITEM:
+                if (attackItems == null || attackItems.isEmpty()) return null;
+                final Element attack = Utils.pickRandom(getInteractable().stream()
+                        .filter(e -> e instanceof NPC)
+                        .filter(e -> e.elements.stream().anyMatch(has -> attackItems.contains(has)))
+                        .collect(Collectors.toSet()));
+                if (attack == null) return null;
+                return Command.act(Word.Action.KILL, attack);
 
-            case FOLLOW_PLAYER:
-                if (followNPCs.isEmpty()) return null;
-                return Command.act(Word.Action.FOLLOW, Utils.pickRandom(followNPCs));
+            case ATACK_PLAYER:
+                if (pacificTurns >= sawPlayer) return null;
+                return Command.act(Word.Action.KILL, game.getPlayer());
 
-            case GOTO:
+            case FOLLOW_NPCS:
+                Element npc;
+                if (followNPCs == null) {
+                    npc = Utils.pickRandom(game.findElementsByClassName(NPC.class));
+                } else {
+                    if (followNPCs.isEmpty()) return null;
+                    npc = Utils.pickRandom(followNPCs);
+                }
+                if (npc.getLocation() == getLocation()) {
+                    return Command.simple(Word.Action.WAIT);
+                } else {
+                    return Command.act(Word.Action.FOLLOW, npc);
+                }
+
+            case NAVIGATE:
                 final Element location = getLocation();
                 if (!(location instanceof Location)) return null;
                 Word.Direction direction = Utils.pickRandom(((Location) location).exits.keySet());
                 return Command.go(direction);
 
             case TALK:
-                if (talkPlayer.isEmpty()) return null;
+                if (talkPlayer == null || talkPlayer.isEmpty()) return null;
                 // prepare sentences
                 Set<String> sentences = talkPlayer.stream()
-                        .filter(p -> p.first >= sawPlayer)
+                        .filter(p -> sawPlayer >= p.first)
                         .map(p -> p.second)
                         .collect(Collectors.toSet());
                 String sentence = Utils.pickRandom(sentences);
@@ -219,16 +245,26 @@ abstract public class NPC extends Element {
                 return Command.say(game.getPlayer(), sentence);
 
             case GIVE:
-                if (giveItems.isEmpty()) return null;
-                final Element item = Utils.pickRandom(giveItems);
+                Element item;
+                if (giveItems == null) {
+                    item = Utils.pickRandom(elements);
+                    if (item == null) return null;
+                } else {
+                    if (giveItems.isEmpty()) return null;
+                    item = Utils.pickRandom(giveItems);
+                }
                 if (item.getLocation() == null) item.moveTo(this);
-                return Command.act(Word.Action.GIVE, item);
+                return Command.act(Word.Action.GIVE, item, game.getPlayer());
 
             case OPEN:
-                return Command.act(Word.Action.OPEN, Utils.pickRandom(getInteractable()));
+                final Element interactable = Utils.pickRandom(getInteractable());
+                if (interactable == null) return null;
+                return Command.act(Word.Action.OPEN, interactable);
 
             case PICK:
-                return Command.act(Word.Action.PICK, Utils.pickRandom(getInteractable()));
+                final Element interactablee = Utils.pickRandom(getInteractable());
+                if (interactablee == null) return null;
+                return Command.act(Word.Action.PICK, interactablee);
         }
         return null;
     }

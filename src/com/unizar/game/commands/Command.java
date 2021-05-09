@@ -75,7 +75,7 @@ public class Command {
      * A say action
      */
     public static Command say(NPC npc, String sentence) {
-        return new Command(null, Word.Action.SAY, null, sentence, new FilterableElements(npc), null);
+        return new Command(null, Word.Action.SAY, null, sentence, null, new FilterableElements(npc));
     }
 
     // ------------------------- generation -------------------------

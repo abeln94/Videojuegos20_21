@@ -9,27 +9,82 @@
     "name": "Gandalf",
     "weight": 100,
     "location": "StartLocation",
-    "id": "Gandalf"
+    "id": "Gandalf",
+    "navigateWeight": 5,
+    "followWeight": 1,
+    "giveWeight": 1,
+    "openWeight": 1,
+    "pickWeight": 1
   },
   {
     "name": "Thorin",
     "weight": 30,
     "location": "StartLocation",
-    "id": "Thorin"
+    "id": "Thorin",
+    "followNPCs": [
+      "Bilbo_Player"
+    ],
+    "followWeight": 10,
+    "navigateWeight": 1,
+    "canFollowOrders": true,
+    "talkPlayer": [
+      {
+        "turns": 1,
+        "sentence": "Hola"
+      },
+      {
+        "turns": 5,
+        "sentence": "Date prisa"
+      },
+      {
+        "turns": 10,
+        "sentence": "La cacharra si, la cacharra no, la cacharra madre la que traigo yo"
+      }
+    ]
   },
   {
     "name": "Un Troll horrendo",
     "weight": 50,
     "location": "TrollsClearing",
     "id": "HideousTroll",
-    "sleepAt": "day"
+    "sleepAt": "day",
+    "pacificTurns": 1,
+    "talkPlayer": [
+      {
+        "turns": 1,
+        "sentence": "Pixa, pue son bien canijo"
+      },
+      {
+        "turns": 1,
+        "sentence": "E vito peazo de maíz en mi mierdah ma grande que este tío!"
+      },
+      {
+        "turns": 1,
+        "sentence": "Qero su bebeee.... asao, asao, asao, asao con ensalaaada, su bebe, su bebe, su bebe o me cago aqui joer"
+      }
+    ]
   },
   {
     "name": "Un Troll pendenciero",
     "weight": 50,
     "location": "TrollsClearing",
     "id": "ViciousTroll",
-    "sleepAt": "day"
+    "sleepAt": "day",
+    "pacificTurns": 1,
+    "talkPlayer": [
+      {
+        "turns": 1,
+        "sentence": "Mirah so hobis"
+      },
+      {
+        "turns": 1,
+        "sentence": "Me lo voi a hamar"
+      },
+      {
+        "turns": 1,
+        "sentence": "Eeeeeeeh miniyo, qeres una mini empanadilla?"
+      }
+    ]
   },
   {
     "name": "Elrond",
@@ -39,25 +94,48 @@
     "languages": [
       "elfo"
     ],
-    "canFollowOrders": true
+    "canFollowOrders": true,
+    "talkPlayer": [
+      {
+        "turns": 1,
+        "sentence": "Hola"
+      },
+      {
+        "turns": 2,
+        "sentence": "Bienvenido de nuevo a estas tierras"
+      },
+      {
+        "turns": 1,
+        "sentence": "Grata es su visita"
+      }
+    ]
   },
   {
     "name": "Un goblin repugnante",
     "weight": 40,
     "location": "DryCave",
-    "id": "NastyGoblin"
+    "id": "NastyGoblin",
+    "moveNPCsTo": "GoblinDungeon"
   },
   {
     "name": "Gollum",
     "weight": 40,
     "location": "DarkWidingPassage_6",
-    "id": "Gollum"
+    "id": "Gollum",
+    "attackItems": [
+      "GoldenRing"
+    ]
   },
   {
     "name": "El mayordomo",
     "weight": 40,
     "location": "CellarOfWine",
-    "id": "Butler"
+    "id": "Butler",
+    "attackItems": [
+      "RedKey"
+    ],
+    "sleepAt": "night",
+    "attackWeight": 1
   },
   {
     "name": "Bardo, el Bardo",
@@ -68,6 +146,9 @@
   {
     "name": "El dorado dragón rojo",
     "weight": 200,
-    "id": "RedGoldenDragon"
+    "id": "RedGoldenDragon",
+    "attackItems": [
+      "RedKey"
+    ]
   }
 ]

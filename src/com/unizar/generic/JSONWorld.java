@@ -113,11 +113,11 @@ public class JSONWorld extends World {
             JSONObject npc_json = npcs.getJSONObject(i);
             NPC npc_element = (NPC) elements.get(npc_json.getString("id"));
 
-            if (npc_json.has("allowedLocations")) {
-                npc_element.allowedLocations = getElements(npc_json.getJSONArray("allowedLocations"), elements);
+            if (npc_json.has("navigateLocations")) {
+                npc_element.navigateLocations = getElements(npc_json.getJSONArray("navigateLocations"), elements);
             }
-            if (npc_json.has("disallowedLocations")) {
-                npc_element.disallowedLocations = getElements(npc_json.getJSONArray("disallowedLocations"), elements);
+            if (npc_json.has("navigateLocationsAreAllowed")) {
+                npc_element.navigateLocationsAreAllowed = npc_json.getBoolean("navigateLocationsAreAllowed");
             }
 
             if (npc_json.has("fuerza")) {
@@ -144,11 +144,16 @@ public class JSONWorld extends World {
             if (npc_json.has("sleepAt")) {
                 npc_element.sleepAt = npc_json.getString("sleepAt");
             }
-            if (npc_json.has("attackNPCs")) {
-                npc_element.attackNPCs = getElements(npc_json.getJSONArray("attackNPCs"), elements);
+            if (npc_json.has("attackItems")) {
+                npc_element.attackItems = getElements(npc_json.getJSONArray("attackItems"), elements);
+                npc_element.attackWeight = 1;
+            }
+            if (npc_json.has("pacificTurns")) {
+                npc_element.pacificTurns = npc_json.getInt("pacificTurns");
             }
             if (npc_json.has("followNPCs")) {
                 npc_element.followNPCs = getElements(npc_json.getJSONArray("followNPCs"), elements);
+                npc_element.followWeight = 1;
             }
             if (npc_json.has("moveNPCsTo")) {
                 npc_element.moveNPCsTo = elements.get(npc_json.getString("moveNPCsTo"));
@@ -163,9 +168,11 @@ public class JSONWorld extends World {
                     talkPlayer.add(Utils.Pair.of(turns, sentence));
                 }
                 npc_element.talkPlayer = talkPlayer;
+                npc_element.talkWeight = 1;
             }
             if (npc_json.has("giveItems")) {
                 npc_element.giveItems = getElements(npc_json.getJSONArray("giveItems"), elements);
+                npc_element.giveWeight = 1;
             }
 
             if (npc_json.has("attackWeight")) {
@@ -174,8 +181,8 @@ public class JSONWorld extends World {
             if (npc_json.has("followWeight")) {
                 npc_element.followWeight = npc_json.getInt("followWeight");
             }
-            if (npc_json.has("gotoWeight")) {
-                npc_element.gotoWeight = npc_json.getInt("gotoWeight");
+            if (npc_json.has("navigateWeight")) {
+                npc_element.navigateWeight = npc_json.getInt("navigateWeight");
             }
             if (npc_json.has("talkWeight")) {
                 npc_element.talkWeight = npc_json.getInt("talkWeight");
