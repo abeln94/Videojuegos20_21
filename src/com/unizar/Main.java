@@ -1,11 +1,11 @@
 package com.unizar;
 
 import com.unizar.game.Game;
-import com.unizar.hobbit.HobbitWorld;
+
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) {
-        // hobbit
-        new Game(new HobbitWorld());
+    public static void main(String[] args) throws IOException {
+        new Game(args.length > 1 ? args[0] : "data");
     }
 }

@@ -1,0 +1,181 @@
+[
+  {
+    "name": "el mapa peculiar",
+    "weight": 1,
+    "location": "Gandalf",
+    "id": "Map"
+  },
+  {
+    "openable": "CLOSED",
+    "name": "el cofre de madera",
+    "location": "StartLocation",
+    "id": "StartChest"
+  },
+  {
+    "openable": "CLOSED",
+    "name": "la puerta verde redonda",
+    "id": "GreenDoor"
+  },
+  {
+    "name": "la gran llave",
+    "weight": 1,
+    "location": "HideousTroll",
+    "id": "LargeKey"
+  },
+  {
+    "openable": "CLOSED",
+    "name": "la pesada puerta de piedra",
+    "lockedWith": "LargeKey",
+    "id": "RockDoor"
+  },
+  {
+    "name": "una espada corta de gran calidad",
+    "weight": 5,
+    "location": "TrollsCave",
+    "id": "Sword"
+  },
+  {
+    "name": "cuerda",
+    "weight": 1,
+    "location": "TrollsCave",
+    "id": "Rope"
+  },
+  {
+    "name": "comida",
+    "weight": 1,
+    "location": "Cupboard",
+    "id": "CupboardFood"
+  },
+  {
+    "name": "comida",
+    "weight": 1,
+    "id": "ElrondFood"
+  },
+  {
+    "name": "una llave de oro",
+    "weight": 1,
+    "location": "MistyValley_2",
+    "id": "GoldenKey"
+  },
+  {
+    "openable": "LOCKED",
+    "name": "la puerta goblinera",
+    "id": "GoblinDoor"
+  },
+  {
+    "openable": "CLOSED",
+    "name": "la ventana goblinera",
+    "id": "GoblinWindow"
+  },
+  {
+    "hidden": {"DIG": "TrapDoor"},
+    "name": "algo de arena",
+    "location": "GoblinDungeon",
+    "id": "Sand"
+  },
+  {
+    "hidden": {"BREAK": "SmallKey"},
+    "name": "una trampilla",
+    "id": "TrapDoor"
+  },
+  {
+    "name": "una pequeña y curiosa llave",
+    "weight": 1,
+    "id": "SmallKey"
+  },
+  {
+    "name": "el anillo de oro",
+    "weight": 1,
+    "location": "DarkWidingPassage_6",
+    "id": "GoldenRing"
+  },
+  {
+    "name": "el oro",
+    "weight": 1,
+    "location": "WestBlackRiver",
+    "id": "Gold"
+  },
+  {
+    "openable": "CLOSED",
+    "name": "la puerta de entrada a la goblinera",
+    "id": "GoblinGate"
+  },
+  {
+    "openable": "CLOSED",
+    "name": "un gran armario",
+    "location": "BeornsHouse",
+    "id": "Cupboard"
+  },
+  {
+    "hidden": {"BREAK": "SpiderWeb_Broken"},
+    "openable": "LOCKED",
+    "name": "una tela de araña",
+    "id": "SpiderWeb"
+  },
+  {
+    "name": "una tela de araña rota",
+    "id": "SpiderWeb_Broken"
+  },
+  {
+    "openable": "CLOSED",
+    "name": "la puerta mágica",
+    "id": "MagicDoor"
+  },
+  {
+    "openable": "CLOSED",
+    "name": "la puerta roja",
+    "lockedWith": "RedKey",
+    "id": "RedDoor"
+  },
+  {
+    "name": "un gran trampilla",
+    "id": "LargeTrapDoor"
+  },
+  {
+    "openable": "CLOSED",
+    "name": "Un tonel",
+    "weight": 10,
+    "location": "CellarOfWine",
+    "id": "Barrel"
+  },
+  {
+    "name": "vino",
+    "weight": 5,
+    "location": "Barrel",
+    "id": "Wine"
+  },
+  {
+    "name": "la llave roja",
+    "weight": 1,
+    "id": "RedKey"
+  },
+  {
+    "openable": "CLOSED",
+    "name": "unas fuertes rejas que separan el rio del lago",
+    "id": "StrongPortcullis"
+  },
+  {
+    "name": "un arco",
+    "weight": 5,
+    "location": "Butler",
+    "id": "Bow"
+  },
+  {
+    "name": "una flecha poderosa",
+    "weight": 1,
+    "location": "LakeTown",
+    "id": "Arrow"
+  },
+  {
+    "openable": "CLOSED",
+    "name": "Tras un fuerte crujido aparece un gran agujero en la pared. Te encuentras ante la puerta lateral de la Montaña Solitaria",
+    "lockedWith": "SmallKey",
+    "id": "SideDoorLonelyMountain"
+  },
+  {
+    "name": "el valioso tesoro",
+    "weight": 5,
+    "location": "DragonsHalls",
+    "id": "TheValuableTreasure"
+  }
+]

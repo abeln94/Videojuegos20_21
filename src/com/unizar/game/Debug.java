@@ -50,7 +50,7 @@ public class Debug {
 
         @Override
         public String toString() {
-            return padding + element.getClass().getSimpleName() + ": " + element;
+            return padding + element.id + ": " + element;
         }
     }
 

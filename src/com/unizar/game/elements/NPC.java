@@ -2,7 +2,6 @@ package com.unizar.game.elements;
 
 import com.unizar.Utils;
 import com.unizar.game.commands.*;
-import com.unizar.hobbit.npcs.Bilbo_Player;
 
 import java.util.*;
 
@@ -11,7 +10,7 @@ import java.util.*;
  */
 abstract public class NPC extends Element {
 
-    Behaviour behaviour = new Behaviour();
+    transient Behaviour behaviour = new Behaviour();
     /**
      * List of parameters that de machine use to select the next action of the npc
      */
@@ -38,10 +37,15 @@ abstract public class NPC extends Element {
     public List<String> idiomas = new ArrayList<>(); //lista de idiomas que conoce, si un objeto está escrito en ese lo puede leer
     //inventario de npc son sus elements
 
+    public String stoneAt;
+
     /**
      * The wearable elements
      */
     public final Set<Element> wearables = new HashSet<>();
+
+    public NPC() {
+    }
 
     public NPC(String name) {
         super(name);
@@ -49,7 +53,7 @@ abstract public class NPC extends Element {
 
     @Override
     public String getDescription() {
-        return name + describeContents(".", ". Lleva:");
+        return name + (isStone() ? " de piedra" : "") + describeContents(".", ". Lleva:");
     }
 
     /**
@@ -78,8 +82,22 @@ abstract public class NPC extends Element {
         orden = message;
     }
 
+    public boolean isStone() {
+        if (stoneAt == null)
+            return false;
+        if (stoneAt.equalsIgnoreCase("night") && game.world.night)
+            return true;
+        if (stoneAt.equalsIgnoreCase("day") && !game.world.night)
+            return true;
+        return false;
+    }
+
     @Override
     public void act() {
+        if (true) return;
+
+        if (isStone()) return;
+
         //se pasa este NPC y el game.getPlayer()
         int intAction = behaviour.nextAction(this, game.getPlayer(), game.world.night);
         Result result = null;
@@ -130,7 +148,7 @@ abstract public class NPC extends Element {
                 for (Iterator<Element> it = elements.iterator(); it.hasNext(); ) {
                     f = it.next();
                 }
-                result = game.engine.execute(this, Command.act(Word.Action.GIVE, f, game.findElementByClassName(Bilbo_Player.class)));
+                //                result = game.engine.execute(this, Command.act(Word.Action.GIVE, f, game.findElementByClassName(Bilbo_Player.class)));
                 break;
             case 9: //Leer
                 //getLocation().notifyNPCs(this, this + " dice: Ve hacia el este desde el Gran Lago para llegar a Ciudad del lago");
@@ -152,10 +170,5 @@ abstract public class NPC extends Element {
         } else {
             hear(result.output);
         }
-    }
-
-    @Override
-    public void init() {
-        super.init();
     }
 }

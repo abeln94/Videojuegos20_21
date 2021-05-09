@@ -76,6 +76,31 @@ abstract public class Location extends Element {
                 return game.getPlayer().getLocation() == Location.this;
             }
         });
+        act();
         super.init();
+    }
+    /**
+     * The image of this location (from the game's data image folder)
+     */
+    public String getImage() {
+        if (image.contains("|")) {
+            // different day/night
+            final String[] split = image.split("\\|");
+            return split[game.world.night ? 1 : 0];
+        } else {
+            return image;
+        }
+    }
+    /**
+     * The music of this location (from the game's data music folder)
+     */
+    public String getMusic() {
+        if (music.contains("|")) {
+            // different day/night
+            final String[] split = music.split("\\|");
+            return split[game.world.night ? 1 : 0];
+        } else {
+            return music;
+        }
     }
 }

@@ -2,9 +2,6 @@ package com.unizar.game.commands;
 
 import com.unizar.game.elements.Element;
 import com.unizar.game.elements.NPC;
-import com.unizar.hobbit.items.GoldenRing;
-import com.unizar.hobbit.items.RedKey;
-import com.unizar.hobbit.npcs.Bardo;
 
 import java.util.*;
 
@@ -34,7 +31,7 @@ public class Behaviour {
 
 
     //matriz de pesos
-    //0 (Atacar NPC) 1 (Atacar jug)	2 (Seguir jug) 3 (Ir a) 5 (Dormir) 6 (Teletransportar) 7 (Hablar) 8 (Dar) 9 (Leer) 11 (Abrir)
+    //0 (Atacar NPC) 1 (Atacar jug)	2 (Seguir jug) 3 (Ir a)	4 (Morir) 5 (Dormir) 6 (Teletransportar) 7 (Hablar)	8 (Dar)	9 (Leer) 10( Matar)	11 (Abrir)
     List<Integer> pesos = Arrays.asList(2, 2, 3, 3, 3, 1, 2, 1, 2, 2, 3, 2); //TODO:uno por NPC
 
     public int nextAction(NPC npc, NPC jugador, boolean night) {
@@ -172,7 +169,7 @@ public class Behaviour {
         //los que no tienen restricciones extra se ponen a true, para que primen el resto
         pj.add(true);
         //1 !DORMIDO && INV_J contains Llave Roja
-        pj.add(!dormido && inventarioJugador.contains(RedKey.class));
+//        pj.add(!dormido && inventarioJugador.contains(RedKey.class));
         //2-11
         pj.add(true);
         pj.add(true);
@@ -192,7 +189,7 @@ public class Behaviour {
         //los que no tienen restricciones extra se ponen a true, para que primen el resto
         pj.add(true);
         //1 && INV_J contains Anillo
-        pj.add(inventarioJugador.contains(GoldenRing.class));
+//        pj.add(inventarioJugador.contains(GoldenRing.class));
         //2-11
         pj.add(true);
         pj.add(true);
@@ -212,13 +209,12 @@ public class Behaviour {
         //los que no tienen restricciones extra se ponen a true, para que primen el resto
         pj.add(true);
         //1 && P_NPC == HALL
-        pj.add(!dormido && inventarioJugador.contains(RedKey.class));
+//        pj.add(!dormido && inventarioJugador.contains(RedKey.class));
         //2,3
         pj.add(true);
         pj.add(true);
         //4 && ATAQUE == Bardo
-        //pj.add(lastAttackedBy.equals(Bardo.class));
-        pj.add(true);
+//        pj.add(lastAttackedBy.equals(Bardo.class));
         //5-11
         pj.add(true);
         pj.add(true);

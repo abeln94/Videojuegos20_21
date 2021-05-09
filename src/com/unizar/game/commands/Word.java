@@ -35,7 +35,7 @@ public class Word {
         KILL("matar atacar"),
         LOCK("bloquear"),
         PICK("elegir coger"),
-        PUT("poner colocar dejar"),
+        PUT("poner colocar"),
         OPEN("abrir"),
         PULL("estirar"),
         RUN("correr"),
@@ -83,13 +83,13 @@ public class Word {
         NORTH("el norte", "n"),
         NORTHEAST("el noreste", "ne"),
         SOUTH("el sur", "s"),
-        NORTHWEST("el noroeste", "no nw"),
+        NORTHWEST("el noroeste", "no"),
         EAST("el este", "e"),
         SOUTHEAST("el sureste", "se"),
         WEST("el oeste", "o w"),
-        SOUTHWEST("el suroeste", "so sw"),
-        UP("arriba", "ar u"),
-        DOWN("abajo", "ab d"),
+        SOUTHWEST("el suroeste", "so"),
+        UP("arriba", "ar"),
+        DOWN("abajo", "ab"),
         ;
 
         Direction(String description, String extraAlias) {

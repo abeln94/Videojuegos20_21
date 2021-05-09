@@ -56,6 +56,9 @@ public class Engine {
             case QUIT:
                 npc.game.exit();
                 return Result.done("[también puedes pulsar la X de la ventana]");
+            case HELP:
+                npc.game.help();
+                return Result.done("[también puedes pulsar F1]"); // TODO: show a help string for the current location instead
             case OPEN:
                 return command.main.require(
                         // you must see the element
@@ -378,8 +381,6 @@ public class Engine {
                     ((NPC) toSay).ask(npc, command.sequence);
                     return Result.done(""); // the notification is above, otherwise the output order would be wrong
                 });
-//            case HELP:
-//                return Result.done(npc.game.world.requiredObjectives.get(0).first);
             case SCORE:
                 return Result.done(npc.game.getCompletion());
             case PUT:

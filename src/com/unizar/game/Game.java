@@ -6,9 +6,11 @@ import com.unizar.game.elements.Element;
 import com.unizar.game.elements.Location;
 import com.unizar.game.elements.NPC;
 import com.unizar.game.elements.Player;
+import com.unizar.generic.JSONWorld;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -22,6 +24,7 @@ public class Game extends KeyAdapter implements Runnable {
 
     // ------------------------- global -------------------------
     public World world;
+    private final String root;
     public Engine engine = new Engine();
     public Sound sound = new Sound();
     public Scheduling autoWait = new Scheduling(this, 10 * 1000);
@@ -46,11 +49,12 @@ public class Game extends KeyAdapter implements Runnable {
     /**
      * Initializer
      *
-     * @param world data of the game to create
+     * @param root root folder of the data
      */
-    public Game(World world) {
-        this.world = world;
-        window = new Window(world.properties.getTitle(), world.properties.getImageRatio(), world.properties.getFontName());
+    public Game(String root) throws IOException {
+        this.root = root;
+        this.world = new JSONWorld(root);
+        window = new Window(world.properties.getTitle(), world.properties.getImageRatio(), world.properties.getFontFile());
         window.setKeyListener(this);
         startScreen();
     }
@@ -119,7 +123,7 @@ public class Game extends KeyAdapter implements Runnable {
 
         // recreate the data object
         try {
-            world = world.getClass().getConstructor().newInstance();
+            world = world.getClass().getConstructor(String.class).newInstance(root);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             // should never happen
             e.printStackTrace();
@@ -206,7 +210,7 @@ public class Game extends KeyAdapter implements Runnable {
 
             // press F1 for help
             case KeyEvent.VK_F1:
-                Utils.showMessage("Ayuda", "/raw/help.txt");
+                help();
                 break;
 
             // press F12 for debug
@@ -293,8 +297,8 @@ public class Game extends KeyAdapter implements Runnable {
         window.clearDescription();
 
         Element location = getPlayer().getLocation();
-        final String image = location instanceof Location ? ((Location) location).image : null;
-        final String music = location instanceof Location ? ((Location) location).music : null;
+        final String image = location instanceof Location ? ((Location) location).getImage() : null;
+        final String music = location instanceof Location ? ((Location) location).getMusic() : null;
 
         if (!Objects.equals(lastImage, image)) {
             // smooth update image
@@ -430,5 +434,16 @@ public class Game extends KeyAdapter implements Runnable {
      */
     public void exit() {
         window.close();
+    }
+
+    /**
+     * Shows the help file
+     */
+    public void help() {
+        try {
+            Utils.showMessage("Ayuda", Utils.readFile(world.properties.getHelpFile()));
+        } catch (IOException ioException) {
+            Utils.showMessage("Ayuda", ioException.toString());
+        }
     }
 }

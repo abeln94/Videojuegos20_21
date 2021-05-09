@@ -36,7 +36,7 @@ abstract public class Properties implements Serializable {
     /**
      * @return the font to use
      */
-    public abstract String getFontName();
+    public abstract String getFontFile();
 
     /**
      * @return the start screen (image name)
@@ -57,6 +57,8 @@ abstract public class Properties implements Serializable {
      * @return the description of the win screen
      */
     public abstract String getWinDescription();
+
+    public abstract String getHelpFile();
 
     /**
      * @return the music of the win screen
