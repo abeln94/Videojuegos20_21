@@ -143,6 +143,11 @@ public class Command {
                     else command.main.markAsAll();
                     break;
 
+                case ANY:
+                    if (isSecondElement) command.secondary.markAsAny();
+                    else command.main.markAsAny();
+                    break;
+
                 case AND:
                     Command newCommand = new Command(elements);
                     newCommand.beforeCommand = command;
