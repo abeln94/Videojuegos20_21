@@ -1,10 +1,7 @@
 package com.unizar.game.elements;
 
 import com.unizar.Utils;
-import com.unizar.game.commands.Command;
-import com.unizar.game.commands.EngineException;
-import com.unizar.game.commands.Result;
-import com.unizar.game.commands.Word;
+import com.unizar.game.commands.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -54,7 +51,7 @@ abstract public class NPC extends Element {
     public boolean canFollowOrders = false;
     public String sleepAt;
     public Set<Element> attackItems = null;
-    public int pacificTurns = Integer.MAX_VALUE;
+    public int pacificTurns = 0;
     public Set<Element> followNPCs = null;
     public Element moveNPCsTo = null;
     public Set<Utils.Pair<Integer, String>> talkPlayer = null;
@@ -249,14 +246,16 @@ abstract public class NPC extends Element {
                 return Command.act(Word.Action.GIVE, item, game.getPlayer());
 
             case OPEN:
-                final Element interactable = Utils.pickRandom(getInteractable());
-                if (interactable == null) return null;
-                return Command.act(Word.Action.OPEN, interactable);
+                final Command openCommand = Command.simple(Word.Action.OPEN);
+                openCommand.main = new FilterableElements(game.world.elements);
+                openCommand.main.markAsAny();
+                return openCommand;
 
             case PICK:
-                final Element interactablee = Utils.pickRandom(getInteractable());
-                if (interactablee == null) return null;
-                return Command.act(Word.Action.PICK, interactablee);
+                final Command pickCommand = Command.simple(Word.Action.PICK);
+                pickCommand.main = new FilterableElements(game.world.elements.stream().filter(e -> e instanceof Item).collect(Collectors.toSet()));
+                pickCommand.main.markAsAny();
+                return pickCommand;
         }
         return null;
     }
