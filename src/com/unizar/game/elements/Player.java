@@ -25,6 +25,11 @@ public class Player extends NPC {
     }
 
     @Override
+    public void ask(NPC npc, String message) {
+        hear(npc + " dice: " + message);
+    }
+
+    @Override
     public String getDescription() {
         String elements = describeContents("No llevas nada encima.", "Llevas:");
         String contents = wearables.stream()

@@ -1,14 +1,11 @@
 package com.unizar;
 
-import com.unizar.game.Game;
-
 import javax.swing.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -46,7 +43,41 @@ public class Utils {
      * Picks a random element from an array
      */
     static public <T> T pickRandom(T[] array) {
-        return array[random.nextInt(array.length)];
+        if (array.length == 0) return null;
+        else return array[random.nextInt(array.length)];
+    }
+
+    /**
+     * Picks a random element from a set
+     */
+    public static <T> T pickRandom(Set<T> attackNPCs) {
+        return (T) pickRandom(attackNPCs.toArray());
+    }
+
+    /**
+     * Picks a random element from a list
+     */
+    public static <T> T pickRandom(List<T> interactable) {
+        return (T) pickRandom(interactable.toArray());
+    }
+
+    /**
+     * Returns a random parameter based on the weights
+     *
+     * @param parameters list of things+weights
+     * @return a thing (or null if all weights are 0)
+     */
+    public static <T> T pickWeightedRandom(Set<Pair<T, Integer>> parameters) {
+        // duplicate
+        Set<T> totalWeight = parameters.stream()
+                .flatMap(p -> Collections.nCopies(p.second, p.first).stream())
+                .collect(Collectors.toSet());
+
+        // exit of none
+        if (totalWeight.isEmpty()) return null;
+
+        // get random
+        return pickRandom(totalWeight);
     }
 
     /**
@@ -115,8 +146,8 @@ public class Utils {
 
     /**
      * Reads a file and returns its content
-     * @param folder folder path
-     * @param fileName file path
+     *
+     * @param path file path
      * @return the content as string
      * @throws IOException if can't read file
      */

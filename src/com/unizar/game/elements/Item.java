@@ -29,8 +29,10 @@ public abstract class Item extends Element {
     //la fuerza del objeto
     public int fuerza = 0; //modificador del daño que hace, la flecha por ejemplo será un 1000, el resto debería ser de 1 a 5
 
-    //idioma en que está escrito
-    public String idioma = null;
+    // idioma en que está escrito
+    public String language = null;
+
+    public String description = null;
 
     public Item(String name) {
         super(name);
@@ -43,7 +45,15 @@ public abstract class Item extends Element {
      * @return the examination result
      */
     public String examine(NPC npc) {
-        return "Es " + getDescription();
+        if (description != null) {
+            if (npc.languages != null && npc.languages.contains(language)) {
+                return "En " + name + " pone: " + description;
+            } else {
+                return name + " tiene unos símbolos extraños";
+            }
+        } else {
+            return "Es " + getDescription();
+        }
     }
 
     @Override

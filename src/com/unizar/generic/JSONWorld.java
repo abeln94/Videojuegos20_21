@@ -68,7 +68,6 @@ public class JSONWorld extends World {
                 });
             else elements.put(id, new NPC(npc.getString("name")) {
             });
-
         }
         for (int i = 0; i < items.length(); i++) {
             JSONObject item = items.getJSONObject(i);
@@ -114,10 +113,84 @@ public class JSONWorld extends World {
             JSONObject npc_json = npcs.getJSONObject(i);
             NPC npc_element = (NPC) elements.get(npc_json.getString("id"));
 
-            // no wearables
+            if (npc_json.has("allowedLocations")) {
+                npc_element.allowedLocations = getElements(npc_json.getJSONArray("allowedLocations"), elements);
+            }
+            if (npc_json.has("disallowedLocations")) {
+                npc_element.disallowedLocations = getElements(npc_json.getJSONArray("disallowedLocations"), elements);
+            }
 
-            if (npc_json.has("stoneAt"))
-                npc_element.stoneAt = npc_json.getString("stoneAt");
+            if (npc_json.has("fuerza")) {
+                npc_element.fuerza = npc_json.getInt("fuerza");
+            }
+            if (npc_json.has("constitucion")) {
+                npc_element.fuerza = npc_json.getInt("constitucion");
+            }
+            if (npc_json.has("vida")) {
+                npc_element.fuerza = npc_json.getInt("vida");
+            }
+            if (npc_json.has("languages")) {
+                Set<String> languages = new HashSet<>();
+                final JSONArray array = npc_json.getJSONArray("languages");
+                for (int j = 0; j < array.length(); j++) {
+                    languages.add(array.getString(j));
+                }
+                npc_element.languages = languages;
+            }
+
+            if (npc_json.has("canFollowOrders")) {
+                npc_element.canFollowOrders = npc_json.getBoolean("canFollowOrders");
+            }
+            if (npc_json.has("sleepAt")) {
+                npc_element.sleepAt = npc_json.getString("sleepAt");
+            }
+            if (npc_json.has("attackNPCs")) {
+                npc_element.attackNPCs = getElements(npc_json.getJSONArray("attackNPCs"), elements);
+            }
+            if (npc_json.has("followNPCs")) {
+                npc_element.followNPCs = getElements(npc_json.getJSONArray("followNPCs"), elements);
+            }
+            if (npc_json.has("moveNPCsTo")) {
+                npc_element.moveNPCsTo = elements.get(npc_json.getString("moveNPCsTo"));
+            }
+            if (npc_json.has("talkPlayer")) {
+                Set<Utils.Pair<Integer, String>> talkPlayer = new HashSet<>();
+                final JSONArray talks = npc_json.getJSONArray("talkPlayer");
+                for (int j = 0; j < talks.length(); j++) {
+                    JSONObject talk = talks.getJSONObject(j);
+                    int turns = talk.optInt("turns", 1);
+                    String sentence = talk.getString("sentence");
+                    talkPlayer.add(Utils.Pair.of(turns, sentence));
+                }
+                npc_element.talkPlayer = talkPlayer;
+            }
+            if (npc_json.has("giveItems")) {
+                npc_element.giveItems = getElements(npc_json.getJSONArray("giveItems"), elements);
+            }
+
+            if (npc_json.has("attackWeight")) {
+                npc_element.attackWeight = npc_json.getInt("attackWeight");
+            }
+            if (npc_json.has("followWeight")) {
+                npc_element.followWeight = npc_json.getInt("followWeight");
+            }
+            if (npc_json.has("gotoWeight")) {
+                npc_element.gotoWeight = npc_json.getInt("gotoWeight");
+            }
+            if (npc_json.has("talkWeight")) {
+                npc_element.talkWeight = npc_json.getInt("talkWeight");
+            }
+            if (npc_json.has("giveWeight")) {
+                npc_element.giveWeight = npc_json.getInt("giveWeight");
+            }
+            if (npc_json.has("openWeight")) {
+                npc_element.openWeight = npc_json.getInt("openWeight");
+            }
+            if (npc_json.has("pickWeight")) {
+                npc_element.pickWeight = npc_json.getInt("pickWeight");
+            }
+
+
         }
 
         // Item
@@ -130,6 +203,12 @@ public class JSONWorld extends World {
             }
             if (item_json.has("lockedWith")) {
                 item_element.lockedWith = elements.get(item_json.getString("lockedWith"));
+            }
+            if (item_json.has("language")) {
+                item_element.language = item_json.getString("language");
+            }
+            if (item_json.has("description")) {
+                item_element.description = item_json.getString("description");
             }
         }
 
@@ -155,5 +234,11 @@ public class JSONWorld extends World {
 
 
         return new HashSet<>(elements.values());
+    }
+
+    private static Set<Element> getElements(JSONArray array, Map<String, Element> elements) {
+        Set<Element> set = new HashSet<>();
+        array.forEach(npc -> set.add(elements.get(npc.toString())));
+        return set;
     }
 }

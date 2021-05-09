@@ -357,7 +357,9 @@ public class Engine {
                 ).apply("Que quieres examinar?", element -> {
 
                     // examine
-                    return Result.done("Examinas " + element + ".\n" + ((Item) element).examine(npc));
+                    final String examination = ((Item) element).examine(npc);
+                    npc.getLocation().notifyNPCs(npc, npc + " dice: " + examination);
+                    return Result.done("Examinas " + element + ".\n" + examination);
                 });
 
             case SAY:
@@ -519,6 +521,12 @@ public class Engine {
 
             case LOOK:
 
+                if (command.main.wasSpecified() && !command.secondary.wasSpecified()) {
+                    // do a EXAMINE instead
+                    command.action = Word.Action.EXAMINE;
+                    return execute(npc, command);
+                }
+
                 // we must be in a location
                 if (!(location instanceof Location)) {
                     return Result.error("No puedes mirar desde aquí.");
@@ -607,7 +615,7 @@ public class Engine {
                 });
 
             case TIRAR:
-                if (command.main.description.isEmpty() && !command.secondary.description.isEmpty()) {
+                if (!command.main.wasSpecified() && command.secondary.wasSpecified()) {
                     // "TIRAR from something" means pull
                     command.action = Word.Action.PULL;
                 } else {

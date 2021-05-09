@@ -22,20 +22,24 @@
     "weight": 50,
     "location": "TrollsClearing",
     "id": "HideousTroll",
-    "stoneAt": "day"
+    "sleepAt": "day"
   },
   {
     "name": "Un Troll pendenciero",
     "weight": 50,
     "location": "TrollsClearing",
     "id": "ViciousTroll",
-    "stoneAt": "day"
+    "sleepAt": "day"
   },
   {
     "name": "Elrond",
     "weight": 100,
     "location": "Rivendell",
-    "id": "Elrond"
+    "id": "Elrond",
+    "languages": [
+      "elfo"
+    ],
+    "canFollowOrders": true
   },
   {
     "name": "Un goblin repugnante",

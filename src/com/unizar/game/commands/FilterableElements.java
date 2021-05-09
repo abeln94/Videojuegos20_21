@@ -48,8 +48,18 @@ public class FilterableElements {
         description = description.isEmpty() ? word : description + " " + word;
     }
 
+    /**
+     * Marks as 'all'
+     */
     public void markAsAll() {
         all = true;
+    }
+
+    /**
+     * @return if a description was specified in the command
+     */
+    public boolean wasSpecified() {
+        return !description.isEmpty();
     }
 
     // ------------------------- using -------------------------

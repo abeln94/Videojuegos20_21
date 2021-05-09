@@ -1,51 +1,79 @@
 package com.unizar.game.elements;
 
 import com.unizar.Utils;
-import com.unizar.game.commands.*;
+import com.unizar.game.commands.Command;
+import com.unizar.game.commands.EngineException;
+import com.unizar.game.commands.Result;
+import com.unizar.game.commands.Word;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A generic NPC
  */
 abstract public class NPC extends Element {
 
-    transient Behaviour behaviour = new Behaviour();
-    /**
-     * List of parameters that de machine use to select the next action of the npc
-     */
-    public int id = 0;
-
-    public int dado = 0; //6, 8, 10, 12, 20
-    //parámetros de personaje
-    public int fuerza = 0; //como de fuerte pega el golpe. Para calcular golpe es fuerza + aleatorio d10 + bonificador arma
-    public int constitucion = 0; //lo robusto del pj
-    public int vida = 0; //, la vida es constitución + aleatorio dSegúnClase
-
-    //cuando se hace un ataque, se calcula la fuerza del golpe y se resta a la vida del que lo recibe, si queda por debajo de 0 muere
-
-    public NPC lastAttackedBy = null;
-    public String seguirA = null; //hace comparación por name, si null es autonomo
-    public boolean puedeDormir = false;
-    public List<String> lugares = new ArrayList<>();
-    public boolean dormido = false;
-    public int nEncuentros = 0;
-    public Map<String, Integer> frases = new LinkedHashMap<>(); //frase acompañada de en que momento del juego la puede decir en base al número de apariciones
-    public List<String> sitioTeletransportar = null;
-    public String armaEnUso = null;
-    public String orden = null;
-    public List<String> idiomas = new ArrayList<>(); //lista de idiomas que conoce, si un objeto está escrito en ese lo puede leer
-    //inventario de npc son sus elements
-
-    public String stoneAt;
+    // ------------------------- non configurable properties -------------------------
 
     /**
      * The wearable elements
      */
     public final Set<Element> wearables = new HashSet<>();
 
-    public NPC() {
+    public int sawPlayer = 0;
+
+    public NPC lastAttackedBy = null;
+
+    // ------------------------- engine properties -------------------------
+
+    public Set<Element> allowedLocations = null;
+    public Set<Element> disallowedLocations = null;
+
+    public int fuerza = 0; //como de fuerte pega el golpe. Para calcular golpe es fuerza + aleatorio d10 + bonificador arma
+    public int constitucion = 0; //lo robusto del pj
+    public int vida = 0; //, la vida es constitución + aleatorio dSegúnClase
+
+    public Set<String> languages = null;
+
+    // ------------------------- ia -------------------------
+
+    public enum ACTION {
+        ATACK_NPC,
+        FOLLOW_PLAYER,
+        GOTO,
+        TALK,
+        GIVE,
+        OPEN,
+        PICK,
     }
+
+    // parameters
+    public boolean canFollowOrders = false;
+    public String sleepAt;
+    public Set<Element> attackNPCs = null;
+    public Set<Element> followNPCs = null;
+    public Element moveNPCsTo = null;
+    public Set<Utils.Pair<Integer, String>> talkPlayer = null;
+    public Set<Element> giveItems = null;
+
+    // weights
+    public int attackWeight = 0;
+    public int followWeight = 0;
+    public int gotoWeight = 0;
+    public int talkWeight = 0;
+    public int giveWeight = 0;
+    public int openWeight = 0;
+    public int pickWeight = 0;
+
+
+    // ------------------------- todo -------------------------
+
+    public List<String> idiomas = new ArrayList<>(); //lista de idiomas que conoce, si un objeto está escrito en ese lo puede leer
+    //inventario de npc son sus elements
 
     public NPC(String name) {
         super(name);
@@ -53,7 +81,7 @@ abstract public class NPC extends Element {
 
     @Override
     public String getDescription() {
-        return name + (isStone() ? " de piedra" : "") + describeContents(".", ". Lleva:");
+        return name + (isSleep() ? " dormido" : "") + describeContents(".", ". Lleva:");
     }
 
     /**
@@ -73,21 +101,35 @@ abstract public class NPC extends Element {
      * @param message what was asked
      */
     public void ask(NPC npc, String message) {
+        if (!canFollowOrders) {
+            npc.hear(npc + " no te hace caso");
+            return;
+        }
 
         // convert message
         // when you say 'darme el mapa' the 'me' part is replaced by the npc
         message = message.replaceAll("\\b([^ ]*)me\\b", "a " + npc.name + " $1");
 
-
-        orden = message;
+        try {
+            // execute
+            Command parse = Command.parse(message, game.world.elements);
+            Result result = game.engine.execute(this, parse);
+            hear(result.output);
+            if (!result.done) {
+                npc.hear(this + " te responde: No se hacer eso");
+            }
+        } catch (EngineException e) {
+            // bad command
+            npc.hear(this + " te responde: Como has dicho?");
+        }
     }
 
-    public boolean isStone() {
-        if (stoneAt == null)
+    public boolean isSleep() {
+        if (sleepAt == null)
             return false;
-        if (stoneAt.equalsIgnoreCase("night") && game.world.night)
+        if (sleepAt.equalsIgnoreCase("night") && game.world.night)
             return true;
-        if (stoneAt.equalsIgnoreCase("day") && !game.world.night)
+        if (sleepAt.equalsIgnoreCase("day") && !game.world.night)
             return true;
 
         return false;
@@ -95,82 +137,99 @@ abstract public class NPC extends Element {
 
     @Override
     public void act() {
-        if (true) return;
+        // can't act if sleep
+        if (isSleep()) return;
 
+        // update talkedPlayer
+        if (game.getPlayer().getLocation() == getLocation())
+            sawPlayer++;
+        else
+            sawPlayer = 0;
 
-        if (isStone()) return;
-
-        //se pasa este NPC y el game.getPlayer()
-        int intAction = behaviour.nextAction(this, game.getPlayer(), game.world.night);
-        Result result = null;
-        switch (intAction) {
-            case 0: //Atacar NPC
-                try {
-                    // execute
-                    Command parse = Command.parse(orden, game.world.elements);
-                    result = game.engine.execute(this, parse);
-                } catch (EngineException e) {
-                    // bad command
-                    this.hear(this + " te responde: Como has dicho?");
-                    return;
-                }
-                break;
-            case 1: //Atacar jug
-                result = game.engine.execute(this, Command.act(Word.Action.KILL, game.getPlayer()));
-                break;
-            case 2: //Seguir jug
-                result = game.engine.execute(this, Command.act(Word.Action.FOLLOW, game.getPlayer()));
-                break;
-            case 3: //Ir a
-                result = game.engine.execute(this, Command.go(Utils.pickRandom(Word.Direction.values()))); //TODO: limitar a las salas a las que pueden ir según su lista
-                break;
-            case 5: //Dormir
-                dormido = true;
-                break;
-            case 6: //Teletransportar
-                /*getLocation().notifyNPCs(this, this + " dice: Secuestraos");
-                game.getPlayer().moveTo(game.findElementByClassName(sitioTP));
-                game.findElementByClassName(Thorin.class).moveTo(game.findElementByClassName(GoblinDungeon.class));*/
-                //TODO: Elige un sitio de la lista
-                break;
-            case 7: //Hablar
-                /*if(primerEncuentroJugador){
-                    int num = (int) (Math.random()*(saludos.size() - 1));
-                    getLocation().notifyNPCs(this, this + " dice: " + saludos.get(num));
-                    primerEncuentroJugador = false;
-                }
-                else{
-                    int num = (int) (Math.random()*(frases.size() - 1));
-                    getLocation().notifyNPCs(this, this + " dice: " + frases.get(num));
-                }*/
-                //TODO: modificar con el map
-                break;
-            case 8: //Dar
-                Element f = null;
-                for (Iterator<Element> it = elements.iterator(); it.hasNext(); ) {
-                    f = it.next();
-                }
-//                result = game.engine.execute(this, Command.act(Word.Action.GIVE, f, game.findElementByClassName(Bilbo_Player.class)));
-                break;
-            case 9: //Leer
-                //getLocation().notifyNPCs(this, this + " dice: Ve hacia el este desde el Gran Lago para llegar a Ciudad del lago");
-                //leer uno de los objetos de su inventario
-                break;
-            case 11: //Abrir
-                //result = game.engine.execute(this, Command.act(Word.Action.OPEN, game.findElementByClassName(elementoAbrir), game.findElementByClassName(Bilbo_Player.class)));
-                //TODO: Abrir uno de los abribles de la sala
-                break;
-            //Por defecto
-            case -1:
-            default:
-                result = game.engine.execute(this, Command.simple(Word.Action.WAIT));
-                break;
+        // return attack
+        if (lastAttackedBy != null) {
+            Result result = game.engine.execute(this, Command.act(Word.Action.KILL, lastAttackedBy));
+            lastAttackedBy = null;
+            if (result.done) {
+                hear(result.output);
+                return;
+            }
         }
-        //System.out.println(this + ": " + result);
-        if (!result.done) {
-            this.hear(this + " te responde: No puedo hacer eso");
-        } else {
-            hear(result.output);
+
+        // tp player
+        if (moveNPCsTo != null) {
+            getLocation().elements.stream().filter(e -> e instanceof NPC).forEach(npc -> {
+                npc.moveTo(moveNPCsTo);
+                npc.hear(this + " te lleva hasta " + moveNPCsTo + ".");
+            });
         }
+
+        int retry = 10;
+        while (retry-- > 0) {
+            Command possibleCommand = getPossibleCommand();
+            if (possibleCommand == null) return;
+
+            Result result = game.engine.execute(this, possibleCommand);
+            if (result.done) {
+                hear(result.output);
+                return;
+            }
+        }
+
+    }
+
+    private Command getPossibleCommand() {
+
+        Set<Utils.Pair<ACTION, Integer>> actions = new HashSet<>();
+        actions.add(Utils.Pair.of(ACTION.ATACK_NPC, attackWeight));
+        actions.add(Utils.Pair.of(ACTION.FOLLOW_PLAYER, followWeight));
+        actions.add(Utils.Pair.of(ACTION.GOTO, gotoWeight));
+        actions.add(Utils.Pair.of(ACTION.TALK, talkWeight));
+        actions.add(Utils.Pair.of(ACTION.GIVE, giveWeight));
+        actions.add(Utils.Pair.of(ACTION.OPEN, openWeight));
+        actions.add(Utils.Pair.of(ACTION.PICK, pickWeight));
+        ACTION action = Utils.pickWeightedRandom(actions);
+
+        if (action == null) return null;
+
+        switch (action) {
+            case ATACK_NPC:
+                if (attackNPCs.isEmpty()) return null;
+                return Command.act(Word.Action.KILL, Utils.pickRandom(attackNPCs));
+
+            case FOLLOW_PLAYER:
+                if (followNPCs.isEmpty()) return null;
+                return Command.act(Word.Action.FOLLOW, Utils.pickRandom(followNPCs));
+
+            case GOTO:
+                final Element location = getLocation();
+                if (!(location instanceof Location)) return null;
+                Word.Direction direction = Utils.pickRandom(((Location) location).exits.keySet());
+                return Command.go(direction);
+
+            case TALK:
+                if (talkPlayer.isEmpty()) return null;
+                // prepare sentences
+                Set<String> sentences = talkPlayer.stream()
+                        .filter(p -> p.first >= sawPlayer)
+                        .map(p -> p.second)
+                        .collect(Collectors.toSet());
+                String sentence = Utils.pickRandom(sentences);
+                if (sentence == null) return null;
+                return Command.say(game.getPlayer(), sentence);
+
+            case GIVE:
+                if (giveItems.isEmpty()) return null;
+                final Element item = Utils.pickRandom(giveItems);
+                if (item.getLocation() == null) item.moveTo(this);
+                return Command.act(Word.Action.GIVE, item);
+
+            case OPEN:
+                return Command.act(Word.Action.OPEN, Utils.pickRandom(getInteractable()));
+
+            case PICK:
+                return Command.act(Word.Action.PICK, Utils.pickRandom(getInteractable()));
+        }
+        return null;
     }
 }

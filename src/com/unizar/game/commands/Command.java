@@ -2,6 +2,7 @@ package com.unizar.game.commands;
 
 import com.unizar.Utils;
 import com.unizar.game.elements.Element;
+import com.unizar.game.elements.NPC;
 
 import java.util.List;
 import java.util.Set;
@@ -68,6 +69,13 @@ public class Command {
      */
     public static Command go(Word.Direction direction) {
         return new Command(null, Word.Action.GO, direction, null, null, null);
+    }
+
+    /**
+     * A say action
+     */
+    public static Command say(NPC npc, String sentence) {
+        return new Command(null, Word.Action.SAY, null, sentence, new FilterableElements(npc), null);
     }
 
     // ------------------------- generation -------------------------

@@ -3,7 +3,9 @@
     "name": "el mapa peculiar",
     "weight": 1,
     "location": "Gandalf",
-    "id": "Map"
+    "id": "Map",
+    "description": "Ve hacia el este desde el Gran Lago para llegar a Ciudad del lago",
+    "language": "elfo"
   },
   {
     "openable": "CLOSED",
@@ -68,13 +70,17 @@
     "id": "GoblinWindow"
   },
   {
-    "hidden": {"DIG": "TrapDoor"},
+    "hidden": {
+      "DIG": "TrapDoor"
+    },
     "name": "algo de arena",
     "location": "GoblinDungeon",
     "id": "Sand"
   },
   {
-    "hidden": {"BREAK": "SmallKey"},
+    "hidden": {
+      "BREAK": "SmallKey"
+    },
     "name": "una trampilla",
     "id": "TrapDoor"
   },
@@ -107,7 +113,9 @@
     "id": "Cupboard"
   },
   {
-    "hidden": {"BREAK": "SpiderWeb_Broken"},
+    "hidden": {
+      "BREAK": "SpiderWeb_Broken"
+    },
     "openable": "LOCKED",
     "name": "una tela de araña",
     "id": "SpiderWeb"
