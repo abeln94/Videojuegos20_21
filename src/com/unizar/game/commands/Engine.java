@@ -200,8 +200,14 @@ public class Engine {
                 }
 
                 Utils.Pair<Location, Item> le = ((Location) location).exits.get(command.direction);
-                if (le == null || !npc.lugares.contains(le.first)) { // TODO: arreglar
+                if (le == null) {
                     // no exit
+                    return Result.error("No hay nada hacia " + command.direction.description + ".");
+                }
+
+                boolean inList = npc.navigateLocations != null && npc.navigateLocations.contains(le.first);
+                if (npc.specifiedLocationsAreForbidden == inList) {
+                    // not allowed
                     return Result.error("No puedes ir hacia " + command.direction.description + ".");
                 }
 
@@ -429,11 +435,12 @@ public class Engine {
                         "No veo a {} por aquí.",
                         "nadie"
                 ).apply("A quien quieres atacar?", attack -> {
-                    // TODO: comprobar
+                    ((NPC) attack).lastAttackedBy = npc;
+
                     //npc ataca, attack defiende
-                    int damage = 0;
                     int dice = (int) Math.floor(Math.random() * 20);
 
+                    int damage;
                     if (dice == 20) { //critico, mata
                         damage = 1000000;
                     } else if (dice == 0) { //pifia, no hace daño

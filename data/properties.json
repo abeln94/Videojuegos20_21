@@ -10,5 +10,7 @@
   "winScreen": "48",
   "title": "El hobbit",
   "winItem": "TheValuableTreasure",
-  "winLocation": "StartChest"
+  "winLocation": "StartChest",
+  "winMusic": "tale",
+  "gameOverMusic": "Final"
 }

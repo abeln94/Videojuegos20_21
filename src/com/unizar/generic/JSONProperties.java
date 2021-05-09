@@ -20,6 +20,8 @@ public class JSONProperties extends Properties {
     private final String startDescription;
     private final String winDescription;
     private final String helpFile;
+    private final String winMusic;
+    private final String gameOverMusic;
 
     public JSONProperties(String root, JSONObject properties) {
 
@@ -33,6 +35,8 @@ public class JSONProperties extends Properties {
         startDescription = properties.getString("startDescription");
         winDescription = properties.getString("winDescription");
         helpFile = root + properties.getString("helpFile");
+        winMusic = properties.getString("winMusic");
+        gameOverMusic = properties.getString("gameOverMusic");
     }
 
     @Override
@@ -87,11 +91,11 @@ public class JSONProperties extends Properties {
 
     @Override
     public String getWinMusic() {
-        return "tale"; // TODO: load from file
+        return winMusic;
     }
 
     @Override
     public String getGameOverMusic() {
-        return "Final"; // TODO: load from file
+        return gameOverMusic;
     }
 }

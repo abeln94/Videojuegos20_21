@@ -6,9 +6,7 @@ import com.unizar.game.commands.EngineException;
 import com.unizar.game.commands.Result;
 import com.unizar.game.commands.Word;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,11 +29,11 @@ abstract public class NPC extends Element {
     // ------------------------- engine properties -------------------------
 
     public Set<Element> navigateLocations = null;
-    public boolean navigateLocationsAreAllowed = false;
+    public boolean specifiedLocationsAreForbidden = true;
 
-    public int fuerza = 0; //como de fuerte pega el golpe. Para calcular golpe es fuerza + aleatorio d10 + bonificador arma
+    public int fuerza = 1; //como de fuerte pega el golpe. Para calcular golpe es fuerza + aleatorio d10 + bonificador arma
     public int constitucion = 0; //lo robusto del pj
-    public int vida = 0; //, la vida es constitución + aleatorio dSegúnClase
+    public int vida = 10; //, la vida es constitución + aleatorio dSegúnClase
 
     public Set<String> languages = null;
 
@@ -70,12 +68,6 @@ abstract public class NPC extends Element {
     public int giveWeight = 0;
     public int openWeight = 0;
     public int pickWeight = 0;
-
-
-    // ------------------------- todo -------------------------
-
-    public List<String> idiomas = new ArrayList<>(); //lista de idiomas que conoce, si un objeto está escrito en ese lo puede leer
-    //inventario de npc son sus elements
 
     public NPC(String name) {
         super(name);

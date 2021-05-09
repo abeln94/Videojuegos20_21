@@ -116,8 +116,8 @@ public class JSONWorld extends World {
             if (npc_json.has("navigateLocations")) {
                 npc_element.navigateLocations = getElements(npc_json.getJSONArray("navigateLocations"), elements);
             }
-            if (npc_json.has("navigateLocationsAreAllowed")) {
-                npc_element.navigateLocationsAreAllowed = npc_json.getBoolean("navigateLocationsAreAllowed");
+            if (npc_json.has("specifiedLocationsAreForbidden")) {
+                npc_element.specifiedLocationsAreForbidden = npc_json.getBoolean("specifiedLocationsAreForbidden");
             }
 
             if (npc_json.has("fuerza")) {
