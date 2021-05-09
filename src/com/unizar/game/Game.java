@@ -131,6 +131,20 @@ public class Game extends KeyAdapter implements Runnable {
         world.init();
     }
 
+    private void backgroundRun(Runnable runnable) {
+        window.disableInput();
+        new Thread(() -> {
+            try {
+                runnable.run();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+                addOutput("{Internal error: " + throwable.getMessage() + "}");
+            } finally {
+                window.enableInput();
+            }
+        }).start();
+    }
+
     // ------------------------- listeners -------------------------
 
     /**
@@ -138,11 +152,7 @@ public class Game extends KeyAdapter implements Runnable {
      */
     @Override
     public void run() {
-        window.disableInput();
-        new Thread(() -> {
-            run("esperar");
-            window.enableInput();
-        }).start();
+        backgroundRun(() -> run("esperar"));
     }
 
     /**
@@ -153,12 +163,10 @@ public class Game extends KeyAdapter implements Runnable {
         switch (state) {
             case StartScreen:
                 state = State.Playing;
-                window.disableInput();
-                new Thread(() -> {
+                backgroundRun(() -> {
                     update();
                     autoWait.schedule();
-                    window.enableInput();
-                }).start();
+                });
                 return;
             case Playing:
                 break;
@@ -173,13 +181,11 @@ public class Game extends KeyAdapter implements Runnable {
 
             // press enter to perform command
             case KeyEvent.VK_ENTER:
-                window.disableInput();
-                new Thread(() -> {
+                backgroundRun(() -> {
                     String command = window.getCommand();
                     window.clearCommand();
                     run(command);
-                    window.enableInput();
-                }).start();
+                });
                 break;
 
             // press F6 to save
