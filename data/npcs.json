@@ -2,7 +2,7 @@
   {
     "id": "Bilbo_Player",
     "name": "Bilbo",
-    "weight": 50,
+    "weight": 10,
     "location": "StartLocation",
     "fuerza": 3,
     "constitucion": 2,
@@ -258,6 +258,7 @@
     "fuerza": 5,
     "constitucion": 5,
     "vida": 25,
+    "pacificTurns": 1,
     "attackWeight": 3,
     "navigateWeight": 8
   },
@@ -301,6 +302,7 @@
     "fuerza": 1,
     "constitucion": 2,
     "vida": 8,
+    "pacificTurns": 1,
     "attackWeight": 8,
     "navigateWeight": 5
   },
@@ -319,6 +321,7 @@
     "fuerza": 1,
     "constitucion": 2,
     "vida": 8,
+    "pacificTurns": 1,
     "attackWeight": 8,
     "navigateWeight": 5
   },
@@ -344,6 +347,7 @@
     "fuerza": 3,
     "constitucion": 5,
     "vida": 17,
+    "pacificTurns": 1,
     "attackWeight": 10,
     "navigateWeight": 1
   }
