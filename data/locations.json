@@ -40,7 +40,7 @@
         "location": "EmptyLand"
       }
     },
-    "music": "forest",
+    "music": "CamoAlla",
     "name": "el claro de los trolls",
     "id": "TrollsClearing"
   },
@@ -53,7 +53,7 @@
       },
       "SOUTH": {"location": "TrollsClearing"}
     },
-    "music": "forest",
+    "music": "CamoAlla",
     "name": "un camino oculto con pisadas de troll",
     "id": "HiddenPath"
   },
@@ -63,7 +63,7 @@
       "item": "RockDoor",
       "location": "HiddenPath"
     }},
-    "music": "cave",
+    "music": "CamoAlla",
     "name": "la cueva de los trolls",
     "id": "TrollsCave"
   },
@@ -97,7 +97,7 @@
       "SOUTH": {"location": "DeadlyPath"},
       "EAST": {"location": "DeadlyPath"}
     },
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un estrecho camino, no puedes ver apenas por la niebla",
     "id": "DeadlyPath"
   },
@@ -107,7 +107,7 @@
       "NORTH": {"location": "NarrowPath_1"},
       "EAST": {"location": "NarrowPath_2"}
     },
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un estrecho camino lleno de niebla",
     "id": "NarrowPath_1"
   },
@@ -117,7 +117,7 @@
       "NORTH": {"location": "NarrowPath_3"},
       "WEST": {"location": "NarrowPath_1"}
     },
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un estrecho camino lleno de niebla",
     "id": "NarrowPath_2"
   },
@@ -128,7 +128,7 @@
       "SOUTH": {"location": "NarrowPath_2"},
       "NORTHWEST": {"location": "NarrowPath_4"}
     },
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un estrecho camino con obstaculos",
     "id": "NarrowPath_3"
   },
@@ -139,7 +139,7 @@
       "SOUTHEAST": {"location": "NarrowPath_3"},
       "SOUTH": {"location": "DeadlyPath"}
     },
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un estrecho camino con obstaculos",
     "id": "NarrowPath_4"
   },
@@ -149,7 +149,7 @@
       "SOUTHEAST": {"location": "NarrowPath_6"},
       "SOUTH": {"location": "NarrowPath_4"}
     },
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un estrecho camino, empiezas a divisar el final de la montaña",
     "id": "NarrowPath_5"
   },
@@ -160,7 +160,7 @@
       "SOUTHWEST": {"location": "NarrowPath_3"},
       "NORTHWEST": {"location": "NarrowPath_5"}
     },
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un estrecho camino, ya puedes ver el final",
     "id": "NarrowPath_6"
   },
@@ -171,28 +171,28 @@
       "SOUTH": {"location": "DangerousPath"},
       "EAST": {"location": "NarrowPath_3"}
     },
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un estrecho camino con obstaculos",
     "id": "NarrowPath_7"
   },
   {
     "image": "SteepPath",
     "exits": {"DOWN": {"location": "SteepPath_2"}},
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un empinado camino",
     "id": "SteepPath_1"
   },
   {
     "image": "SteepPath",
     "exits": {"DOWN": {"location": "SteepPath_3"}},
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un empinado camino, la niebla es menos densa",
     "id": "SteepPath_2"
   },
   {
     "image": "SteepPath",
     "exits": {"DOWN": {"location": "MistyValley_1"}},
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un empinado camino, empiezas a oir agua",
     "id": "SteepPath_3"
   },
@@ -202,7 +202,7 @@
       "UP": {"location": "SteepPath_3"},
       "EAST": {"location": "MistyValley_2"}
     },
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un profundo valle con resto de niebla",
     "id": "MistyValley_1"
   },
@@ -212,7 +212,7 @@
       "WEST": {"location": "MistyValley_1"},
       "UP": {"location": "NarrowPath_2"}
     },
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un profundo valle con resto de niebla",
     "id": "MistyValley_2"
   },
@@ -246,7 +246,7 @@
         "location": "DarkWidingPassage_1"
       }
     },
-    "music": "cave",
+    "music": "CourtJesters",
     "name": "en la mazmorra de los goblins. Te han secuestrado",
     "id": "GoblinDungeon"
   },
@@ -256,21 +256,21 @@
       "SOUTHEAST": {"location": "DarkWidingPassage_3"},
       "SOUTHWEST": {"location": "DarkWidingPassage_2"}
     },
-    "music": "cave",
+    "music": "CourtJesters",
     "name": "en un pasaje ancho y oscuro",
     "id": "DarkWidingPassage_1"
   },
   {
     "image": "DarkWidingPassage",
     "exits": {"NORTH": {"location": "DarkWidingPassage_4"}},
-    "music": "cave",
+    "music": "CourtJesters",
     "name": "en un pasaje oscuro y cerrado",
     "id": "DarkWidingPassage_2"
   },
   {
     "image": "DarkWidingPassage",
     "exits": {"EAST": {"location": "DarkWidingPassage_4"}},
-    "music": "cave",
+    "music": "CourtJesters",
     "name": "en un pasaje oscuro y cerrado",
     "id": "DarkWidingPassage_3"
   },
@@ -281,14 +281,14 @@
       "SOUTH": {"location": "DarkWidingPassage_2"},
       "EAST": {"location": "DeadlyPassage"}
     },
-    "music": "cave",
+    "music": "CourtJesters",
     "name": "en un pasaje oscuro y cerrado",
     "id": "DarkWidingPassage_4"
   },
   {
     "image": "DarkWidingPassage",
     "exits": {"EAST": {"location": "DarkWidingPassage_6"}},
-    "music": "cave",
+    "music": "CourtJesters",
     "name": "en un pasaje oscuro y cerrado",
     "id": "DarkWidingPassage_5"
   },
@@ -298,7 +298,7 @@
       "NORTH": {"location": "DarkWidingPassage_7"},
       "NORTHWEST": {"location": "DeadlyPassage"}
     },
-    "music": "cave",
+    "music": "CourtJesters",
     "name": "en un pasaje oscuro y cerrado",
     "id": "DarkWidingPassage_6"
   },
@@ -309,7 +309,7 @@
       "SOUTHWEST": {"location": "DarkWidingPassage_6"},
       "SOUTH": {"location": "DarkWidingPassage_8"}
     },
-    "music": "cave",
+    "music": "CourtJesters",
     "name": "en un pasaje ancho y oscuro",
     "id": "DarkWidingPassage_7"
   },
@@ -320,7 +320,7 @@
       "SOUTHWEST": {"location": "DeadlyPassage"},
       "NORTHWEST": {"location": "DarkWidingPassage_9"}
     },
-    "music": "cave",
+    "music": "CourtJesters",
     "name": "en un pasaje ancho y oscuro",
     "id": "DarkWidingPassage_8"
   },
@@ -331,7 +331,7 @@
       "SOUTHEAST": {"location": "DarkWidingPassage_8"},
       "EAST": {"location": "GoblinsGate"}
     },
-    "music": "cave",
+    "music": "CourtJesters",
     "name": "en un pasaje ancho y oscuro",
     "id": "DarkWidingPassage_9"
   },
@@ -343,7 +343,7 @@
       "SOUTH": {"location": "DeadlyPassage"},
       "EAST": {"location": "DeadlyPassage"}
     },
-    "music": "cave",
+    "music": "CourtJesters",
     "name": "en un pasaje laberintico y oscuro",
     "id": "DeadlyPassage"
   },
@@ -363,7 +363,7 @@
       "EAST": {"location": "DarkWidingPassage_7"},
       "NORTHWEST": {"location": "DarkWidingPassage_3"}
     },
-    "music": "forest",
+    "music": "CourtJesters",
     "name": "en la entrada a la goblinera",
     "id": "GoblinsGate"
   },
@@ -376,7 +376,7 @@
       },
       "EAST": {"location": "TrelessOpening"}
     },
-    "music": "wind",
+    "music": "forest",
     "name": "fuera de la goblinera",
     "id": "OutsideGoblinsGate"
   },
@@ -398,7 +398,7 @@
       "EAST": {"location": "ForestGate"},
       "NORTHWEST": {"location": "TrelessOpening"}
     },
-    "music": "fire",
+    "music": "Beorns",
     "name": "en la casa de Beorn",
     "id": "BeornsHouse"
   },
@@ -409,7 +409,7 @@
       "SOUTH": {"location": "ForestGate"},
       "EAST": {"location": "BewitchedPlace"}
     },
-    "music": "forest",
+    "music": "DistantMemory",
     "name": "en la entrada de Mirkwood",
     "id": "Mirkwood"
   },
@@ -419,7 +419,7 @@
       "WEST": {"location": "ForestGate"},
       "EAST": {"location": "WestBlackRiver"}
     },
-    "music": "calm",
+    "music": "DistantMemory",
     "name": "en un lugar tenebroso, incluso parece embrujado",
     "id": "BewitchedPlace"
   },
@@ -433,7 +433,7 @@
   {
     "image": "EastBlackRiver",
     "exits": {"EAST": {"location": "GreenForest"}},
-    "music": "river",
+    "music": "water",
     "name": "en la orilla esta del río Negro",
     "id": "EastBlackRiver"
   },
@@ -495,7 +495,7 @@
         "location": "RedDoorRoom"
       }
     },
-    "music": "ommmm",
+    "music": "calm",
     "name": " en los grandes salones del reino de los elfos.",
     "id": "Elvenkings"
   },
@@ -512,7 +512,7 @@
       },
       "NORTH": {"location": "Elvenkings"}
     },
-    "music": "fire",
+    "music": "calm",
     "name": " en la bodega donde el rey guarda sus toneles de vino.",
     "id": "CellarOfWine"
   },
@@ -522,7 +522,7 @@
       "item": "RedDoor",
       "location": "CellarOfWine"
     }},
-    "music": "fire",
+    "music": "calm",
     "name": " una pequeña sala con más barriles de vino.",
     "id": "RedDoorRoom"
   },
@@ -551,7 +551,7 @@
         "location": "StrongRiver"
       }
     },
-    "music": "water",
+    "music": "shores",
     "name": " en el Gran Lago. ",
     "id": "LongLake"
   },
@@ -563,8 +563,8 @@
       "SOUTH": {"location": "LongLake"},
       "EAST": {"location": "LongLake"}
     },
-    "music": "people",
-    "name": " en la ciudad de madera en medio del Gran Lago. Ciudad del lago. ",
+    "music": "LakeTown",
+    "name": "en la ciudad de madera en medio del Gran Lago. La bulliciosa Ciudad del Lago ",
     "id": "LakeTown"
   },
   {
@@ -609,7 +609,7 @@
         "location": "SmoothPassage"
       }
     },
-    "music": "wind",
+    "music": "ommmm",
     "name": "en una pequeña bahía empinada, tranquila y silenciosa, con un acantilado que sobresale.",
     "id": "Sidedoor"
   },
@@ -622,7 +622,7 @@
       },
       "EAST": {"location": "DragonsHalls"}
     },
-    "music": "chimney",
+    "music": "ommmm",
     "name": "en una pasaje recto y liso.",
     "id": "SmoothPassage"
   },
@@ -632,7 +632,7 @@
       "SOUTH": {"location": "Sidedoor"},
       "UP": {"location": "LonelyMountain"}
     },
-    "music": "calm",
+    "music": "ommmm",
     "name": "en un lugar vacío.",
     "id": "EmptyPlace"
   },
@@ -663,7 +663,7 @@
         "location": "LonelyMountain"
       }
     },
-    "music": "cave",
+    "music": "ommmm",
     "name": "en la Cueva de Smaug.",
     "id": "DragonsHalls"
   },
@@ -683,7 +683,7 @@
       "WEST": {"location": "ForestRoad_1"},
       "EAST": {"location": "RunningRiver"}
     },
-    "music": "forest",
+    "music": "DangerForest",
     "name": "en un bosque",
     "id": "Forest"
   },
@@ -694,7 +694,7 @@
       "SOUTH": {"location": "ForestRoad_2"},
       "EAST": {"location": "BewitchedPlace"}
     },
-    "music": "forest",
+    "music": "DangerForest",
     "name": "en la puerta del bosque",
     "id": "ForestGate"
   },
@@ -718,7 +718,7 @@
       "WEST": {"location": "ForestRoad_2"},
       "EAST": {"location": "Forest"}
     },
-    "music": "forest",
+    "music": "DangerForest",
     "name": "en un camino forestal",
     "id": "ForestRoad_1"
   },
@@ -728,7 +728,7 @@
       "NORTH": {"location": "ForestGate"},
       "EAST": {"location": "ForestRoad_1"}
     },
-    "music": "forest",
+    "music": "DangerForest",
     "name": "en un camino forestal",
     "id": "ForestRoad_2"
   },
@@ -739,7 +739,7 @@
       "WEST": {"location": "Ravenhill"},
       "SOUTH": {"location": "RuinsTownDale"}
     },
-    "music": "wind",
+    "music": "ommmm",
     "name": "en la puerta principal de la Montaña Solitaria.",
     "id": "FrontGate"
   },
@@ -751,7 +751,7 @@
       "WEST": {"location": "Sidedoor"},
       "SOUTH": {"location": "FrontGate"}
     },
-    "music": "wind",
+    "music": "ommmm",
     "name": "en la Montaña Solitaria.",
     "id": "LonelyMountain"
   },
@@ -768,7 +768,7 @@
       "SOUTH": {"location": "LongLake"},
       "UP": {"location": "BleakBarrenLand"}
     },
-    "music": "waterfall",
+    "music": "water",
     "name": "en un río con corrientes muy fuertes",
     "id": "StrongRiver"
   },
@@ -778,7 +778,7 @@
       "WEST": {"location": "FastRiver"},
       "SOUTH": {"location": "RunningRiver"}
     },
-    "music": "water",
+    "music": "waterfalls",
     "name": "en las cascadas.",
     "id": "Waterfall"
   },

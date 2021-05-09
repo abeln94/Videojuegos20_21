@@ -1,15 +1,21 @@
 [
   {
+    "id": "Bilbo_Player",
     "name": "Bilbo",
     "weight": 50,
     "location": "StartLocation",
-    "id": "Bilbo_Player"
+    "fuerza": 3,
+    "constitucion": 2,
+    "vida": 10
   },
   {
+    "id": "Gandalf",
     "name": "Gandalf",
     "weight": 100,
     "location": "StartLocation",
-    "id": "Gandalf",
+    "fuerza": 5,
+    "constitucion": 5,
+    "vida": 25,
     "navigateWeight": 5,
     "followWeight": 1,
     "giveWeight": 1,
@@ -17,16 +23,17 @@
     "pickWeight": 1
   },
   {
+    "id": "Thorin",
     "name": "Thorin",
     "weight": 30,
     "location": "StartLocation",
-    "id": "Thorin",
+    "fuerza": 5,
+    "constitucion": 5,
+    "vida": 17,
+    "canFollowOrders": true,
     "followNPCs": [
       "Bilbo_Player"
     ],
-    "followWeight": 10,
-    "navigateWeight": 1,
-    "canFollowOrders": true,
     "talkPlayer": [
       {
         "turns": 1,
@@ -40,13 +47,24 @@
         "turns": 10,
         "sentence": "La cacharra si, la cacharra no, la cacharra madre la que traigo yo"
       }
-    ]
+    ],
+    "followWeight": 10,
+    "navigateWeight": 1,
+    "talkWeight": 3
   },
   {
+    "id": "HideousTroll",
     "name": "Un Troll horrendo",
     "weight": 50,
     "location": "TrollsClearing",
-    "id": "HideousTroll",
+    "navigateLocations": [
+      "TrollsClearing",
+      "HiddenPath"
+    ],
+    "specifiedLocationsAreForbidden": false,
+    "fuerza": 3,
+    "constitucion": 5,
+    "vida": 17,
     "sleepAt": "day",
     "pacificTurns": 1,
     "talkPlayer": [
@@ -55,20 +73,30 @@
         "sentence": "Pixa, pue son bien canijo"
       },
       {
-        "turns": 1,
+        "turns": 3,
         "sentence": "E vito peazo de maíz en mi mierdah ma grande que este tío!"
       },
       {
-        "turns": 1,
+        "turns": 5,
         "sentence": "Qero su bebeee.... asao, asao, asao, asao con ensalaaada, su bebe, su bebe, su bebe o me cago aqui joer"
       }
-    ]
+    ],
+    "attackWeight": 3,
+    "talkWeight": 10
   },
   {
+    "id": "ViciousTroll",
     "name": "Un Troll pendenciero",
     "weight": 50,
     "location": "TrollsClearing",
-    "id": "ViciousTroll",
+    "navigateLocations": [
+      "TrollsClearing",
+      "HiddenPath"
+    ],
+    "specifiedLocationsAreForbidden": false,
+    "fuerza": 3,
+    "constitucion": 5,
+    "vida": 17,
     "sleepAt": "day",
     "pacificTurns": 1,
     "talkPlayer": [
@@ -77,20 +105,29 @@
         "sentence": "Mirah so hobis"
       },
       {
-        "turns": 1,
+        "turns": 2,
         "sentence": "Me lo voi a hamar"
       },
       {
-        "turns": 1,
+        "turns": 4,
         "sentence": "Eeeeeeeh miniyo, qeres una mini empanadilla?"
       }
-    ]
+    ],
+    "attackWeight": 5,
+    "talkWeight": 10
   },
   {
+    "id": "Elrond",
     "name": "Elrond",
     "weight": 100,
     "location": "Rivendell",
-    "id": "Elrond",
+    "navigateLocations": [
+      "Rivendell"
+    ],
+    "specifiedLocationsAreForbidden": false,
+    "fuerza": 5,
+    "constitucion": 5,
+    "vida": 25,
     "languages": [
       "elfo"
     ],
@@ -108,29 +145,83 @@
         "turns": 1,
         "sentence": "Grata es su visita"
       }
-    ]
+    ],
+    "talkWeight": 5
   },
   {
+    "id": "NastyGoblin",
     "name": "Un goblin repugnante",
     "weight": 40,
     "location": "DryCave",
-    "id": "NastyGoblin",
-    "moveNPCsTo": "GoblinDungeon"
+    "navigateLocations": [
+      "DryCave",
+      "GoblinDungeon",
+      "DarkWidingPassage_1",
+      "DarkWidingPassage_2",
+      "DarkWidingPassage_3",
+      "DarkWidingPassage_4",
+      "DarkWidingPassage_5",
+      "DarkWidingPassage_6",
+      "DarkWidingPassage_7",
+      "DarkWidingPassage_8",
+      "DarkWidingPassage_9",
+      "GoblinsGate"
+    ],
+    "specifiedLocationsAreForbidden": false,
+    "fuerza": 1,
+    "constitucion": 2,
+    "vida": 8,
+    "moveNPCsTo": "GoblinDungeon",
+    "attackWeight": 1,
+    "navigateWeight": 2
   },
   {
+    "id": "Gollum",
     "name": "Gollum",
     "weight": 40,
+    "fuerza": 1,
+    "constitucion": 4,
+    "vida": 10,
     "location": "DarkWidingPassage_6",
-    "id": "Gollum",
+    "navigateLocations": [
+      "DryCave",
+      "GoblinDungeon",
+      "DarkWidingPassage_1",
+      "DarkWidingPassage_2",
+      "DarkWidingPassage_3",
+      "DarkWidingPassage_4",
+      "DarkWidingPassage_5",
+      "DarkWidingPassage_6",
+      "DarkWidingPassage_7",
+      "DarkWidingPassage_8",
+      "DarkWidingPassage_9",
+      "GoblinsGate"
+    ],
+    "specifiedLocationsAreForbidden": false,
     "attackItems": [
       "GoldenRing"
-    ]
+    ],
+    "followNPCs": [
+      "Bilbo_Player"
+    ],
+    "attackWeight": 5,
+    "followWeight": 5,
+    "navigateWeight": 2
   },
   {
+    "id": "Butler",
     "name": "El mayordomo",
     "weight": 40,
     "location": "CellarOfWine",
-    "id": "Butler",
+    "navigateLocations": [
+      "CellarOfWine",
+      "ElvishClearing",
+      "Elvenkings"
+    ],
+    "specifiedLocationsAreForbidden": false,
+    "fuerza": 1,
+    "constitucion": 3,
+    "vida": 11,
     "attackItems": [
       "RedKey"
     ],
@@ -138,17 +229,122 @@
     "attackWeight": 1
   },
   {
+    "id": "Bardo",
     "name": "Bardo, el Bardo",
     "weight": 500,
     "location": "LakeTown",
-    "id": "Bardo"
+    "fuerza": 5,
+    "constitucion": 5,
+    "vida": 25,
+    "followNPCs": [
+      "Bilbo_Player"
+    ],
+    "followWeight": 10
   },
   {
+    "id": "RedGoldenDragon",
     "name": "El dorado dragón rojo",
     "weight": 200,
-    "id": "RedGoldenDragon",
-    "attackItems": [
-      "RedKey"
-    ]
+    "location": "DragonsHalls",
+    "navigateLocations": [
+      "Sidedoor",
+      "SmoothPassage",
+      "EmptyPlace",
+      "FrontGate",
+      "LonelyMountain",
+      "DragonsHalls"
+    ],
+    "specifiedLocationsAreForbidden": false,
+    "fuerza": 5,
+    "constitucion": 5,
+    "vida": 25,
+    "attackWeight": 3,
+    "navigateWeight": 8
+  },
+  {
+    "id": "Elf",
+    "name": "El elfo que guarda la puerta mágica",
+    "weight": 100,
+    "location": "Elvenkings",
+    "navigateLocations": [
+      "CellarOfWine",
+      "ElvishClearing",
+      "Elvenkings"
+    ],
+    "specifiedLocationsAreForbidden": false,
+    "fuerza": 5,
+    "constitucion": 5,
+    "vida": 25,
+    "attackWeight": 3,
+    "navigateWeight": 5
+  },
+  {
+    "id": "Goblin",
+    "name": "Un goblin horripilante",
+    "weight": 40,
+    "location": "DryCave",
+    "navigateLocations": [
+      "DryCave",
+      "GoblinDungeon",
+      "DarkWidingPassage_1",
+      "DarkWidingPassage_2",
+      "DarkWidingPassage_3",
+      "DarkWidingPassage_4",
+      "DarkWidingPassage_5",
+      "DarkWidingPassage_6",
+      "DarkWidingPassage_7",
+      "DarkWidingPassage_8",
+      "DarkWidingPassage_9",
+      "GoblinsGate"
+    ],
+    "specifiedLocationsAreForbidden": false,
+    "fuerza": 1,
+    "constitucion": 2,
+    "vida": 8,
+    "attackWeight": 8,
+    "navigateWeight": 5
+  },
+  {
+    "id": "Slime",
+    "name": "Un limo muy baboso",
+    "weight": 40,
+    "location": "Forest",
+    "navigateLocations": [
+      "Forest",
+      "ForestGate",
+      "ForestRoad_1",
+      "ForestRoad_2"
+    ],
+    "specifiedLocationsAreForbidden": false,
+    "fuerza": 1,
+    "constitucion": 2,
+    "vida": 8,
+    "attackWeight": 8,
+    "navigateWeight": 5
+  },
+  {
+    "id": "Orc",
+    "name": "Un enorme orco",
+    "weight": 40,
+    "location": "NarrowPath_1",
+    "navigateLocations": [
+      "NarrowPath_1",
+      "NarrowPath_2",
+      "NarrowPath_3",
+      "NarrowPath_4",
+      "NarrowPath_5",
+      "NarrowPath_6",
+      "NarrowPath_7",
+      "SteepPath_1",
+      "SteepPath_2",
+      "SteepPath_3",
+      "MistyValley_1",
+      "MistyValley_2"
+    ],
+    "fuerza": 3,
+    "constitucion": 5,
+    "vida": 17,
+    "attackWeight": 10,
+    "navigateWeight": 1
   }
 ]

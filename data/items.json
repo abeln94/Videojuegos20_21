@@ -25,7 +25,7 @@
     "id": "LargeKey"
   },
   {
-    "openable": "CLOSED",
+    "openable": "LOCKED",
     "name": "la pesada puerta de piedra",
     "lockedWith": "LargeKey",
     "id": "RockDoor"
@@ -37,16 +37,10 @@
     "id": "Sword"
   },
   {
-    "name": "cuerda",
-    "weight": 1,
-    "location": "TrollsCave",
-    "id": "Rope"
-  },
-  {
-    "name": "comida",
+    "name": "manzanas",
     "weight": 1,
     "location": "Cupboard",
-    "id": "CupboardFood"
+    "id": "Apples"
   },
   {
     "name": "comida",
@@ -96,12 +90,6 @@
     "id": "GoldenRing"
   },
   {
-    "name": "el oro",
-    "weight": 1,
-    "location": "WestBlackRiver",
-    "id": "Gold"
-  },
-  {
     "openable": "CLOSED",
     "name": "la puerta de entrada a la goblinera",
     "id": "GoblinGate"
@@ -125,13 +113,19 @@
     "id": "SpiderWeb_Broken"
   },
   {
-    "openable": "CLOSED",
+    "openable": "LOCKED",
     "name": "la puerta mágica",
     "id": "MagicDoor",
     "description": "La puerta mágica te advierte de que se acercan los elfos."
   },
   {
-    "openable": "CLOSED",
+    "name": "una llave mágica",
+    "weight": 1,
+    "location": "Elf",
+    "id": "MagicKey"
+  },
+  {
+    "openable": "LOCKED",
     "name": "la puerta roja",
     "lockedWith": "RedKey",
     "id": "RedDoor"
@@ -148,12 +142,6 @@
     "id": "Barrel"
   },
   {
-    "name": "vino",
-    "weight": 5,
-    "location": "Barrel",
-    "id": "Wine"
-  },
-  {
     "name": "la llave roja",
     "weight": 1,
     "id": "RedKey"
@@ -164,20 +152,14 @@
     "id": "StrongPortcullis"
   },
   {
-    "name": "un arco",
+    "name": "un arco con flechas poderosas",
     "weight": 5,
     "location": "Butler",
     "id": "Bow"
   },
   {
-    "name": "una flecha poderosa",
-    "weight": 1,
-    "location": "LakeTown",
-    "id": "Arrow"
-  },
-  {
     "openable": "CLOSED",
-    "name": "Tras un fuerte crujido aparece un gran agujero en la pared. Te encuentras ante la puerta lateral de la Montaña Solitaria",
+    "name": "la puerta lateral de la Montaña Solitaria",
     "lockedWith": "SmallKey",
     "id": "SideDoorLonelyMountain"
   },
