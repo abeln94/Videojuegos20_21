@@ -59,6 +59,8 @@ public class Engine {
             case HELP:
                 npc.game.help();
                 return Result.done("[también puedes pulsar F1]"); // TODO: show a help string for the current location instead
+            case SCORE:
+                return Result.done(npc.game.getCompletion());
 
             case OPEN:
                 return command.main.require(
@@ -390,8 +392,6 @@ public class Engine {
                     ((NPC) toSay).ask(npc, command.sequence);
                     return Result.done(""); // the notification is above, otherwise the output order would be wrong
                 });
-            case SCORE:
-                return Result.done(npc.game.getCompletion());
             case PUT:
                 return command.main.require(
                         // we must have it
@@ -669,7 +669,7 @@ public class Engine {
                 });
         }
 
-        return Result.error("Aún no se hacer eso!");
+        return Result.error("No se hacer eso");
     }
 
 }

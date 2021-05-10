@@ -5,7 +5,7 @@
   "imagePath": "/images/{}.PNG",
   "helpFile": "/other/help.txt",
   "startDescription": "Eres un hobbit, tu objetivo es derrotar al dragon y quedarte su tesoro.",
-  "winDescription": "Has conseguido derrotar al dragón y te has llevado su oro (que si, de verdad)!",
+  "winDescription": "Has conseguido derrotar al dragón y te has llevado su oro, se celebra una fiesta en tu honor",
   "startScreen": "1_español",
   "winScreen": "48",
   "title": "El hobbit",
