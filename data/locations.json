@@ -425,14 +425,20 @@
   },
   {
     "image": "WestBlackRiver",
-    "exits": {"WEST": {"location": "BewitchedPlace"}},
+    "exits": {
+      "WEST": {"location": "BewitchedPlace"},
+      "EAST": {"location": "EastBlackRiver"}
+    },
     "music": "water",
     "name": "en la orilla oesta del río Negro",
     "id": "WestBlackRiver"
   },
   {
     "image": "EastBlackRiver",
-    "exits": {"EAST": {"location": "GreenForest"}},
+    "exits": {
+      "EAST": {"location": "GreenForest"},
+      "WEST": {"location": "WestBlackRiver"}
+    },
     "music": "water",
     "name": "en la orilla esta del río Negro",
     "id": "EastBlackRiver"
