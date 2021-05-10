@@ -52,13 +52,13 @@ public class Engine {
                 return Result.done("[también puedes usar F6 para guardar]");
             case LOAD:
                 npc.game.load();
-                return Result.done("[también puedes usar F9 para guardar]");
+                return Result.done("[también puedes usar F9 para cargar]");
             case QUIT:
                 npc.game.exit();
-                return Result.done("[también puedes pulsar la X de la ventana]");
+                return Result.done("[también puedes pulsar la X de la ventana pra salir]");
             case HELP:
                 npc.game.help();
-                return Result.done("[también puedes pulsar F1]"); // TODO: show a help string for the current location instead
+                return Result.done("[también puedes pulsar F1 para mostrar la ayuda]"); // TODO: show a help string for the current location instead
             case SCORE:
                 return Result.done(npc.game.getCompletion());
 
