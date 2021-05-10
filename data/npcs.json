@@ -168,6 +168,9 @@
     "constitucion": 2,
     "vida": 8,
     "moveNPCsTo": "GoblinDungeon",
+    "allies": [
+      "Goblin"
+    ],
     "attackWeight": 1,
     "navigateWeight": 2
   },

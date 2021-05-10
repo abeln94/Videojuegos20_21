@@ -207,9 +207,10 @@ public class Engine {
                     return Result.error("No hay nada hacia " + command.direction.description + ".");
                 }
 
-                boolean inList = npc.navigateLocations != null && npc.navigateLocations.contains(le.first);
-                if (npc.navigateLocationsAreForbidden == inList) {
+                if (npc.navigateLocations.contains(le.first) == npc.navigateLocationsAreForbidden) {
                     // not allowed
+                    // either the location is in the list and the list is for the forbidden (so the location is forbidden)
+                    // or the location is not in the list and the list is for the allowed (so the location is not allowed)
                     return Result.error("No puedes ir hacia " + command.direction.description + ".");
                 }
 

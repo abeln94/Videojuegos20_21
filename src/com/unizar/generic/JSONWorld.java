@@ -132,12 +132,10 @@ public class JSONWorld extends World {
                 npc_element.fuerza = npc_json.getInt("vida");
             }
             if (npc_json.has("languages")) {
-                Set<String> languages = new HashSet<>();
                 final JSONArray array = npc_json.getJSONArray("languages");
                 for (int j = 0; j < array.length(); j++) {
-                    languages.add(array.getString(j));
+                    npc_element.languages.add(array.getString(j));
                 }
-                npc_element.languages = languages;
             }
 
             if (npc_json.has("canFollowOrders")) {
@@ -157,19 +155,20 @@ public class JSONWorld extends World {
                 npc_element.followNPCs = getElements(npc_json.getJSONArray("followNPCs"), elements);
                 npc_element.followWeight = 1;
             }
+            if (npc_json.has("allies")) {
+                npc_element.allies = getElements(npc_json.getJSONArray("allies"), elements);
+            }
             if (npc_json.has("moveNPCsTo")) {
                 npc_element.moveNPCsTo = elements.get(npc_json.getString("moveNPCsTo"));
             }
             if (npc_json.has("talkPlayer")) {
-                Set<Utils.Pair<Integer, String>> talkPlayer = new HashSet<>();
                 final JSONArray talks = npc_json.getJSONArray("talkPlayer");
                 for (int j = 0; j < talks.length(); j++) {
                     JSONObject talk = talks.getJSONObject(j);
                     int turns = talk.optInt("turns", 1);
                     String sentence = talk.getString("sentence");
-                    talkPlayer.add(Utils.Pair.of(turns, sentence));
+                    npc_element.talkPlayer.add(Utils.Pair.of(turns, sentence));
                 }
-                npc_element.talkPlayer = talkPlayer;
                 npc_element.talkWeight = 1;
             }
             if (npc_json.has("giveItems")) {
