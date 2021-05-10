@@ -22,6 +22,7 @@ public class Player extends NPC {
     @Override
     public void act() {
         // already done
+        // TODO: consider adding a 'demo' that plays automatically
     }
 
     @Override

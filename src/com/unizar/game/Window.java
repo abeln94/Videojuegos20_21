@@ -20,11 +20,6 @@ import java.io.InputStream;
  */
 public class Window {
 
-    public interface InputListener {
-
-        void onText(String text);
-    }
-
     // ------------------------- elements -------------------------
     private final JFrame frame;
     private final JTextArea commandOutput;

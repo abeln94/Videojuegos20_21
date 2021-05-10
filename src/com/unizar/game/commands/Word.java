@@ -65,6 +65,9 @@ public class Word {
         SCORE("puntuación"),
         WAIT("esperar"),
 
+        // new
+        SEARCH("buscar"),
+
         // spanishSpecial
         TIRAR("tirar"),
         ;

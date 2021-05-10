@@ -1,6 +1,7 @@
 package com.unizar.game.commands;
 
 import com.unizar.Utils;
+import com.unizar.game.ElementSearcher;
 import com.unizar.game.elements.Element;
 import com.unizar.game.elements.Item;
 import com.unizar.game.elements.Location;
@@ -668,6 +669,11 @@ public class Engine {
                     npc.elements.add(wearable);
                     return Result.done("Te quitas " + wearable);
                 });
+
+            case SEARCH:
+                return command.main.apply("Que quieres buscar?", searchable ->
+                        Result.done(ElementSearcher.searchElement(npc, searchable))
+                );
         }
 
         return Result.error("No se hacer eso");
