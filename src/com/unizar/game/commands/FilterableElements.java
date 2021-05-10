@@ -1,5 +1,6 @@
 package com.unizar.game.commands;
 
+import com.unizar.Utils;
 import com.unizar.game.elements.Element;
 
 import java.util.Collections;
@@ -16,6 +17,7 @@ public class FilterableElements {
     public String description = "";
     public String error = null;
     public boolean all = false;
+    public boolean any = false;
 
     // ------------------------- construction -------------------------
 
@@ -53,6 +55,13 @@ public class FilterableElements {
      */
     public void markAsAll() {
         all = true;
+    }
+
+    /**
+     * Marks as 'any'
+     */
+    public void markAsAny() {
+        any = true;
     }
 
     /**
@@ -136,6 +145,9 @@ public class FilterableElements {
                         }
                     }
                     return result;
+                } else if (any) {
+                    // pick any
+                    return action.apply(Utils.pickRandom(elements));
                 } else {
                     //more info needed
                     return Result.moreNeeded(moreNeeded, moreNeededAppendable);

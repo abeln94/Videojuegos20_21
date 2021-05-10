@@ -150,6 +150,11 @@ public class Word {
     static String all = "todo toda todos todas";
 
     /**
+     * The 'any' words
+     */
+    static String any = "algo alguna alguno cualquier cualquiera";
+
+    /**
      * To separate commands
      */
     static String and = "y";
@@ -166,8 +171,8 @@ public class Word {
         UNKNOWN,
         IGNORE,
         ALL,
+        ANY,
         AND,
-        ;
     }
 
     /**
@@ -227,6 +232,9 @@ public class Word {
 
         // all
         if (Word.matchSentences(all, word)) return Utils.Pair.of(Type.ALL, null);
+
+        // any
+        if (Word.matchSentences(any, word)) return Utils.Pair.of(Type.ANY, null);
 
 
         // and finally, check the word in the game-specific elements

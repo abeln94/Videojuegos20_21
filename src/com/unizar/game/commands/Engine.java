@@ -52,13 +52,15 @@ public class Engine {
                 return Result.done("[también puedes usar F6 para guardar]");
             case LOAD:
                 npc.game.load();
-                return Result.done("[también puedes usar F9 para guardar]");
+                return Result.done("[también puedes usar F9 para cargar]");
             case QUIT:
                 npc.game.exit();
-                return Result.done("[también puedes pulsar la X de la ventana]");
+                return Result.done("[también puedes pulsar la X de la ventana pra salir]");
             case HELP:
                 npc.game.help();
-                return Result.done("[también puedes pulsar F1]"); // TODO: show a help string for the current location instead
+                return Result.done("[también puedes pulsar F1 para mostrar la ayuda]"); // TODO: show a help string for the current location instead
+            case SCORE:
+                return Result.done(npc.game.getCompletion());
 
             case OPEN:
                 return command.main.require(
@@ -205,9 +207,10 @@ public class Engine {
                     return Result.error("No hay nada hacia " + command.direction.description + ".");
                 }
 
-                boolean inList = npc.navigateLocations != null && npc.navigateLocations.contains(le.first);
-                if (npc.specifiedLocationsAreForbidden == inList) {
+                if (npc.navigateLocations.contains(le.first) == npc.navigateLocationsAreForbidden) {
                     // not allowed
+                    // either the location is in the list and the list is for the forbidden (so the location is forbidden)
+                    // or the location is not in the list and the list is for the allowed (so the location is not allowed)
                     return Result.error("No puedes ir hacia " + command.direction.description + ".");
                 }
 
@@ -390,8 +393,6 @@ public class Engine {
                     ((NPC) toSay).ask(npc, command.sequence);
                     return Result.done(""); // the notification is above, otherwise the output order would be wrong
                 });
-            case SCORE:
-                return Result.done(npc.game.getCompletion());
             case PUT:
                 return command.main.require(
                         // we must have it
@@ -669,7 +670,7 @@ public class Engine {
                 });
         }
 
-        return Result.error("Aún no se hacer eso!");
+        return Result.error("No se hacer eso");
     }
 
 }

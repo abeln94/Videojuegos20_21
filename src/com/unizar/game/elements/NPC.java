@@ -1,10 +1,7 @@
 package com.unizar.game.elements;
 
 import com.unizar.Utils;
-import com.unizar.game.commands.Command;
-import com.unizar.game.commands.EngineException;
-import com.unizar.game.commands.Result;
-import com.unizar.game.commands.Word;
+import com.unizar.game.commands.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,14 +25,14 @@ abstract public class NPC extends Element {
 
     // ------------------------- engine properties -------------------------
 
-    public Set<Element> navigateLocations = null;
-    public boolean specifiedLocationsAreForbidden = true;
+    public Set<Element> navigateLocations = new HashSet<>();
+    public boolean navigateLocationsAreForbidden = true; // if false, navigateLocations are allowed
 
     public int fuerza = 1; //como de fuerte pega el golpe. Para calcular golpe es fuerza + aleatorio d10 + bonificador arma
     public int constitucion = 0; //lo robusto del pj
     public int vida = 10; //, la vida es constitución + aleatorio dSegúnClase
 
-    public Set<String> languages = null;
+    public Set<String> languages = new HashSet<>();
 
     // ------------------------- ia -------------------------
 
@@ -53,12 +50,13 @@ abstract public class NPC extends Element {
     // parameters
     public boolean canFollowOrders = false;
     public String sleepAt;
-    public Set<Element> attackItems = null;
-    public int pacificTurns = Integer.MAX_VALUE;
-    public Set<Element> followNPCs = null;
+    public Set<Element> attackItems = new HashSet<>();
+    public int pacificTurns = 0;
+    public Set<Element> followNPCs = new HashSet<>();
+    public Set<Element> allies = new HashSet<>();
     public Element moveNPCsTo = null;
-    public Set<Utils.Pair<Integer, String>> talkPlayer = null;
-    public Set<Element> giveItems = null;
+    public Set<Utils.Pair<Integer, String>> talkPlayer = new HashSet<>();
+    public Set<Element> giveItems = new HashSet<>();
 
     // weights
     public int attackWeight = 0;
@@ -150,16 +148,19 @@ abstract public class NPC extends Element {
             }
         }
 
-        // tp player
+        // tp npcs
         if (moveNPCsTo != null) {
-            getLocation().elements.stream()
+            final Set<Element> movable = getLocation().elements.stream()
+                    .filter(e -> !allies.contains(e))
                     .filter(e -> e instanceof NPC)
                     .filter(e -> e != this)
-                    .collect(Collectors.toSet())
-                    .forEach(npc -> {
-                        npc.moveTo(moveNPCsTo);
-                        npc.hear(this + " te lleva hasta " + moveNPCsTo + ".");
-                    });
+                    .collect(Collectors.toSet());
+            if (!movable.isEmpty()) {
+                final Element npc = Utils.pickRandom(movable);
+                npc.moveTo(moveNPCsTo);
+                npc.hear(this + " te lleva hasta " + moveNPCsTo + ".");
+                return;
+            }
         }
 
         int retry = 10;
@@ -193,9 +194,10 @@ abstract public class NPC extends Element {
 
         switch (action) {
             case ATACK_ITEM:
-                if (attackItems == null || attackItems.isEmpty()) return null;
+                if (attackItems.isEmpty()) return null;
                 final Element attack = Utils.pickRandom(getInteractable().stream()
                         .filter(e -> e instanceof NPC)
+                        .filter(e -> !allies.contains(e))
                         .filter(e -> e.elements.stream().anyMatch(has -> attackItems.contains(has)))
                         .collect(Collectors.toSet()));
                 if (attack == null) return null;
@@ -207,10 +209,9 @@ abstract public class NPC extends Element {
 
             case FOLLOW_NPCS:
                 Element npc;
-                if (followNPCs == null) {
+                if (followNPCs.isEmpty()) {
                     npc = Utils.pickRandom(game.findElementsByClassName(NPC.class));
                 } else {
-                    if (followNPCs.isEmpty()) return null;
                     npc = Utils.pickRandom(followNPCs);
                 }
                 if (npc.getLocation() == getLocation()) {
@@ -226,7 +227,6 @@ abstract public class NPC extends Element {
                 return Command.go(direction);
 
             case TALK:
-                if (talkPlayer == null || talkPlayer.isEmpty()) return null;
                 // prepare sentences
                 Set<String> sentences = talkPlayer.stream()
                         .filter(p -> sawPlayer >= p.first)
@@ -238,25 +238,26 @@ abstract public class NPC extends Element {
 
             case GIVE:
                 Element item;
-                if (giveItems == null) {
+                if (giveItems.isEmpty()) {
                     item = Utils.pickRandom(elements);
                     if (item == null) return null;
                 } else {
-                    if (giveItems.isEmpty()) return null;
                     item = Utils.pickRandom(giveItems);
                 }
                 if (item.getLocation() == null) item.moveTo(this);
                 return Command.act(Word.Action.GIVE, item, game.getPlayer());
 
             case OPEN:
-                final Element interactable = Utils.pickRandom(getInteractable());
-                if (interactable == null) return null;
-                return Command.act(Word.Action.OPEN, interactable);
+                final Command openCommand = Command.simple(Word.Action.OPEN);
+                openCommand.main = new FilterableElements(game.world.elements);
+                openCommand.main.markAsAny();
+                return openCommand;
 
             case PICK:
-                final Element interactablee = Utils.pickRandom(getInteractable());
-                if (interactablee == null) return null;
-                return Command.act(Word.Action.PICK, interactablee);
+                final Command pickCommand = Command.simple(Word.Action.PICK);
+                pickCommand.main = new FilterableElements(game.world.elements.stream().filter(e -> e instanceof Item).collect(Collectors.toSet()));
+                pickCommand.main.markAsAny();
+                return pickCommand;
         }
         return null;
     }

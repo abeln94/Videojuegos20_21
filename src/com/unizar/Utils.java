@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -68,23 +71,27 @@ public class Utils {
      * @return a thing (or null if all weights are 0)
      */
     public static <T> T pickWeightedRandom(Set<Pair<T, Integer>> parameters) {
-        // duplicate
-        Set<T> totalWeight = parameters.stream()
-                .flatMap(p -> Collections.nCopies(p.second, p.first).stream())
-                .collect(Collectors.toSet());
+        if (parameters.isEmpty()) return null;
 
-        // exit of none
-        if (totalWeight.isEmpty()) return null;
+        // pick random from total weight
+        final int sum = parameters.stream().mapToInt(p -> p.second).sum();
+        int picked = random.nextInt(sum);
 
-        // get random
-        return pickRandom(totalWeight);
+        // get based on weight
+        for (Pair<T, Integer> parameter : parameters) {
+            picked -= parameter.second;
+            // picked
+            if (picked < 0) return parameter.first;
+        }
+        // should never happen
+        return null;
     }
 
     /**
      * Show a dialog with a scrollable window with content from a file
      *
-     * @param title window title
-     * @param path  path to the file with the message text
+     * @param title   window title
+     * @param message message text
      */
     public static void showMessage(String title, String message) {
         // read message
