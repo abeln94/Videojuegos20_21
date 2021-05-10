@@ -7,6 +7,7 @@ import com.unizar.game.elements.Item;
 import com.unizar.game.elements.Location;
 import com.unizar.game.elements.NPC;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -461,7 +462,8 @@ public class Engine {
                     if (((NPC) attack).vida <= 0) { //muere
                         // 'drop' all its objects
                         Element floor = attack.getLocation();
-                        attack.elements.forEach(e -> e.moveTo(floor));
+                        new HashSet<>(attack.elements) // a copy is needed to avoid modifiyng while iterating
+                                .forEach(e -> e.moveTo(floor));
 
                         attack.hear(npc + " te ataca. Con un golpe certero, te parte el cráneo.");
                         attack.moveTo(null);
