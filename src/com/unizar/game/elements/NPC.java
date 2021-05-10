@@ -76,6 +76,15 @@ abstract public class NPC extends Element {
         return name + (isSleep() ? " dormido" : "") + describeContents(".", ". Lleva:");
     }
 
+    @Override
+    public void kill() {
+        // 'drop' all its wearables
+        Element floor = getLocation();
+        new HashSet<>(wearables) // a copy is needed to avoid modifiyng while iterating
+                .forEach(e -> e.moveTo(floor));
+        super.kill();
+    }
+
     /**
      * When this npc hears something
      *
@@ -205,7 +214,7 @@ abstract public class NPC extends Element {
 
             case ATACK_PLAYER:
                 if (pacificTurns >= sawPlayer) return null;
-                    return Command.act(Word.Action.KILL, game.getPlayer());
+                return Command.act(Word.Action.KILL, game.getPlayer());
 
             case FOLLOW_NPCS:
                 Element npc;

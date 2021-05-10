@@ -148,6 +148,13 @@ public class ElementSearcher {
             element.hiddenElements.forEach((a, h) -> {
                 graph.append(line(element, h, a.name()));
             });
+
+            // giveable items
+            if (element instanceof NPC) {
+                ((NPC) element).giveItems.forEach(giveable ->
+                        graph.append(line(element, giveable, "GIVE"))
+                );
+            }
         });
 
         return graph.append("}").toString();
