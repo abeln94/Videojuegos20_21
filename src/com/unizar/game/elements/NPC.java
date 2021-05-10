@@ -205,7 +205,7 @@ abstract public class NPC extends Element {
 
             case ATACK_PLAYER:
                 if (pacificTurns >= sawPlayer) return null;
-                return Command.act(Word.Action.KILL, game.getPlayer());
+                    return Command.act(Word.Action.KILL, game.getPlayer());
 
             case FOLLOW_NPCS:
                 Element npc;
