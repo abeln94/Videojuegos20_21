@@ -26,7 +26,7 @@ abstract public class NPC extends Element {
     // ------------------------- engine properties -------------------------
 
     public Set<Element> navigateLocations = null;
-    public boolean specifiedLocationsAreForbidden = true;
+    public boolean navigateLocationsAreForbidden = true; // if false, navigateLocations are allowed
 
     public int fuerza = 1; //como de fuerte pega el golpe. Para calcular golpe es fuerza + aleatorio d10 + bonificador arma
     public int constitucion = 0; //lo robusto del pj
@@ -53,7 +53,7 @@ abstract public class NPC extends Element {
     public Set<Element> attackItems = null;
     public int pacificTurns = 0;
     public Set<Element> followNPCs = null;
-    public Element moveNPCsTo = null;
+    public Element moveNPCsTo = null; // TODO: add a moveNPCs so that you can only move some (not all)
     public Set<Utils.Pair<Integer, String>> talkPlayer = null;
     public Set<Element> giveItems = null;
 

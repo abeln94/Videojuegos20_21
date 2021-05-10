@@ -113,11 +113,13 @@ public class JSONWorld extends World {
             JSONObject npc_json = npcs.getJSONObject(i);
             NPC npc_element = (NPC) elements.get(npc_json.getString("id"));
 
-            if (npc_json.has("navigateLocations")) {
-                npc_element.navigateLocations = getElements(npc_json.getJSONArray("navigateLocations"), elements);
+            if (npc_json.has("allowedLocations")) {
+                npc_element.navigateLocations = getElements(npc_json.getJSONArray("allowedLocations"), elements);
+                npc_element.navigateLocationsAreForbidden = false;
             }
-            if (npc_json.has("specifiedLocationsAreForbidden")) {
-                npc_element.specifiedLocationsAreForbidden = npc_json.getBoolean("specifiedLocationsAreForbidden");
+            if (npc_json.has("forbiddenLocations")) {
+                npc_element.navigateLocations = getElements(npc_json.getJSONArray("forbiddenLocations"), elements);
+                npc_element.navigateLocationsAreForbidden = true;
             }
 
             if (npc_json.has("fuerza")) {

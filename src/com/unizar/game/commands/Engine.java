@@ -208,7 +208,7 @@ public class Engine {
                 }
 
                 boolean inList = npc.navigateLocations != null && npc.navigateLocations.contains(le.first);
-                if (npc.specifiedLocationsAreForbidden == inList) {
+                if (npc.navigateLocationsAreForbidden == inList) {
                     // not allowed
                     return Result.error("No puedes ir hacia " + command.direction.description + ".");
                 }
