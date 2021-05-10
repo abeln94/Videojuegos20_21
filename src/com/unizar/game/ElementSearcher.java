@@ -16,18 +16,16 @@ public class ElementSearcher {
         Element element;
         String whereIs = null;
         String debug;
-        String type;
 
         public Node(Element element) {
             this.element = element;
             debug = element == null ? "NULL" : element.id;
         }
 
-        public Node connect(Element element, String whereIs, String type) {
+        public Node connect(Element element, String whereIs) {
             final Node newNode = new Node(element);
             newNode.whereIs = this.whereIs == null ? whereIs : this.whereIs;
             newNode.debug = (element == null ? "NULL" : element.id) + " <- " + this.debug;
-            newNode.type = type;
             return newNode;
         }
     }
@@ -64,47 +62,36 @@ public class ElementSearcher {
                 return (whereIs == null ? "Estás en " + to : to + " " + whereIs) + ".";
             }
 
-            generateConnections(node, from, toCheck);
+            // check inventory
+            check.elements.forEach(e -> toCheck.add(node.connect(e,
+                    check == from ? "lo tienes en el inventario"
+                            : "está ahí"
+            )));
+
+            // check wearables
+            if (check instanceof NPC) {
+                ((NPC) check).wearables.forEach(e -> toCheck.add(node.connect(e,
+                        whereIs == null ? "lo llevas puesto" : whereIs
+                )));
+            }
+
+            // check parent
+            toCheck.add(node.connect(check.getLocation(), whereIs)); // only possible null
+
+            // check exits
+            if (check instanceof Location) {
+                ((Location) check).exits.forEach((dir, p) -> {
+                            toCheck.add(node.connect(p.first,
+                                    whereIs == null ? "está hacia " + dir.description : whereIs
+                            ));
+                            toCheck.add(node.connect(p.second, "está ahí"));
+                        }
+                );
+            }
 
         }
         System.out.println(graph);
         return "No se ha podido encontrar " + to + ".";
-    }
-
-    private static void generateConnections(Node node, Element from, Queue<Node> toCheck) {
-        Element check = node.element;
-        String whereIs = node.whereIs;
-
-
-        // check inventory
-        check.elements.forEach(e -> toCheck.add(node.connect(e,
-                check == from ? "lo tienes en el inventario"
-                        : "está ahí",
-                "CHILD"
-        )));
-
-        // check wearables
-        if (check instanceof NPC) {
-            ((NPC) check).wearables.forEach(e -> toCheck.add(node.connect(e,
-                    whereIs == null ? "lo llevas puesto" : whereIs,
-                    "WEAR"
-            )));
-        }
-
-        // check parent
-        toCheck.add(node.connect(check.getLocation(), whereIs, null)); // only possible null
-
-        // check exits
-        if (check instanceof Location) {
-            ((Location) check).exits.forEach((dir, p) -> {
-                        toCheck.add(node.connect(p.first,
-                                whereIs == null ? "está hacia " + dir.description : whereIs,
-                                "GO:" + dir.name()
-                        ));
-                        toCheck.add(node.connect(p.second, "está ahí", "AT:" + dir.name()));
-                    }
-            );
-        }
     }
 
     public static String generateGraph(Set<Element> elements) {
@@ -116,41 +103,57 @@ public class ElementSearcher {
             // node types
             graph.append(element.id + " [shape=" + (
                     element instanceof Player ? "doublecircle"
-                            : element instanceof NPC ? "circle"
+                            : element instanceof NPC ? "oval"
                             : element instanceof Item ? "diamond"
                             : element instanceof Location ? "box"
                             : "point"
             ) + "];\n");
 
-            // node connections
-            final LinkedList<Node> connections = new LinkedList<>();
-            generateConnections(new Node(element), null, connections);
-            connections.stream()
-                    .filter(n -> n.element != null)
-                    .filter(n -> n.type != null)
-                    .forEach(connection ->
-                            graph.append(line(element, connection.element, connection.type)).append("\n")
-                    );
-        });
+            // inventory
+            element.elements.forEach(child ->
+                    graph.append(line(element, child, "HAS"))
+            );
 
-        // tp connections
-        elements.stream().filter(e -> e instanceof NPC).forEach(npc -> {
-            final Element destination = ((NPC) npc).moveNPCsTo;
-            if (destination != null) {
-                graph.append(line(npc, destination, "TP")).append("\n");
+            // wearables
+            if (element instanceof NPC) {
+                ((NPC) element).wearables.forEach(wearable ->
+                        graph.append(line(element, wearable, "WEAR"))
+                );
             }
+
+            // exits
+            if (element instanceof Location) {
+                ((Location) element).exits.forEach((dir, p) -> {
+                            if (p.second == null) {
+                                // direct
+                                graph.append(line(element, p.first, "GO:" + dir.name()));
+                            } else {
+                                // through
+                                graph.append(line(element, p.second, "AT:" + dir.name()));
+                                graph.append(line(p.second, p.first, "OF:" + element.id));
+                            }
+                        }
+                );
+            }
+
+            // TP connections
+            if (element instanceof NPC) {
+                Element destination = ((NPC) element).moveNPCsTo;
+                if (destination != null) {
+                    graph.append(line(element, destination, "TP"));
+                }
+            }
+
+            // hidden connections
+            element.hiddenElements.forEach((a, h) -> {
+                graph.append(line(element, h, a.name()));
+            });
         });
-
-        // hidden connections
-        elements.forEach(e -> e.hiddenElements.forEach((a, h) -> {
-            graph.append(line(e, h, a.name()));
-        }));
-
 
         return graph.append("}").toString();
     }
 
     private static String line(Element from, Element to, String label) {
-        return from.id + " -> " + to.id + " [label=\"" + label + "\"];";
+        return from.id + " -> " + to.id + " [label=\"" + label + "\"];\n";
     }
 }
