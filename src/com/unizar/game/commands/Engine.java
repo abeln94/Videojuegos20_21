@@ -459,6 +459,10 @@ public class Engine {
                     }
 
                     if (((NPC) attack).vida <= 0) { //muere
+                        // 'drop' all its objects
+                        Element floor = attack.getLocation();
+                        attack.elements.forEach(e -> e.moveTo(floor));
+
                         attack.hear(npc + " te ataca. Con un golpe certero, te parte el cráneo.");
                         attack.moveTo(null);
                         return Result.done("Atacas a " + attack + ". Con un golpe certero le partes el cráneo.");
