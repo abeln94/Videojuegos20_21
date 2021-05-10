@@ -85,7 +85,7 @@
       "SOUTH": {"location": "NarrowPath_1"},
       "EAST": {"location": "DimValley"}
     },
-    "music": "wind",
+    "music": "iceCavern",
     "name": "en un sinuoso y peligroso camino en las montañas brumosas",
     "id": "DangerousPath"
   },
@@ -229,7 +229,10 @@
   },
   {
     "image": "DryCave",
-    "exits": {"SOUTH": {"location": "DimValley"}},
+    "exits": {
+      "SOUTH": {"location": "DimValley"},
+      "DOWN": {"location": "DarkWidingPassage_6"}
+    },
     "music": "cave",
     "name": "en un una larga y seca cueva, bastante acogedora. Debajo tiene una pequeña grieta",
     "id": "DryCave"
@@ -485,7 +488,7 @@
       }
     },
     "music": "forest",
-    "name": "en un claro élfico con desniveles en el terreno y troncos.",
+    "name": "en un claro élfico con desniveles en el terreno y troncos",
     "id": "ElvishClearing"
   },
   {
@@ -502,7 +505,7 @@
       }
     },
     "music": "calm",
-    "name": " en los grandes salones del reino de los elfos.",
+    "name": "en los grandes salones del reino de los elfos",
     "id": "Elvenkings"
   },
   {
@@ -518,8 +521,8 @@
       },
       "NORTH": {"location": "Elvenkings"}
     },
-    "music": "calm",
-    "name": " en la bodega donde el rey guarda sus toneles de vino.",
+    "music": "MK",
+    "name": "en la bodega donde el rey guarda sus toneles de vino. Se escucha una extraña música cantada por el ebrio mayordomo..",
     "id": "CellarOfWine"
   },
   {
@@ -528,7 +531,7 @@
       "item": "RedDoor",
       "location": "CellarOfWine"
     }},
-    "music": "calm",
+    "music": "MK",
     "name": " una pequeña sala con más barriles de vino.",
     "id": "RedDoorRoom"
   },
@@ -543,7 +546,7 @@
       "EAST": {"location": "LongLake"}
     },
     "music": "water",
-    "name": " en el río que atraviesa el bosque. ",
+    "name": "en el río que atraviesa el bosque",
     "id": "Forestriver"
   },
   {
@@ -558,7 +561,7 @@
       }
     },
     "music": "shores",
-    "name": " en el Gran Lago. ",
+    "name": "en el Gran Lago",
     "id": "LongLake"
   },
   {
@@ -570,7 +573,7 @@
       "EAST": {"location": "LongLake"}
     },
     "music": "LakeTown",
-    "name": "en la ciudad de madera en medio del Gran Lago. La bulliciosa Ciudad del Lago ",
+    "name": "en la ciudad de madera en medio del Gran Lago. La bulliciosa Ciudad del Lago",
     "id": "LakeTown"
   },
   {
@@ -580,7 +583,7 @@
       "NORTH": {"location": "RuinsTownDale"}
     },
     "music": "wind",
-    "name": " en una tierra desolada y yerma que alguna vez fue verde. ",
+    "name": "en una tierra desolada y yerma que alguna vez fue verde",
     "id": "BleakBarrenLand"
   },
   {
@@ -591,7 +594,7 @@
       "NORTHWEST": {"location": "Ravenhill"}
     },
     "music": "calm",
-    "name": " en las ruinas del pueblo de Dale. ",
+    "name": "en las ruinas del pueblo de Dale",
     "id": "RuinsTownDale"
   },
   {
@@ -602,7 +605,7 @@
       "EAST": {"location": "FrontGate"}
     },
     "music": "wind",
-    "name": " en el lado oeste de La Colina de los Cuervos. ",
+    "name": "en el lado oeste de La Colina de los Cuervos",
     "id": "Ravenhill"
   },
   {
@@ -616,7 +619,7 @@
       }
     },
     "music": "ommmm",
-    "name": "en una pequeña bahía empinada, tranquila y silenciosa, con un acantilado que sobresale.",
+    "name": "en una pequeña bahía empinada, tranquila y silenciosa, con un acantilado que sobresale",
     "id": "Sidedoor"
   },
   {
@@ -629,7 +632,7 @@
       "EAST": {"location": "DragonsHalls"}
     },
     "music": "ommmm",
-    "name": "en una pasaje recto y liso.",
+    "name": "en una pasaje recto y liso",
     "id": "SmoothPassage"
   },
   {
@@ -639,7 +642,7 @@
       "UP": {"location": "LonelyMountain"}
     },
     "music": "ommmm",
-    "name": "en un lugar vacío.",
+    "name": "en un alto camino de la Montaña Solitaria. Solo ves tierra",
     "id": "EmptyPlace"
   },
   {
@@ -670,17 +673,17 @@
       }
     },
     "music": "ommmm",
-    "name": "en la Cueva de Smaug.",
+    "name": "en la Cueva de Smaug",
     "id": "DragonsHalls"
   },
   {
     "image": "Forestriver",
     "exits": {
-      "NORTH": {"location": "FastRiver"},
+      "NORTH": {"location": "Forestriver"},
       "EAST": {"location": "FastRiver"}
     },
     "music": "water",
-    "name": "en el río rápido.",
+    "name": "en el río Rápido",
     "id": "FastRiver"
   },
   {
@@ -715,7 +718,7 @@
       "EAST": {"location": "LongLake"}
     },
     "music": "water",
-    "name": " en el río que atraviesa el bosque. ",
+    "name": "en el río que atraviesa el bosque",
     "id": "Forestriver"
   },
   {
@@ -735,7 +738,7 @@
       "EAST": {"location": "ForestRoad_1"}
     },
     "music": "DangerForest",
-    "name": "en un camino forestal",
+    "name": "en un camino forestal lleno de piedras",
     "id": "ForestRoad_2"
   },
   {
@@ -785,7 +788,7 @@
       "SOUTH": {"location": "RunningRiver"}
     },
     "music": "waterfalls",
-    "name": "en las cascadas.",
+    "name": "en las cascadas. Las leyendas dicen que si esperas, podrás oir a las ninfas de las cascadas",
     "id": "Waterfall"
   },
   {

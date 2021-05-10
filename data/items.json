@@ -113,16 +113,10 @@
     "id": "SpiderWeb_Broken"
   },
   {
-    "openable": "LOCKED",
+    "openable": "CLOSED",
     "name": "la puerta mágica",
     "id": "MagicDoor",
     "description": "La puerta mágica te advierte de que se acercan los elfos."
-  },
-  {
-    "name": "una llave mágica",
-    "weight": 1,
-    "location": "Elf",
-    "id": "MagicKey"
   },
   {
     "openable": "LOCKED",
@@ -144,6 +138,7 @@
   {
     "name": "la llave roja",
     "weight": 1,
+    "location": "Butler",
     "id": "RedKey"
   },
   {
@@ -154,7 +149,7 @@
   {
     "name": "un arco con flechas poderosas",
     "weight": 5,
-    "location": "Butler",
+    "location": "Bardo",
     "id": "Bow"
   },
   {

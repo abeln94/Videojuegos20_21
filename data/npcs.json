@@ -6,7 +6,7 @@
     "location": "StartLocation",
     "fuerza": 3,
     "constitucion": 2,
-    "vida": 10
+    "vida": 20
   },
   {
     "id": "Gandalf",
@@ -15,7 +15,7 @@
     "location": "StartLocation",
     "fuerza": 5,
     "constitucion": 5,
-    "vida": 25,
+    "vida": 50,
     "navigateWeight": 5,
     "followWeight": 1,
     "giveWeight": 1,
@@ -29,7 +29,7 @@
     "location": "StartLocation",
     "fuerza": 5,
     "constitucion": 5,
-    "vida": 17,
+    "vida": 34,
     "canFollowOrders": true,
     "followNPCs": [
       "Bilbo_Player"
@@ -42,10 +42,6 @@
       {
         "turns": 5,
         "sentence": "Date prisa"
-      },
-      {
-        "turns": 10,
-        "sentence": "La cacharra si, la cacharra no, la cacharra madre la que traigo yo"
       }
     ],
     "followWeight": 10,
@@ -63,7 +59,7 @@
     ],
     "fuerza": 3,
     "constitucion": 5,
-    "vida": 17,
+    "vida": 34,
     "sleepAt": "day",
     "pacificTurns": 1,
     "talkPlayer": [
@@ -94,7 +90,7 @@
     ],
     "fuerza": 3,
     "constitucion": 5,
-    "vida": 17,
+    "vida": 34,
     "sleepAt": "day",
     "pacificTurns": 1,
     "talkPlayer": [
@@ -124,7 +120,7 @@
     ],
     "fuerza": 5,
     "constitucion": 5,
-    "vida": 25,
+    "vida": 50,
     "languages": [
       "elfo"
     ],
@@ -135,11 +131,11 @@
         "sentence": "Hola"
       },
       {
-        "turns": 2,
-        "sentence": "Bienvenido de nuevo a estas tierras"
+        "turns": 5,
+        "sentence": "¿Como va su viaje?"
       },
       {
-        "turns": 1,
+        "turns": 10,
         "sentence": "Grata es su visita"
       }
     ],
@@ -166,7 +162,7 @@
     ],
     "fuerza": 1,
     "constitucion": 2,
-    "vida": 8,
+    "vida": 16,
     "moveNPCsTo": "GoblinDungeon",
     "allies": [
       "Goblin"
@@ -180,7 +176,7 @@
     "weight": 40,
     "fuerza": 1,
     "constitucion": 4,
-    "vida": 10,
+    "vida": 20,
     "location": "DarkWidingPassage_6",
     "allowedLocations": [
       "DryCave",
@@ -213,17 +209,35 @@
     "location": "CellarOfWine",
     "allowedLocations": [
       "CellarOfWine",
-      "ElvishClearing",
-      "Elvenkings"
+      "Elvenkings",
+      "RedDoorRoom"
+    ],
+    "pacificTurns": 9,
+    "talkPlayer": [
+      {
+        "turns": 1,
+        "sentence": "Pues por eso, pues por eso, no quemas queso en exceso!!"
+      },
+      {
+        "turns": 2,
+        "sentence": "Lomo con pi, lomo con pimieeeeeeeeeentooos, lomo con pi lomo con piiimieeeentosss NO"
+      },
+      {
+        "turns": 3,
+        "sentence": "La caxarra si, la caxarra no, la caxarra madre la que traigo yo"
+      },
+      {
+        "turns": 5,
+        "sentence": "k te vayas jujaaaaaaas!!!!!!!"
+      }
     ],
     "fuerza": 1,
     "constitucion": 3,
-    "vida": 11,
+    "vida": 22,
     "attackItems": [
       "RedKey"
     ],
-    "sleepAt": "night",
-    "attackWeight": 1
+    "talkWeight": 5
   },
   {
     "id": "Bardo",
@@ -232,7 +246,7 @@
     "location": "LakeTown",
     "fuerza": 5,
     "constitucion": 5,
-    "vida": 25,
+    "vida": 50,
     "followNPCs": [
       "Bilbo_Player"
     ],
@@ -253,26 +267,10 @@
     ],
     "fuerza": 5,
     "constitucion": 5,
-    "vida": 25,
+    "vida": 50,
     "pacificTurns": 1,
     "attackWeight": 3,
     "navigateWeight": 8
-  },
-  {
-    "id": "Elf",
-    "name": "El elfo que guarda la puerta mágica",
-    "weight": 100,
-    "location": "Elvenkings",
-    "allowedLocations": [
-      "CellarOfWine",
-      "ElvishClearing",
-      "Elvenkings"
-    ],
-    "fuerza": 5,
-    "constitucion": 5,
-    "vida": 25,
-    "attackWeight": 3,
-    "navigateWeight": 5
   },
   {
     "id": "Goblin",
@@ -295,7 +293,7 @@
     ],
     "fuerza": 1,
     "constitucion": 2,
-    "vida": 8,
+    "vida": 16,
     "pacificTurns": 1,
     "attackWeight": 8,
     "navigateWeight": 5
@@ -313,7 +311,7 @@
     ],
     "fuerza": 1,
     "constitucion": 2,
-    "vida": 8,
+    "vida": 16,
     "pacificTurns": 1,
     "attackWeight": 8,
     "navigateWeight": 5
@@ -323,7 +321,7 @@
     "name": "Un enorme orco",
     "weight": 40,
     "location": "NarrowPath_1",
-    "forbiddenLocations": [
+    "allowedLocations": [
       "NarrowPath_1",
       "NarrowPath_2",
       "NarrowPath_3",
@@ -339,7 +337,7 @@
     ],
     "fuerza": 3,
     "constitucion": 5,
-    "vida": 17,
+    "vida": 34,
     "pacificTurns": 1,
     "attackWeight": 10,
     "navigateWeight": 1
