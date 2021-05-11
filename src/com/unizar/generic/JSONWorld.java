@@ -214,6 +214,9 @@ public class JSONWorld extends World {
             if (item_json.has("description")) {
                 item_element.description = item_json.getString("description");
             }
+            if (item_json.has("makesInvisible")) {
+                item_element.makesInvisible = item_json.getBoolean("makesInvisible");
+            }
         }
 
         // Location

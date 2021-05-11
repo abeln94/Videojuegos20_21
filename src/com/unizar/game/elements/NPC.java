@@ -106,6 +106,11 @@ abstract public class NPC extends Element {
             return;
         }
 
+        if (npc.isInvisible()) {
+            getLocation().notifyNPCs(this, "Quien osa hablarme sin mostrarse! Manifiéstate!");
+            return;
+        }
+
         // convert message
         // when you say 'darme el mapa' the 'me' part is replaced by the npc
         message = message.replaceAll("\\b([^ ]*)me\\b", "a " + npc.name + " $1");
@@ -135,13 +140,18 @@ abstract public class NPC extends Element {
         return false;
     }
 
+    public boolean isInvisible() {
+        return wearables.stream().anyMatch(e -> e instanceof Item && ((Item) e).makesInvisible);
+    }
+
     @Override
     public void act() {
         // can't act if sleep
         if (isSleep()) return;
 
         // update talkedPlayer
-        if (game.getPlayer().getLocation() == getLocation())
+        Player player = game.getPlayer();
+        if (!player.isInvisible() && player.getLocation() == getLocation())
             sawPlayer++;
         else
             sawPlayer = 0;
@@ -162,6 +172,7 @@ abstract public class NPC extends Element {
                     .filter(e -> !allies.contains(e))
                     .filter(e -> e instanceof NPC)
                     .filter(e -> e != this)
+                    .filter(e -> !((NPC) e).isInvisible())
                     .collect(Collectors.toSet());
             if (!movable.isEmpty()) {
                 final Element npc = Utils.pickRandom(movable);

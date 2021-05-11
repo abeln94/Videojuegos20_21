@@ -95,6 +95,7 @@ abstract public class Element implements Serializable {
     public List<Element> getInteractable() {
         List<Element> interactable = new ArrayList<>(elements);
         elements.forEach(i -> interactable.addAll(i.getInteractable()));
+        interactable.removeIf(e -> e instanceof NPC && ((NPC) e).isInvisible());
         return interactable;
     }
 

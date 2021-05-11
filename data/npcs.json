@@ -11,6 +11,7 @@
   {
     "id": "Gandalf",
     "name": "Gandalf",
+    "canFollowOrders": true,
     "weight": 100,
     "location": "StartLocation",
     "strength": 5,

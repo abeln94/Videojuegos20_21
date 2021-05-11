@@ -254,7 +254,8 @@ public class Engine {
                         "todos"
                 ).require(
                         // and be in one of the connected exits
-                        otherNPC -> ((Location) location).exits.entrySet().stream().anyMatch(l -> l.getValue().first.elements.contains(otherNPC)),
+                        otherNPC -> ((Location) location).exits.entrySet().stream().anyMatch(l -> l.getValue().first.elements.contains(otherNPC))
+                                && !((NPC) otherNPC).isInvisible(), // and not invisible
                         "No veo a {}.",
                         "nadie a quien seguir"
                 ).apply("A quien quieres seguir?", toFollow -> {

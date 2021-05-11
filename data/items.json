@@ -87,7 +87,8 @@
     "name": "el anillo de oro",
     "weight": 1,
     "location": "DarkWidingPassage_6",
-    "id": "GoldenRing"
+    "id": "GoldenRing",
+    "makesInvisible": true
   },
   {
     "openable": "CLOSED",
