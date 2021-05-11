@@ -3,6 +3,7 @@ package com.unizar.game.commands;
 import com.unizar.Utils;
 import com.unizar.game.elements.Element;
 
+import java.text.Collator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -263,7 +264,10 @@ public class Word {
      * @return true if they match, false otherwise
      */
     static public boolean matchWords(String baseWord, String testWord) {
-        return testWord.equals(baseWord);
+        Collator collate = Collator.getInstance();
+        collate.setStrength(java.text.Collator.PRIMARY);
+        collate.setDecomposition(java.text.Collator.CANONICAL_DECOMPOSITION);
+        return collate.equals(testWord.toLowerCase(), baseWord.toLowerCase());
     }
 
     /**

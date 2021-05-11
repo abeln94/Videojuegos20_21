@@ -930,7 +930,6 @@
         "location": "SmoothPassage"
       },
       "UP": {
-        "item": "SideDoorLonelyMountain",
         "location": "LonelyMountain"
       }
     },

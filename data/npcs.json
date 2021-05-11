@@ -169,7 +169,8 @@
     "health": 16,
     "moveNPCsTo": "GoblinDungeon",
     "allies": [
-      "Goblin"
+      "Goblin",
+      "Gollum"
     ],
     "attackWeight": 1,
     "navigateWeight": 2
