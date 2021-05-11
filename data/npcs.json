@@ -244,7 +244,7 @@
   },
   {
     "id": "Bardo",
-    "name": "Bardo, el Bardo",
+    "name": "Bardo",
     "weight": 500,
     "location": "LakeTown",
     "strength": 5,
@@ -257,7 +257,7 @@
   },
   {
     "id": "RedGoldenDragon",
-    "name": "El dorado dragón rojo",
+    "name": "El dragón Smaug",
     "weight": 200,
     "location": "DragonsHalls",
     "allowedLocations": [

@@ -108,7 +108,7 @@
       }
     },
     "music": "iceCavern",
-    "name": "un sinuoso y peligroso camino en las montañas brumosas",
+    "name": "un sinuoso y peligroso camino en las Montañas Nubladas",
     "id": "DangerousPath"
   },
   {
@@ -596,7 +596,7 @@
       }
     },
     "music": "DistantMemory",
-    "name": "la entrada de Mirkwood",
+    "name": "la entrada del Bosque Negro",
     "id": "Mirkwood"
   },
   {
@@ -610,7 +610,7 @@
       }
     },
     "music": "DistantMemory",
-    "name": "un lugar tenebroso",
+    "name": "un bosque tenebroso",
     "description": ", incluso parece embrujado",
     "id": "BewitchedPlace"
   },
@@ -625,7 +625,7 @@
       }
     },
     "music": "water",
-    "name": "la orilla oesta del río Negro",
+    "name": "la orilla oesta del Río Encantado",
     "id": "WestBlackRiver"
   },
   {
@@ -639,7 +639,7 @@
       }
     },
     "music": "water",
-    "name": "la orilla este del río Negro",
+    "name": "la orilla este del Río Encantado",
     "id": "EastBlackRiver"
   },
   {
@@ -949,7 +949,7 @@
       }
     },
     "music": "water",
-    "name": "el río Rápido",
+    "name": "el río Gris",
     "id": "FastRiver"
   },
   {
@@ -1088,7 +1088,7 @@
       }
     },
     "music": "water",
-    "name": "un río con corrientes muy fuertes",
+    "name": "el río Anduin",
     "id": "StrongRiver"
   },
   {
@@ -1117,7 +1117,7 @@
       }
     },
     "music": "water",
-    "name": "un río con rápidos",
+    "name": "el Rio Grande",
     "id": "RunningRiver"
   }
 ]
