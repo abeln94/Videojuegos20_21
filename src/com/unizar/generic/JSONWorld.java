@@ -121,14 +121,11 @@ public class JSONWorld extends World {
                 npc_element.navigateLocationsAreForbidden = true;
             }
 
-            if (npc_json.has("fuerza")) {
-                npc_element.fuerza = npc_json.getInt("fuerza");
+            if (npc_json.has("strenght")) {
+                npc_element.strenght = npc_json.getInt("strenght");
             }
-            if (npc_json.has("constitucion")) {
-                npc_element.fuerza = npc_json.getInt("constitucion");
-            }
-            if (npc_json.has("vida")) {
-                npc_element.fuerza = npc_json.getInt("vida");
+            if (npc_json.has("health")) {
+                npc_element.health = npc_json.getInt("health");
             }
             if (npc_json.has("languages")) {
                 final JSONArray array = npc_json.getJSONArray("languages");
@@ -236,6 +233,9 @@ public class JSONWorld extends World {
                         Word.Direction.valueOf(direction),
                         Utils.Pair.of(location, item)
                 );
+            }
+            if (location_json.has("description")) {
+                location_element.description = location_json.getString("description");
             }
         }
 

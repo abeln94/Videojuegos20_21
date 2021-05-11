@@ -104,7 +104,7 @@ public class Game extends KeyAdapter implements Runnable {
      */
     public void gameOverScreen() {
         state = State.GameOverScreen;
-        setImage(null);
+        setImage(world.properties.getGameOverScreen());
         setMusic(world.properties.getGameOverMusic());
         addOutput("Has muerto.");
         window.clearDescription();

@@ -27,7 +27,7 @@ public class Player extends NPC {
 
     @Override
     public void ask(NPC npc, String message) {
-        hear(npc + " dice: " + message);
+        hear(npc + " dice: \"" + message + "\"");
     }
 
     @Override

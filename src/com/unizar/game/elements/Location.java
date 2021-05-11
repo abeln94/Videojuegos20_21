@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 abstract public class Location extends Element {
 
     public String image;
-
     public String music;
+    public String description = "";
 
     /**
      * List of exits from this location. A map of
@@ -43,7 +43,7 @@ abstract public class Location extends Element {
     @Override
     public String getDescription() {
         // start with the location description
-        StringBuilder description = new StringBuilder(name + ".");
+        StringBuilder description = new StringBuilder(name + this.description + ".");
 
         // add the object exits
         List<String> visibleExits = exits.entrySet().stream().filter(e -> {

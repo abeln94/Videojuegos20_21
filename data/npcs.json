@@ -4,18 +4,18 @@
     "name": "Bilbo",
     "weight": 10,
     "location": "StartLocation",
-    "fuerza": 3,
+    "strength": 3,
     "constitucion": 2,
-    "vida": 20
+    "health": 20
   },
   {
     "id": "Gandalf",
     "name": "Gandalf",
     "weight": 100,
     "location": "StartLocation",
-    "fuerza": 5,
+    "strength": 5,
     "constitucion": 5,
-    "vida": 50,
+    "health": 50,
     "navigateWeight": 5,
     "followWeight": 1,
     "giveWeight": 1,
@@ -27,9 +27,9 @@
     "name": "Thorin",
     "weight": 30,
     "location": "StartLocation",
-    "fuerza": 5,
+    "strength": 5,
     "constitucion": 5,
-    "vida": 34,
+    "health": 34,
     "canFollowOrders": true,
     "followNPCs": [
       "Bilbo_Player"
@@ -57,9 +57,9 @@
       "TrollsClearing",
       "HiddenPath"
     ],
-    "fuerza": 3,
+    "strength": 3,
     "constitucion": 5,
-    "vida": 34,
+    "health": 34,
     "sleepAt": "day",
     "pacificTurns": 1,
     "talkPlayer": [
@@ -88,9 +88,9 @@
       "TrollsClearing",
       "HiddenPath"
     ],
-    "fuerza": 3,
+    "strength": 3,
     "constitucion": 5,
-    "vida": 34,
+    "health": 34,
     "sleepAt": "day",
     "pacificTurns": 1,
     "talkPlayer": [
@@ -118,9 +118,9 @@
     "allowedLocations": [
       "Rivendell"
     ],
-    "fuerza": 5,
+    "strength": 5,
     "constitucion": 5,
-    "vida": 50,
+    "health": 50,
     "languages": [
       "elfo"
     ],
@@ -163,9 +163,9 @@
       "DarkWidingPassage_9",
       "GoblinsGate"
     ],
-    "fuerza": 1,
+    "strength": 1,
     "constitucion": 2,
-    "vida": 16,
+    "health": 16,
     "moveNPCsTo": "GoblinDungeon",
     "allies": [
       "Goblin"
@@ -177,9 +177,9 @@
     "id": "Gollum",
     "name": "Gollum",
     "weight": 40,
-    "fuerza": 1,
+    "strength": 1,
     "constitucion": 4,
-    "vida": 20,
+    "health": 20,
     "location": "DarkWidingPassage_6",
     "allowedLocations": [
       "DryCave",
@@ -234,9 +234,9 @@
         "sentence": "k te vayas jujaaaaaaas!!!!!!!"
       }
     ],
-    "fuerza": 1,
+    "strength": 1,
     "constitucion": 3,
-    "vida": 22,
+    "health": 22,
     "attackItems": [
       "RedKey"
     ],
@@ -247,9 +247,9 @@
     "name": "Bardo, el Bardo",
     "weight": 500,
     "location": "LakeTown",
-    "fuerza": 5,
+    "strength": 5,
     "constitucion": 5,
-    "vida": 50,
+    "health": 50,
     "followNPCs": [
       "Bilbo_Player"
     ],
@@ -268,9 +268,9 @@
       "LonelyMountain",
       "DragonsHalls"
     ],
-    "fuerza": 5,
+    "strength": 5,
     "constitucion": 5,
-    "vida": 50,
+    "health": 50,
     "pacificTurns": 1,
     "attackWeight": 3,
     "navigateWeight": 8
@@ -294,9 +294,9 @@
       "DarkWidingPassage_9",
       "GoblinsGate"
     ],
-    "fuerza": 1,
+    "strength": 1,
     "constitucion": 2,
-    "vida": 16,
+    "health": 16,
     "pacificTurns": 1,
     "attackWeight": 8,
     "navigateWeight": 5
@@ -312,9 +312,9 @@
       "ForestRoad_1",
       "ForestRoad_2"
     ],
-    "fuerza": 1,
+    "strength": 1,
     "constitucion": 2,
-    "vida": 16,
+    "health": 16,
     "pacificTurns": 1,
     "attackWeight": 8,
     "navigateWeight": 5
@@ -338,9 +338,9 @@
       "MistyValley_1",
       "MistyValley_2"
     ],
-    "fuerza": 3,
+    "strength": 3,
     "constitucion": 5,
-    "vida": 34,
+    "health": 34,
     "pacificTurns": 1,
     "attackWeight": 10,
     "navigateWeight": 1
