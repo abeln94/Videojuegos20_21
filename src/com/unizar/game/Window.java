@@ -5,10 +5,7 @@ import com.unizar.AlphaIcon;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -85,7 +82,7 @@ public class Window {
         if (fontFile != null) {
             try {
                 InputStream is = new FileInputStream(fontFile);
-                font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(20f); // TODO: hacer mas grandes
+                font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(20f);
             } catch (FontFormatException | IOException e) {
                 e.printStackTrace();
             }
@@ -107,7 +104,7 @@ public class Window {
 
         // command input
         commandInput = new JTextField();
-        commandInput.setFont(font);
+        if (font != null) commandInput.setFont(font);
         frame.add(commandInput);
 
         // description
@@ -116,8 +113,31 @@ public class Window {
         description.setLineWrap(true);
         description.setWrapStyleWord(true);
         description.setFocusable(false);
-        description.setFont(font);
+        if (font != null) description.setFont(font);
         frame.add(new JScrollPane(description, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+
+        // changeFont listener
+        for (Component component : new Component[]{frame, commandOutput, description}) {
+            component.addMouseWheelListener(new MouseAdapter() {
+                @Override
+                public void mouseWheelMoved(MouseWheelEvent e) {
+                    if (e.isControlDown()) {
+                        // change font size
+                        int amount = e.getWheelRotation();
+                        if (amount == 0) return;
+                        for (Component textview : new Component[]{commandInput, commandOutput, description}) {
+                            Font font1 = textview.getFont();
+                            font1 = font1.deriveFont(font1.getSize2D() - amount);
+                            textview.setFont(font1);
+                        }
+                    } else {
+                        // scroll parent
+                        Container parent = component.getParent();
+                        if (parent != null) parent.dispatchEvent(e);
+                    }
+                }
+            });
+        }
 
         // show
         frame.setSize(640, 480);
@@ -125,7 +145,7 @@ public class Window {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        frame.setResizable(false); // noooooo
         frame.setVisible(true);
-        commandInput.grabFocus();
+        commandInput.requestFocusInWindow();
     }
 
     // ------------------------- command -------------------------

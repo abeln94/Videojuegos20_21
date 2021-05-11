@@ -37,3 +37,4 @@ En [dirección] se puede especificar una de las direcciones donde hay una salida
 
 Otras funcionalidades del motor son:
 - Pulsar flecha arriba/abajo para elegir de comandos introducidos previamente
+- Control + rueda del mouse para cambiar el tamaño de la letra
