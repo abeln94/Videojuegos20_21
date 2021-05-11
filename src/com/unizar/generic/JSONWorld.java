@@ -52,8 +52,6 @@ public class JSONWorld extends World {
     }
 
     public static Set<Element> loadElements(String path) throws IOException {
-        // TODO: ensure there is at least one element using each property
-
         final JSONArray npcs = new JSONArray(Utils.readFile(path + FILE_NPCS));
         final JSONArray items = new JSONArray(Utils.readFile(path + FILE_ITEMS));
         final JSONArray locations = new JSONArray(Utils.readFile(path + FILE_LOCATIONS));
