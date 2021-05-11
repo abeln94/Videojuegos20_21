@@ -11,16 +11,22 @@ public class JSONProperties extends Properties {
     // TODO: use internally a JSONObject instead of a serializable field
 
     private final String title;
+
     private final int imageRatio;
+    private final String fontFile;
+    private final String helpFile;
+
     private final String imagePath;
     private final String musicPath;
-    private final String fontFile;
+
     private final String startScreen;
-    private final String winScreen;
     private final String startDescription;
+    private final String startMusic;
+
+    private final String winScreen;
     private final String winDescription;
-    private final String helpFile;
     private final String winMusic;
+
     private final String gameOverMusic;
 
     public JSONProperties(String root, JSONObject properties) {
@@ -37,6 +43,7 @@ public class JSONProperties extends Properties {
         helpFile = root + properties.getString("helpFile");
         winMusic = properties.getString("winMusic");
         gameOverMusic = properties.getString("gameOverMusic");
+        startMusic = properties.getString("startMusic");
     }
 
     @Override
@@ -97,5 +104,10 @@ public class JSONProperties extends Properties {
     @Override
     public String getGameOverMusic() {
         return gameOverMusic;
+    }
+
+    @Override
+    public String getStartMusic() {
+        return startMusic;
     }
 }

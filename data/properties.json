@@ -12,5 +12,6 @@
   "winItem": "TheValuableTreasure",
   "winLocation": "StartChest",
   "winMusic": "tale",
-  "gameOverMusic": "Final"
+  "gameOverMusic": "Final",
+  "startMusic": "prelude"
 }
