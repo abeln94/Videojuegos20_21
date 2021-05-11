@@ -452,17 +452,18 @@ public class Engine {
                     } else if (dice == 0) { //pifia, no hace daño
                         damage = 0;
                     } else { //normal
-                        damage = npc.fuerza + dice;
+                        damage = npc.strenght + dice;
+                        // TODO: add strength of the item
                     }
 
-                    ((NPC) attack).vida = ((NPC) attack).vida - damage;
+                    ((NPC) attack).health = ((NPC) attack).health - damage;
 
                     if (damage == 0) {
                         attack.hear(npc + " te ataca pero no te provoca ningún daño.");
                         return Result.done("Atacas a " + attack + " pero el esfuerzo es en vano. Su defensa es muy fuerte.");
                     }
 
-                    if (((NPC) attack).vida <= 0) { //muere
+                    if (((NPC) attack).health <= 0) { //muere
                         attack.hear(npc + " te ataca. Con un golpe certero, te parte el cráneo.");
                         attack.kill();
                         return Result.done("Atacas a " + attack + ". Con un golpe certero le partes el cráneo.");
