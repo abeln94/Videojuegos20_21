@@ -97,28 +97,29 @@ public class ElementSearcher {
     public static String generateGraph(Set<Element> elements) {
         final StringBuilder graph = new StringBuilder("digraph G {\n");
 
+        final int[] unique = {0};
 
         elements.forEach(element -> {
 
             // node types
-            graph.append(element.id + " [shape=" + (
+            graph.append(node(element,
                     element instanceof Player ? "doublecircle"
                             : element instanceof NPC ? "oval"
                             : element instanceof Item ? "diamond"
                             : element instanceof Location ? "box"
                             : "point"
-            ) + "];\n");
+            ));
 
             // inventory
             element.elements.forEach(child ->
-                    graph.append(line(element, child, "HAS"))
-            );
+                    graph.append(connection(element, child, "HAS", null)
+                    ));
 
             // wearables
             if (element instanceof NPC) {
                 ((NPC) element).wearables.forEach(wearable ->
-                        graph.append(line(element, wearable, "WEAR"))
-                );
+                        graph.append(connection(element, wearable, "WEAR", null)
+                        ));
             }
 
             // exits
@@ -126,11 +127,14 @@ public class ElementSearcher {
                 ((Location) element).exits.forEach((dir, p) -> {
                             if (p.second == null) {
                                 // direct
-                                graph.append(line(element, p.first, "GO:" + dir.name()));
+                                graph.append(connection(element, p.first, "GO:" + dir.name(), "bold"));
                             } else {
                                 // through
-                                graph.append(line(element, p.second, "AT:" + dir.name()));
-                                graph.append(line(p.second, p.first, "OF:" + element.id));
+                                String uniqueNode = "u_" + (unique[0]++);
+                                graph.append(node(uniqueNode, "point"));
+                                graph.append(connection(element, uniqueNode, "GO:" + dir.name(), "bold"));
+                                graph.append(connection(uniqueNode, p.first, "TO", "bold"));
+                                graph.append(connection(uniqueNode, p.second, "THROUGH", null));
                             }
                         }
                 );
@@ -140,19 +144,19 @@ public class ElementSearcher {
             if (element instanceof NPC) {
                 Element destination = ((NPC) element).moveNPCsTo;
                 if (destination != null) {
-                    graph.append(line(element, destination, "TP"));
+                    graph.append(connection(element, destination, "TP", "dotted"));
                 }
             }
 
             // hidden connections
             element.hiddenElements.forEach((a, h) -> {
-                graph.append(line(element, h, a.name()));
+                graph.append(connection(element, h, a.name(), "dashed"));
             });
 
             // giveable items
             if (element instanceof NPC) {
                 ((NPC) element).giveItems.forEach(giveable ->
-                        graph.append(line(element, giveable, "GIVE"))
+                        graph.append(connection(element, giveable, "GIVE", "dashed"))
                 );
             }
         });
@@ -160,7 +164,20 @@ public class ElementSearcher {
         return graph.append("}").toString();
     }
 
-    private static String line(Element from, Element to, String label) {
-        return from.id + " -> " + to.id + " [label=\"" + label + "\"];\n";
+    private static String node(Object node, String shape) {
+        return (node instanceof Element ? ((Element) node).id : node.toString())
+                + " ["
+                + (shape != null ? "shape=" + shape + " " : "")
+                + "];\n";
+    }
+
+    private static String connection(Object from, Object to, String label, String style) {
+        return (from instanceof Element ? ((Element) from).id : from.toString())
+                + " -> "
+                + (to instanceof Element ? ((Element) to).id : to.toString())
+                + " ["
+                + (label != null ? "label=\"" + label + "\" " : "")
+                + (style != null ? "style=" + style + " " : "")
+                + "];\n";
     }
 }

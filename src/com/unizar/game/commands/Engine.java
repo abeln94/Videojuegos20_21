@@ -372,6 +372,10 @@ public class Engine {
                 });
 
             case SAY:
+                if (command.main != null && command.main.wasSpecified() && !command.secondary.wasSpecified()) {
+                    // "decir Gandalf" -> "decir a Gandalf"
+                    command.secondary = command.main;
+                }
                 return command.secondary.require(
                         // the element must be an npc
                         e -> e instanceof NPC,

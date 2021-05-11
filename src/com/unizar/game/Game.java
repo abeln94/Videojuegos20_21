@@ -10,7 +10,10 @@ import com.unizar.generic.JSONWorld;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -66,6 +69,7 @@ public class Game extends KeyAdapter implements Runnable {
         state = State.StartScreen;
         reset();
         setImage(world.properties.getStartScreen());
+        setMusic(world.properties.getStartMusic());
         window.clearOutput();
         addOutput("Escribe aquí los comandos y pulsa enter para introducirlos.");
         addOutput("También puedes pulsar F6/F9 para guardar/cargar la partida. Y pulsar F2 para resetear. Si necesitas ayuda sobre el juego puedes pulsar F1.");
@@ -319,9 +323,7 @@ public class Game extends KeyAdapter implements Runnable {
             setMusic(music);
             setImage(image);
 
-            Utils.smoothing(f -> {
-                window.setImageTransparency(f);
-            });
+            Utils.smoothing(window::setImageTransparency);
         }
 
         // describe current room
@@ -450,10 +452,20 @@ public class Game extends KeyAdapter implements Runnable {
      * Shows the help file
      */
     public void help() {
+
+        // engine help
+        InputStream resource = Game.class.getResourceAsStream("/help.txt");
+        assert resource != null;
+        String engineHelp = new BufferedReader(new InputStreamReader(resource)).lines().collect(Collectors.joining("\n"));
+
+        // game help
+        String gameHelp;
         try {
-            Utils.showMessage("Ayuda", Utils.readFile(world.properties.getHelpFile()));
+            gameHelp = Utils.readFile(world.properties.getHelpFile());
         } catch (IOException ioException) {
-            Utils.showMessage("Ayuda", ioException.toString());
+            gameHelp = ioException.toString();
         }
+
+        Utils.showMessage("Ayuda", gameHelp + "\n\n--------------------------------------------------\n\n" + engineHelp);
     }
 }

@@ -103,7 +103,7 @@ abstract public class NPC extends Element {
      */
     public void ask(NPC npc, String message) {
         if (!canFollowOrders) {
-            npc.hear(npc + " no te hace caso");
+            npc.hear(this + " no te hace caso");
             return;
         }
 
