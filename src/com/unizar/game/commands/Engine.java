@@ -494,6 +494,18 @@ public class Engine {
                     food.kill();
                     food.hear(npc + " te come.");
 
+                    if (food instanceof NPC) {
+                        // eat npc, reduce health
+                        npc.health -= food.weight;
+                        if (npc.health <= 0) { //muere
+                            npc.kill();
+                            return Result.done("Te comes " + food + ", pero te sienta tan mal que falleces al instante."); // todo: improve
+                        }
+                    } else {
+                        // eat item, increase health
+                        npc.health += food.weight;
+                    }
+
                     return Result.done("Te comes " + food + ".");
                 });
             case DIG:
