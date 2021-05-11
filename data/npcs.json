@@ -126,7 +126,7 @@
       "elfo"
     ],
     "giveItems": [
-      "ElrondFood"
+      "Food"
     ],
     "canFollowOrders": true,
     "talkPlayer": [
