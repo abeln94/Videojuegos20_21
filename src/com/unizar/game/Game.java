@@ -466,6 +466,6 @@ public class Game extends KeyAdapter implements Runnable {
             gameHelp = ioException.toString();
         }
 
-        Utils.showMessage("Ayuda", gameHelp + "\n\n--------------------------------------------------\n\n" + engineHelp);
+        Utils.showMessage("Ayuda", gameHelp + "\n\n\n\n\n--------------------------------------------------\n\n\n\n\n" + engineHelp);
     }
 }

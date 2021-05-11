@@ -4,7 +4,7 @@
   "musicPath": "/music/{}.wav",
   "imagePath": "/images/{}.PNG",
   "helpFile": "/other/help.txt",
-  "startDescription": "Eres un hobbit, tu objetivo es derrotar al dragon y quedarte su tesoro.",
+  "startDescription": "Mi buen amigo Bilbo:\nPuede que a lo largo del viaje no pueda estar contigo, ya sabes, cosas de magos, pero quería que tuvieses toda la ayuda que pudieses.\nTe he recomendado para esta misión porque se que con tu tamaño y astucia puedes ser un gran saqueador.\nEl camino no va a ser fácil: Trolls, Rivendell, las Montañas Nubladas, goblins, el Bosque Negro, las Montañas Solitarias... y Smaug.\nTe deseo lo mejor y espero poder vernos en el camino.\nGandalf",
   "winDescription": "Has conseguido derrotar al dragón y te has llevado su oro, se celebra una fiesta en tu honor",
   "startScreen": "StartScreen",
   "winScreen": "WinScreen",
