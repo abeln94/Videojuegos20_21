@@ -10,7 +10,7 @@ Sandra Navarro Moreno (681138)
 El proyecto consiste en el desarrollo de un motor de juegos textuales por comandos, que implementa una versión propia
 del videojuego El Hobbit.
 
-La carpeta 'data' consta de los datos del Hobbit, y se permite (y se incita) a cambiarlos para crear nuevas situaciones,
+La carpeta 'data' consta de los datos del Hobbit, y se permite (y se anima) a cambiarlos para crear nuevas situaciones,
 personajes, elementos o incluso un juego totalmente nuevo.
 
 Lamentablemente la documentación no está aún disponible, pero se puede ver como está hecho el Hobbit para entender la

@@ -237,6 +237,9 @@ public class JSONWorld extends World {
                         Utils.Pair.of(location, item)
                 );
             }
+            if (location_json.has("description")) {
+                location_element.description = location_json.getString("description");
+            }
         }
 
 
