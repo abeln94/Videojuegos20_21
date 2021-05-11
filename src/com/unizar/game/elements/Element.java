@@ -145,6 +145,19 @@ abstract public class Element implements Serializable {
         if (newParent != null) newParent.elements.add(this);
     }
 
+    /**
+     * Kills this element and drops its items
+     */
+    public void kill() {
+        // 'drop' all its objects
+        Element floor = getLocation();
+        new HashSet<>(elements) // a copy is needed to avoid modifying while iterating
+                .forEach(e -> e.moveTo(floor));
+
+        // move to null
+        moveTo(null);
+    }
+
     @Override
     public String toString() {
         return name;

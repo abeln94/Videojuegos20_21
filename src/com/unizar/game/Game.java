@@ -221,7 +221,11 @@ public class Game extends KeyAdapter implements Runnable {
 
             // press F12 for debug
             case KeyEvent.VK_F12:
-                Debug.teleportPlayer(this);
+                if ((e.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) != 0) {
+                    Utils.showMessage("http://viz-js.com/", ElementSearcher.generateGraph(world.elements));
+                } else {
+                    Debug.teleportPlayer(this);
+                }
                 update();
                 break;
         }

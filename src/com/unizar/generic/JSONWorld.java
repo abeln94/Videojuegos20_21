@@ -27,8 +27,8 @@ public class JSONWorld extends World {
 
     // ------------------------- completion -------------------------
 
-    private Element winItem;
-    private Element winLocation;
+    private final Element winItem;
+    private final Element winLocation;
 
     @Override
     public boolean playerWon(Game game) {
@@ -52,6 +52,7 @@ public class JSONWorld extends World {
     }
 
     public static Set<Element> loadElements(String path) throws IOException {
+        // TODO: ensure there is at least one element using each property
 
         final JSONArray npcs = new JSONArray(Utils.readFile(path + FILE_NPCS));
         final JSONArray items = new JSONArray(Utils.readFile(path + FILE_ITEMS));

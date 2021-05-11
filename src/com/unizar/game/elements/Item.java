@@ -34,6 +34,8 @@ public abstract class Item extends Element {
 
     public String description = null;
 
+    // TODO: makes invisible
+
     public Item(String name) {
         super(name);
     }

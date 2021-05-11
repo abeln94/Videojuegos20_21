@@ -124,6 +124,9 @@
     "languages": [
       "elfo"
     ],
+    "giveItems": [
+      "ElrondFood"
+    ],
     "canFollowOrders": true,
     "talkPlayer": [
       {

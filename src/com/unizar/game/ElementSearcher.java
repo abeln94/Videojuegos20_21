@@ -1,8 +1,6 @@
 package com.unizar.game;
 
-import com.unizar.game.elements.Element;
-import com.unizar.game.elements.Location;
-import com.unizar.game.elements.NPC;
+import com.unizar.game.elements.*;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -17,7 +15,7 @@ public class ElementSearcher {
     static private class Node {
         Element element;
         String whereIs = null;
-        String debug = "";
+        String debug;
 
         public Node(Element element) {
             this.element = element;
@@ -38,6 +36,7 @@ public class ElementSearcher {
         // variables
         Set<Element> visited = new HashSet<>();
         Queue<Node> toCheck = new LinkedList<>();
+        String graph = "";
 
         // initialize
         toCheck.add(new Node(from));
@@ -91,7 +90,77 @@ public class ElementSearcher {
             }
 
         }
-
+        System.out.println(graph);
         return "No se ha podido encontrar " + to + ".";
+    }
+
+    public static String generateGraph(Set<Element> elements) {
+        final StringBuilder graph = new StringBuilder("digraph G {\n");
+
+
+        elements.forEach(element -> {
+
+            // node types
+            graph.append(element.id + " [shape=" + (
+                    element instanceof Player ? "doublecircle"
+                            : element instanceof NPC ? "oval"
+                            : element instanceof Item ? "diamond"
+                            : element instanceof Location ? "box"
+                            : "point"
+            ) + "];\n");
+
+            // inventory
+            element.elements.forEach(child ->
+                    graph.append(line(element, child, "HAS"))
+            );
+
+            // wearables
+            if (element instanceof NPC) {
+                ((NPC) element).wearables.forEach(wearable ->
+                        graph.append(line(element, wearable, "WEAR"))
+                );
+            }
+
+            // exits
+            if (element instanceof Location) {
+                ((Location) element).exits.forEach((dir, p) -> {
+                            if (p.second == null) {
+                                // direct
+                                graph.append(line(element, p.first, "GO:" + dir.name()));
+                            } else {
+                                // through
+                                graph.append(line(element, p.second, "AT:" + dir.name()));
+                                graph.append(line(p.second, p.first, "OF:" + element.id));
+                            }
+                        }
+                );
+            }
+
+            // TP connections
+            if (element instanceof NPC) {
+                Element destination = ((NPC) element).moveNPCsTo;
+                if (destination != null) {
+                    graph.append(line(element, destination, "TP"));
+                }
+            }
+
+            // hidden connections
+            element.hiddenElements.forEach((a, h) -> {
+                graph.append(line(element, h, a.name()));
+            });
+
+            // giveable items
+            if (element instanceof NPC) {
+                ((NPC) element).giveItems.forEach(giveable ->
+                        graph.append(line(element, giveable, "GIVE"))
+                );
+            }
+        });
+
+        return graph.append("}").toString();
+    }
+
+    private static String line(Element from, Element to, String label) {
+        return from.id + " -> " + to.id + " [label=\"" + label + "\"];\n";
     }
 }
