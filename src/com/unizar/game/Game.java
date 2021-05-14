@@ -144,7 +144,7 @@ public class Game extends KeyAdapter implements Runnable {
                 runnable.run();
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
-                addOutput("{Internal error: " + throwable.getMessage() + "}");
+                addOutput("{Internal error: " + throwable + "}");
             } finally {
                 window.enableInput();
             }
