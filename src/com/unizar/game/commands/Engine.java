@@ -84,7 +84,7 @@ public class Engine {
                         e -> ((Item) e).openable != Item.OPENABLE.LOCKED,
                         "{} está bloqueado/a.",
                         "todo"
-                ).apply("Que quieres abrir?", element -> {
+                ).apply("Que {} quieres abrir?", "elemento", element -> {
                     // open
                     ((Item) element).openable = Item.OPENABLE.OPENED;
                     location.notifyNPCs(npc, npc + " abre " + element + ".");
@@ -111,7 +111,7 @@ public class Engine {
                         e -> ((Item) e).openable != Item.OPENABLE.LOCKED,
                         "{} está bloqueado/a.",
                         "todo"
-                ).apply("Que quieres cerrar?", element -> {
+                ).apply("Que {} quieres cerrar?", "elemento", element -> {
 
                     // close
                     ((Item) element).openable = Item.OPENABLE.CLOSED;
@@ -134,7 +134,7 @@ public class Engine {
                         e -> ((Item) e).openable == Item.OPENABLE.LOCKED,
                         "{} ya está desbloqueado.",
                         "todo"
-                ).apply("Que quieres desbloquear?", unlockable -> {
+                ).apply("Que {} quieres desbloquear?", "elemento", unlockable -> {
 
                     return command.secondary.require(
                             // we must have it
@@ -146,7 +146,7 @@ public class Engine {
                             e -> e == ((Item) unlockable).lockedWith,
                             "No puedes desbloquear " + unlockable + " con {}",
                             "nada de lo que llevas"
-                    ).apply("Con que quieres desbloquearlo?", item -> {
+                    ).apply("Con que {} quieres desbloquearlo?", "elemento", item -> {
 
                         // unlock
                         ((Item) unlockable).openable = Item.OPENABLE.CLOSED;
@@ -170,7 +170,7 @@ public class Engine {
                         e -> ((Item) e).openable != Item.OPENABLE.LOCKED,
                         "{} ya está bloqueado.",
                         "todo"
-                ).apply("Que quieres bloquear?", lockable -> {
+                ).apply("Que {} quieres bloquear?", "elemento", lockable -> {
 
                     return command.secondary.require(
                             // we must have it
@@ -182,7 +182,7 @@ public class Engine {
                             e -> e == ((Item) lockable).lockedWith,
                             "No puedes bloquear " + lockable + " con {}",
                             "nada de lo que llevas"
-                    ).apply("Con que quieres bloquearlo?", item -> {
+                    ).apply("Con que {} quieres bloquearlo?", "elemento", item -> {
 
                         // lock
                         ((Item) lockable).openable = Item.OPENABLE.LOCKED;
@@ -258,7 +258,7 @@ public class Engine {
                                 && !((NPC) otherNPC).isInvisible(), // and not invisible
                         "No veo a {}.",
                         "nadie a quien seguir"
-                ).apply("A quien quieres seguir?", toFollow -> {
+                ).apply("A qué {} quieres seguir?", "personaje", toFollow -> {
 
                     // find direction and follow
                     for (Map.Entry<Word.Direction, Utils.Pair<Location, Item>> entry : ((Location) location).exits.entrySet()) {
@@ -288,7 +288,7 @@ public class Engine {
                         npc.elements::contains,
                         "No tienes {}.",
                         "nada que dar"
-                ).apply("Que quieres dar?", elementToGive -> {
+                ).apply("Que {} quieres dar?", "cosa", elementToGive -> {
 
                     // check who to give it to
                     return command.secondary.require(
@@ -301,7 +301,7 @@ public class Engine {
                             interactable::contains,
                             "No veo a {}.",
                             "nadie desde aquí"
-                    ).apply("A quién se lo quieres dar?", Word.Preposition.AT.alias + " ", whoToGiveItTo -> {
+                    ).apply("A qué {} se lo quieres dar?", "personaje", Word.Preposition.AT.alias + " ", whoToGiveItTo -> {
 
                         // give
                         elementToGive.moveTo(whoToGiveItTo);
@@ -335,7 +335,7 @@ public class Engine {
                         e -> e.weight < npc.weight,
                         "{} pesa demasiado.",
                         "todo"
-                ).apply("Que quieres coger?", pickable -> {
+                ).apply("Que {} quieres coger?", "cosa", pickable -> {
 
                     // pick
                     pickable.moveTo(npc);
@@ -347,7 +347,7 @@ public class Engine {
                         npc.elements::contains,
                         "No tienes {}.",
                         "nada"
-                ).apply("Que quieres tirar?", dropable -> {
+                ).apply("Que {} quieres tirar?", "cosa", dropable -> {
 
                     // drop
                     dropable.moveTo(location);
@@ -364,7 +364,7 @@ public class Engine {
                         e -> e instanceof Item,
                         "No puedes examinar {}.",
                         "nada"
-                ).apply("Que quieres examinar?", element -> {
+                ).apply("Que {} quieres examinar?", "cosa", element -> {
 
                     // examine
                     final String examination = ((Item) element).examine(npc);
@@ -387,7 +387,7 @@ public class Engine {
                         interactable::contains,
                         "No veo a {} por aquí.",
                         "nadie"
-                ).apply("A quien quieres hablarle?", toSay -> {
+                ).apply("A qué {} quieres hablarle?", "personaje", toSay -> {
 
                     // check subsequence
                     if (command.sequence == null) {
@@ -405,7 +405,7 @@ public class Engine {
                         npc.elements::contains,
                         "No tienes {}.",
                         "nada para poner"
-                ).apply("Que quieres poner?", elementToGive -> {
+                ).apply("Que {} quieres poner?", "elemento", elementToGive -> {
 
                     // check what to give it to
                     return command.secondary.require(
@@ -423,7 +423,7 @@ public class Engine {
                             item -> ((Item) item).openable == Item.OPENABLE.OPENED,
                             "{} está cerrado.",
                             "todo"
-                    ).apply("Donde lo quieres poner?", Word.Preposition.AT.alias + " ", container -> {
+                    ).apply("En qué {} lo quieres poner?", "elemento", Word.Preposition.AT.alias + " ", container -> {
 
                         // put
                         elementToGive.moveTo(container);
@@ -441,7 +441,7 @@ public class Engine {
                         interactable::contains,
                         "No veo a {} por aquí.",
                         "nadie"
-                ).apply("A quien quieres atacar?", attack -> {
+                ).apply("A qué {} quieres atacar?", "personaje", attack -> {
                     ((NPC) attack).lastAttackedBy = npc;
 
                     //npc ataca, attack defiende
@@ -489,7 +489,7 @@ public class Engine {
                         e -> e.weight < npc.weight,
                         "{} pesa demasiado para comerlo.",
                         "todo"
-                ).apply("Que quieres comer?", food -> {
+                ).apply("Que {} quieres comer?", "cosa", food -> {
 
                     // eat
                     food.kill();
@@ -520,7 +520,7 @@ public class Engine {
                         e -> e.hiddenElements.containsKey(Word.Action.DIG),
                         "No puedes cavar en {}.",
                         "nada"
-                ).apply("Donde quieres cavar?", dig -> {
+                ).apply("Qué {} quieres cavar?", "elemento", dig -> {
 
                     // dig
                     final Element found = dig.hiddenElements.remove(Word.Action.DIG);
@@ -538,7 +538,7 @@ public class Engine {
                         e -> e.hiddenElements.containsKey(Word.Action.BREAK),
                         "No puedes romper {}.",
                         "nada"
-                ).apply("Que quieres romper?", breakItem -> {
+                ).apply("Que {} quieres romper?", "cosa", breakItem -> {
 
                     // break
 
@@ -584,7 +584,7 @@ public class Engine {
                         item -> ((Location) location).exits.values().stream().map(li -> li.second).filter(Objects::nonNull).collect(Collectors.toSet()).contains(item),
                         "No hay nada hacia {}.",
                         "ningun sitio"
-                ).apply("Hacia donde quieres mirar?", door -> {
+                ).apply("Hacia qué {} quieres mirar?", "sitio", door -> {
 
                     // look
                     return Result.done("Miras hacia " + door + ". Puedes ver " +
@@ -603,7 +603,7 @@ public class Engine {
                         npc.elements::contains,
                         "No tienes {}.",
                         "nada que lanzar"
-                ).apply("Que quieres lanzar?", elementToThrow -> {
+                ).apply("Que {} quieres lanzar?", "cosa", elementToThrow -> {
 
                     // check who to give it to
                     return command.secondary.require(
@@ -621,7 +621,7 @@ public class Engine {
                             item -> ((Location) location).exits.values().stream().map(li -> li.second).filter(Objects::nonNull).collect(Collectors.toSet()).contains(item),
                             "No hay nada hacia {}.",
                             "ningun sitio"
-                    ).apply("Hacia donde lo quieres lanzar?", Word.Preposition.ACROSS.alias + " ", throwAcross -> {
+                    ).apply("Hacia qué {} lo quieres lanzar?", "sitio", Word.Preposition.ACROSS.alias + " ", throwAcross -> {
 
                         Location whereToThrow = ((Location) location).exits.values().stream().filter(li -> li.second == throwAcross).map(li -> li.first).findAny().orElse(null);
 
@@ -643,7 +643,7 @@ public class Engine {
                         e -> e.hiddenElements.containsKey(Word.Action.PULL),
                         "No puedes tirar de {}.",
                         "nada"
-                ).apply("De que quieres tirar?", pull -> {
+                ).apply("De qué {} quieres tirar?", "elemento", pull -> {
 
                     // pull
                     final Element found = pull.hiddenElements.get(Word.Action.PULL);
@@ -667,7 +667,7 @@ public class Engine {
                         npc.elements::contains,
                         "No tienes {}.",
                         "nada"
-                ).apply("Que quieres ponerte?", wearable -> {
+                ).apply("Que {} quieres ponerte?", "elemento", wearable -> {
 
                     // wear
                     npc.elements.remove(wearable);
@@ -680,7 +680,7 @@ public class Engine {
                         npc.wearables::contains,
                         "No llevas puesto {}.",
                         "nada"
-                ).apply("Que quieres quitarte?", wearable -> {
+                ).apply("Que {} quieres quitarte?", "elemento", wearable -> {
 
                     // unwear
                     npc.wearables.remove(wearable);
@@ -689,7 +689,7 @@ public class Engine {
                 });
 
             case SEARCH:
-                return command.main.apply("Que quieres buscar?", searchable ->
+                return command.main.apply("Que {} quieres buscar?", "cosa", searchable ->
                         Result.done(ElementSearcher.searchElement(npc, searchable))
                 );
         }

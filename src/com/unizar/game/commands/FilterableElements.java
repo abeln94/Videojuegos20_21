@@ -77,8 +77,8 @@ public class FilterableElements {
      * Makes the element require something.
      *
      * @param filter        the filter that should be true for all elements in this collection
-     * @param message       the error message if, after applying the filter, no more elements are in the collection. Must contain a '{}' that will be replaced with the element description
-     * @param noDescription if no description was provided when this command was generated, return this as the description
+     * @param message       the error message if, after applying the filter, no more elements are in the collection. Must contain a '{}' that will be replaced with the unique element description
+     * @param noDescription if there is no unique element after the filtering, replace with this instead
      * @return the error message, or null if this still contains elements after the filtering
      */
     public FilterableElements require(Predicate<Element> filter, String message, String noDescription) {
@@ -107,23 +107,25 @@ public class FilterableElements {
     /**
      * Apply a function to the element, or returns an error
      *
-     * @param moreNeeded string to return if there are multiple elements available
-     * @param action     what to run if there is exactly one element
+     * @param moreNeeded    string to return if there are multiple elements available. Must contain a '{}' that will be replaced with the input description
+     * @param noDescription if no input description was provided to the command, replace with this instead
+     * @param action        what to run if there is exactly one element
      * @return the corresponding result
      */
-    public Result apply(String moreNeeded, Function<Element, Result> action) {
-        return apply(moreNeeded, null, action);
+    public Result apply(String moreNeeded, String noDescription, Function<Element, Result> action) {
+        return apply(moreNeeded, noDescription, null, action);
     }
 
     /**
      * Apply a function to the element, or returns an error
      *
-     * @param moreNeeded           string to return if there are multiple elements available
+     * @param moreNeeded           string to return if there are multiple elements available. Must contain a '{}' that will be replaced with the element description
+     * @param noDescription        if no input description was provided to the command, replace with this instead
      * @param moreNeededAppendable appendable string for the moreNeeded result
      * @param action               what to run if there is exactly one element
      * @return the corresponding result
      */
-    public Result apply(String moreNeeded, String moreNeededAppendable, Function<Element, Result> action) {
+    public Result apply(String moreNeeded, String noDescription, String moreNeededAppendable, Function<Element, Result> action) {
         switch (elements.size()) {
             case 1:
                 // only one element, apply
@@ -150,7 +152,8 @@ public class FilterableElements {
                     return action.apply(Utils.pickRandom(elements));
                 } else {
                     //more info needed
-                    return Result.moreNeeded(moreNeeded, moreNeededAppendable);
+                    String what = !description.isEmpty() ? "'" + description + "'" : noDescription;
+                    return Result.moreNeeded(moreNeeded.replace("{}", what), moreNeededAppendable);
                 }
         }
     }
