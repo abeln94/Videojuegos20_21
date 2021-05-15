@@ -20,6 +20,8 @@ public class Result {
      */
     public String output = null;
 
+    // TODO: add a nextCommand field that will need to be run on next turn. Save here when multiple commands are executed
+
     // ------------------------- constructors -------------------------
 
     /**

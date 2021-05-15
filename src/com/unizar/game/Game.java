@@ -190,6 +190,7 @@ public class Game extends KeyAdapter implements Runnable {
                 backgroundRun(() -> {
                     String command = window.getCommand();
                     window.clearCommand();
+                    history.add(command);
                     run(command);
                 });
                 break;
@@ -245,8 +246,6 @@ public class Game extends KeyAdapter implements Runnable {
         try {
             Command command = Command.parse(rawText, world.elements);
 
-            history.add(rawText);
-
             // execute
             Result result = engine.execute(getPlayer(), command);
 
@@ -254,9 +253,7 @@ public class Game extends KeyAdapter implements Runnable {
             if (result.done) {
                 addOutput(result.output);
             } else {
-                if (result.requiresMore != null)
-                    throw new EngineException(result.output, rawText + " " + result.requiresMore);
-                else throw new EngineException(result.output);
+                throw new EngineException(result.output, result.requiresMore);
             }
 
             // player end
@@ -294,8 +291,10 @@ public class Game extends KeyAdapter implements Runnable {
             // wait again for player
 
         } catch (EngineException e) {
-            if (e.userError != null) addOutput(e.userError);
-            if (e.newUserInput != null) window.setCommand(e.newUserInput);
+            if (e.userError != null)
+                addOutput(e.userError);
+            if (e.newUserInput != null)
+                window.setCommand(history.getPreviousInput(true) + " " + e.newUserInput);
         }
 
     }
