@@ -58,7 +58,8 @@ abstract public class NPC extends Element {
     public Set<Element> giveItems = new HashSet<>();
 
     // weights
-    public int attackWeight = 0;
+    public int attackItemWeight = 0;
+    public int attackPlayerWeight = 0;
     public int followWeight = 0;
     public int navigateWeight = 0;
     public int talkWeight = 0;
@@ -199,8 +200,8 @@ abstract public class NPC extends Element {
     private Command getPossibleCommand() {
 
         Set<Utils.Pair<ACTION, Integer>> actions = new HashSet<>();
-        actions.add(Utils.Pair.of(ACTION.ATACK_ITEM, attackWeight));
-        actions.add(Utils.Pair.of(ACTION.ATACK_PLAYER, attackWeight));
+        actions.add(Utils.Pair.of(ACTION.ATACK_ITEM, attackItemWeight));
+        actions.add(Utils.Pair.of(ACTION.ATACK_PLAYER, attackPlayerWeight));
         actions.add(Utils.Pair.of(ACTION.FOLLOW_NPCS, followWeight));
         actions.add(Utils.Pair.of(ACTION.NAVIGATE, navigateWeight));
         actions.add(Utils.Pair.of(ACTION.TALK, talkWeight));
@@ -214,7 +215,7 @@ abstract public class NPC extends Element {
         switch (action) {
             case ATACK_ITEM:
                 if (attackItems.isEmpty()) return null;
-                final Element attack = Utils.pickRandom(getInteractable().stream()
+                final Element attack = Utils.pickRandom(getLocation().getInteractable().stream()
                         .filter(e -> e instanceof NPC)
                         .filter(e -> !allies.contains(e))
                         .filter(e -> e.elements.stream().anyMatch(has -> attackItems.contains(has)))

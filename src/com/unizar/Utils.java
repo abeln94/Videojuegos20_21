@@ -75,6 +75,7 @@ public class Utils {
 
         // pick random from total weight
         final int sum = parameters.stream().mapToInt(p -> p.second).sum();
+        if (sum <= 0) return null;
         int picked = random.nextInt(sum);
 
         // get based on weight

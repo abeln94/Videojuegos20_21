@@ -29,7 +29,7 @@ public class JSONWorld extends World {
 
     @Override
     public boolean playerWon(Game game) {
-        return winLocation.elements.contains(winItem);
+        return winLocation != null && winLocation.elements.contains(winItem);
     }
 
     // ------------------------- loading -------------------------
@@ -58,28 +58,27 @@ public class JSONWorld extends World {
         // initialize empty elements
         for (int i = 0; i < npcs.length(); i++) {
             JSONObject npc = npcs.getJSONObject(i);
-            assertKey(npc, "id");
-            assertKey(npc, "name");
-            final String id = npc.getString("id");
+            String id = npc.optString("id", null);
+            if (id == null) id = "(noID)-" + UUID.randomUUID();
             if (id.contains("Player"))
-                elements.put(id, new Player(npc.getString("name")) {
+                elements.put(id, new Player(npc.optString("name", "")) {
                 });
-            else elements.put(id, new NPC(npc.getString("name")) {
+            else elements.put(id, new NPC(npc.optString("name", "")) {
             });
         }
         for (int i = 0; i < items.length(); i++) {
             JSONObject item = items.getJSONObject(i);
-            assertKey(item, "id");
-            assertKey(item, "name");
-            elements.put(item.getString("id"), new Item(item.getString("name")) {
+            String id = item.optString("id", null);
+            if (id == null) id = "(noID)-" + UUID.randomUUID();
+            elements.put(id, new Item(item.optString("name", "")) {
             });
         }
         for (int i = 0; i < locations.length(); i++) {
             JSONObject location = locations.getJSONObject(i);
-            assertKey(location, "id");
-            assertKey(location, "name");
-            elements.put(location.getString("id"), new Location(
-                    location.getString("name"),
+            String id = location.optString("id", null);
+            if (id == null) id = "(noID)-" + UUID.randomUUID();
+            elements.put(id, new Location(
+                    location.optString("name", ""),
                     location.optString("image", null),
                     location.optString("music", null)
             ) {
@@ -149,10 +148,11 @@ public class JSONWorld extends World {
             }
             if (npc_json.has("attackItems")) {
                 npc_element.attackItems = getElements(npc_json.getJSONArray("attackItems"), elements);
-                npc_element.attackWeight = 1;
+                npc_element.attackItemWeight = 1;
             }
             if (npc_json.has("pacificTurns")) {
                 npc_element.pacificTurns = npc_json.getInt("pacificTurns");
+                npc_element.attackPlayerWeight = 1;
             }
             if (npc_json.has("followNPCs")) {
                 npc_element.followNPCs = getElements(npc_json.getJSONArray("followNPCs"), elements);
@@ -169,7 +169,7 @@ public class JSONWorld extends World {
                 for (int j = 0; j < talks.length(); j++) {
                     JSONObject talk = talks.getJSONObject(j);
                     int turns = talk.optInt("turns", 1);
-                    String sentence = talk.getString("sentence");
+                    String sentence = talk.optString("sentence", "...");
                     npc_element.talkPlayer.add(Utils.Pair.of(turns, sentence));
                 }
                 npc_element.talkWeight = 1;
@@ -179,8 +179,11 @@ public class JSONWorld extends World {
                 npc_element.giveWeight = 1;
             }
 
-            if (npc_json.has("attackWeight")) {
-                npc_element.attackWeight = npc_json.getInt("attackWeight");
+            if (npc_json.has("attackPlayerWeight")) {
+                npc_element.attackPlayerWeight = npc_json.getInt("attackPlayerWeight");
+            }
+            if (npc_json.has("attackItemWeight")) {
+                npc_element.attackItemWeight = npc_json.getInt("attackItemWeight");
             }
             if (npc_json.has("followWeight")) {
                 npc_element.followWeight = npc_json.getInt("followWeight");

@@ -77,7 +77,7 @@
         "sentence": "Qero su bebeee.... asao, asao, asao, asao con ensalaaada, su bebe, su bebe, su bebe o me cago aqui joer"
       }
     ],
-    "attackWeight": 3,
+    "attackPlayerWeight": 3,
     "talkWeight": 10
   },
   {
@@ -108,7 +108,7 @@
         "sentence": "Eeeeeeeh miniyo, qeres una mini empanadilla?"
       }
     ],
-    "attackWeight": 5,
+    "attackPlayerWeight": 5,
     "talkWeight": 10
   },
   {
@@ -172,7 +172,7 @@
       "Goblin",
       "Gollum"
     ],
-    "attackWeight": 1,
+    "attackPlayerWeight": 1,
     "navigateWeight": 2
   },
   {
@@ -203,7 +203,7 @@
     "followNPCs": [
       "Bilbo_Player"
     ],
-    "attackWeight": 5,
+    "attackItemWeight": 5,
     "followWeight": 5,
     "navigateWeight": 2
   },
@@ -274,7 +274,7 @@
     "constitucion": 5,
     "health": 50,
     "pacificTurns": 1,
-    "attackWeight": 3,
+    "attackPlayerWeight": 3,
     "navigateWeight": 8
   },
   {
@@ -300,7 +300,7 @@
     "constitucion": 2,
     "health": 16,
     "pacificTurns": 1,
-    "attackWeight": 8,
+    "attackPlayerWeight": 8,
     "navigateWeight": 5
   },
   {
@@ -318,7 +318,7 @@
     "constitucion": 2,
     "health": 16,
     "pacificTurns": 1,
-    "attackWeight": 8,
+    "attackPlayerWeight": 8,
     "navigateWeight": 5
   },
   {
@@ -344,7 +344,7 @@
     "constitucion": 5,
     "health": 34,
     "pacificTurns": 1,
-    "attackWeight": 10,
+    "attackPlayerWeight": 10,
     "navigateWeight": 1
   }
 ]

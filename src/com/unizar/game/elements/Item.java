@@ -48,12 +48,16 @@ public abstract class Item extends Element {
      */
     public String examine(NPC npc) {
         if (description != null) {
-            if (npc.languages.contains(language)) {
+            // contains a description
+            if (language == null || npc.languages.contains(language)) {
+                // either no language, or the npc understands this language
                 return description;
             } else {
+                // the npc don't understand the language
                 return "Tiene unos símbolos extraños.";
             }
         } else {
+            // no description
             return "Es " + getDescription();
         }
     }

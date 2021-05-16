@@ -147,13 +147,6 @@ abstract public class Element implements Serializable {
         if (parent != null) {
             // remove
             parent.elements.remove(this);
-
-            // notify new npc
-            if (this instanceof NPC) {
-                parent.notifyNPCs((NPC) this, this + " sale.");
-            } else {
-                parent.notifyNPCs(null, this + " desaparece.");
-            }
         }
 
         if (newParent != null) {
@@ -173,13 +166,14 @@ abstract public class Element implements Serializable {
      * Kills this element and drops its items
      */
     public void kill() {
-        // 'drop' all its objects
         Element floor = getLocation();
-        new HashSet<>(elements) // a copy is needed to avoid modifying while iterating
-                .forEach(e -> e.moveTo(floor));
 
         // move to null
         moveTo(null);
+
+        // 'drop' all its objects
+        new HashSet<>(elements) // a copy is needed to avoid modifying while iterating
+                .forEach(e -> e.moveTo(floor));
     }
 
     @Override
