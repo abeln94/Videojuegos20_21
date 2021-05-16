@@ -238,6 +238,9 @@ public class Game extends KeyAdapter implements Runnable {
         // skip empty lines
         if (rawText.isEmpty()) return;
 
+        // stop scheduling
+        autoWait.cancel();
+
         // write command
         addOutput("\n> " + rawText);
 
@@ -283,9 +286,6 @@ public class Game extends KeyAdapter implements Runnable {
             // update window
             update();
 
-            // schedule next wait command
-            autoWait.schedule();
-
             // wait again for player
 
         } catch (EngineException e) {
@@ -294,6 +294,9 @@ public class Game extends KeyAdapter implements Runnable {
             if (e.newUserInput != null)
                 window.setCommand(history.getPreviousInput(true) + " " + e.newUserInput);
         }
+
+        // schedule next wait command
+        autoWait.schedule();
 
     }
 

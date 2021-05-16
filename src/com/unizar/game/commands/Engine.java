@@ -233,6 +233,9 @@ public class Engine {
                 // move
                 npc.moveTo(newLocation);
 
+                // notify new npc
+                newLocation.notifyNPCs(npc, npc + " entra.");
+
                 return Result.done("Te diriges hacia " + command.direction.description);
             case FOLLOW:
                 // check if we are inside something
