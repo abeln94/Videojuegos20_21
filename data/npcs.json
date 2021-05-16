@@ -5,7 +5,6 @@
     "weight": 10,
     "location": "StartLocation",
     "strength": 3,
-    "constitucion": 2,
     "health": 20
   },
   {
@@ -15,7 +14,6 @@
     "weight": 100,
     "location": "StartLocation",
     "strength": 5,
-    "constitucion": 5,
     "health": 50,
     "navigateWeight": 5,
     "followWeight": 1,
@@ -29,7 +27,6 @@
     "weight": 30,
     "location": "StartLocation",
     "strength": 5,
-    "constitucion": 5,
     "health": 34,
     "canFollowOrders": true,
     "followNPCs": [
@@ -59,7 +56,6 @@
       "HiddenPath"
     ],
     "strength": 3,
-    "constitucion": 5,
     "health": 34,
     "sleepAt": "day",
     "pacificTurns": 1,
@@ -90,7 +86,6 @@
       "HiddenPath"
     ],
     "strength": 3,
-    "constitucion": 5,
     "health": 34,
     "sleepAt": "day",
     "pacificTurns": 1,
@@ -120,7 +115,6 @@
       "Rivendell"
     ],
     "strength": 5,
-    "constitucion": 5,
     "health": 50,
     "languages": [
       "elfo"
@@ -165,7 +159,6 @@
       "GoblinsGate"
     ],
     "strength": 1,
-    "constitucion": 2,
     "health": 16,
     "moveNPCsTo": "GoblinDungeon",
     "allies": [
@@ -180,7 +173,6 @@
     "name": "Gollum",
     "weight": 40,
     "strength": 1,
-    "constitucion": 4,
     "health": 20,
     "location": "DarkWidingPassage_6",
     "allowedLocations": [
@@ -237,7 +229,6 @@
       }
     ],
     "strength": 1,
-    "constitucion": 3,
     "health": 22,
     "attackItems": [
       "RedKey"
@@ -250,7 +241,6 @@
     "weight": 500,
     "location": "LakeTown",
     "strength": 5,
-    "constitucion": 5,
     "health": 50,
     "followNPCs": [
       "Bilbo_Player"
@@ -271,7 +261,6 @@
       "DragonsHalls"
     ],
     "strength": 5,
-    "constitucion": 5,
     "health": 50,
     "pacificTurns": 1,
     "attackPlayerWeight": 3,
@@ -297,7 +286,6 @@
       "GoblinsGate"
     ],
     "strength": 1,
-    "constitucion": 2,
     "health": 16,
     "pacificTurns": 1,
     "attackPlayerWeight": 8,
@@ -315,7 +303,6 @@
       "ForestRoad_2"
     ],
     "strength": 1,
-    "constitucion": 2,
     "health": 16,
     "pacificTurns": 1,
     "attackPlayerWeight": 8,
@@ -341,7 +328,6 @@
       "MistyValley_2"
     ],
     "strength": 3,
-    "constitucion": 5,
     "health": 34,
     "pacificTurns": 1,
     "attackPlayerWeight": 10,

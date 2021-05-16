@@ -29,7 +29,7 @@ abstract public class NPC extends Element {
     public boolean navigateLocationsAreForbidden = true; // if false, navigateLocations are allowed
 
     public int strenght = 1; //como de fuerte pega el golpe. Para calcular golpe es fuerza + aleatorio d10 + bonificador arma
-    public int health = 10; //, la vida es constitución + aleatorio dSegúnClase
+    public int health = 10; //, la vida es health + aleatorio dSegúnClase
 
     public Set<String> languages = new HashSet<>();
 
