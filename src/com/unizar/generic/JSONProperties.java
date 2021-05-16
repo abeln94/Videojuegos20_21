@@ -31,21 +31,20 @@ public class JSONProperties extends Properties {
     private final String gameOverMusic;
 
     public JSONProperties(String root, JSONObject properties) {
-
-        title = properties.getString("title");
-        imageRatio = properties.getInt("imageRatio");
-        imagePath = root + properties.getString("imagePath");
-        musicPath = root + properties.getString("musicPath");
-        fontFile = root + properties.getString("fontFile");
-        startScreen = properties.getString("startScreen");
-        winScreen = properties.getString("winScreen");
-        startDescription = properties.getString("startDescription");
-        winDescription = properties.getString("winDescription");
-        helpFile = root + properties.getString("helpFile");
-        winMusic = properties.getString("winMusic");
-        gameOverMusic = properties.getString("gameOverMusic");
-        gameOverScreen = properties.getString("gameOverScreen");
-        startMusic = properties.getString("startMusic");
+        title = properties.optString("title", "My Game");
+        imageRatio = properties.optInt("imageRatio", 1);
+        imagePath = root + properties.optString("imagePath", "/{}");
+        musicPath = root + properties.optString("musicPath", "/{}");
+        fontFile = root + properties.optString("fontFile", "/{}");
+        startScreen = properties.optString("startScreen", null);
+        winScreen = properties.optString("winScreen", null);
+        startDescription = properties.optString("startDescription", null);
+        winDescription = properties.optString("winDescription", "You won");
+        helpFile = root + properties.optString("helpFile", null);
+        winMusic = properties.optString("winMusic", null);
+        gameOverMusic = properties.optString("gameOverMusic", null);
+        gameOverScreen = properties.optString("gameOverScreen", null);
+        startMusic = properties.optString("startMusic", null);
     }
 
     @Override

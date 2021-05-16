@@ -159,6 +159,7 @@ public class Utils {
      * @throws IOException if can't read file
      */
     public static String readFile(String path) throws IOException {
+        if (path == null) return null;
         return String.join("\n", Files.readAllLines(Paths.get(path)));
     }
 
