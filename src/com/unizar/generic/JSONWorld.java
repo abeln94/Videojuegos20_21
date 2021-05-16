@@ -88,7 +88,7 @@ public class JSONWorld extends World {
         all.putAll(locations);
         for (int i = 0; i < all.length(); ++i) {
             JSONObject json = all.getJSONObject(i);
-            Element element = elements.get(json.getString("id"));
+            Element element = getElement(json, "id", elements);
 
             element.id = json.getString("id");
 
@@ -96,13 +96,13 @@ public class JSONWorld extends World {
                 element.weight = json.getInt("weight");
             }
             if (json.has("location")) {
-                elements.get(json.getString("location")).elements.add(element);
+                getElement(json, "location", elements).elements.add(element);
             }
 
             if (json.has("hidden")) {
                 final JSONObject hidden = json.getJSONObject("hidden");
                 for (String action : hidden.keySet()) {
-                    element.hiddenElements.put(Word.Action.valueOf(action), elements.get(hidden.getString(action)));
+                    element.hiddenElements.put(Word.Action.valueOf(action), getElement(hidden, action, elements));
                 }
             }
         }
@@ -110,7 +110,7 @@ public class JSONWorld extends World {
         // NPC
         for (int i = 0; i < npcs.length(); i++) {
             JSONObject npc_json = npcs.getJSONObject(i);
-            NPC npc_element = (NPC) elements.get(npc_json.getString("id"));
+            NPC npc_element = (NPC) getElement(npc_json, "id", elements);
 
             if (npc_json.has("allowedLocations")) {
                 npc_element.navigateLocations = getElements(npc_json.getJSONArray("allowedLocations"), elements);
@@ -155,7 +155,7 @@ public class JSONWorld extends World {
                 npc_element.allies = getElements(npc_json.getJSONArray("allies"), elements);
             }
             if (npc_json.has("moveNPCsTo")) {
-                npc_element.moveNPCsTo = elements.get(npc_json.getString("moveNPCsTo"));
+                npc_element.moveNPCsTo = getElement(npc_json, "moveNPCsTo", elements);
             }
             if (npc_json.has("talkPlayer")) {
                 final JSONArray talks = npc_json.getJSONArray("talkPlayer");
@@ -200,13 +200,13 @@ public class JSONWorld extends World {
         // Item
         for (int i = 0; i < items.length(); i++) {
             JSONObject item_json = items.getJSONObject(i);
-            Item item_element = (Item) elements.get(item_json.getString("id"));
+            Item item_element = (Item) getElement(item_json, "id", elements);
 
             if (item_json.has("openable")) {
                 item_element.openable = Item.OPENABLE.valueOf(item_json.getString("openable"));
             }
             if (item_json.has("lockedWith")) {
-                item_element.lockedWith = elements.get(item_json.getString("lockedWith"));
+                item_element.lockedWith = getElement(item_json, "lockedWith", elements);
             }
             if (item_json.has("language")) {
                 item_element.language = item_json.getString("language");
@@ -222,14 +222,14 @@ public class JSONWorld extends World {
         // Location
         for (int i = 0; i < locations.length(); i++) {
             JSONObject location_json = locations.getJSONObject(i);
-            Location location_element = (Location) elements.get(location_json.getString("id"));
+            Location location_element = (Location) getElement(location_json, "id", elements);
 
             final JSONObject exits = location_json.getJSONObject("exits");
             for (String direction : exits.keySet()) {
                 JSONObject locationItem = exits.getJSONObject(direction);
-                Location location = (Location) elements.get(locationItem.getString("location"));
+                Location location = (Location) getElement(locationItem, "location", elements);
                 Item item = locationItem.has("item")
-                        ? (Item) elements.get(locationItem.getString("item"))
+                        ? (Item) getElement(locationItem, "item", elements)
                         : null;
 
                 location_element.exits.put(
@@ -248,7 +248,22 @@ public class JSONWorld extends World {
 
     private static Set<Element> getElements(JSONArray array, Map<String, Element> elements) {
         Set<Element> set = new HashSet<>();
-        array.forEach(npc -> set.add(elements.get(npc.toString())));
+        array.forEach(npc -> {
+            final String id = npc.toString();
+            if (!elements.containsKey(id)) {
+                throw new RuntimeException("There is no element with id '" + id + "'");
+            }
+            set.add(elements.get(id));
+        });
         return set;
+    }
+
+    private static Element getElement(JSONObject object, String key, Map<String, Element> elements) {
+        if (!object.has(key)) return null;
+        final String id = object.getString(key);
+        if (!elements.containsKey(id)) {
+            throw new RuntimeException("There is no element with id '" + id + "'");
+        }
+        return elements.get(id);
     }
 }

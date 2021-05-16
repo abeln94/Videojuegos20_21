@@ -129,9 +129,7 @@ public class Game extends KeyAdapter implements Runnable {
         try {
             world = world.getClass().getConstructor(String.class).newInstance(root);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            // should never happen
-            e.printStackTrace();
-            System.exit(-1);
+            Utils.showMessage("Error", "Uh oh, can't reload the game. The data wasn't found or may be corrupt (here is the error just in case):\n\n" + e);
         }
         world.register(this);
         world.init();
