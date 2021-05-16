@@ -9,10 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A World generated from JSON files
@@ -61,6 +58,8 @@ public class JSONWorld extends World {
         // initialize empty elements
         for (int i = 0; i < npcs.length(); i++) {
             JSONObject npc = npcs.getJSONObject(i);
+            assertKey(npc, "id");
+            assertKey(npc, "name");
             final String id = npc.getString("id");
             if (id.contains("Player"))
                 elements.put(id, new Player(npc.getString("name")) {
@@ -70,12 +69,20 @@ public class JSONWorld extends World {
         }
         for (int i = 0; i < items.length(); i++) {
             JSONObject item = items.getJSONObject(i);
+            assertKey(item, "id");
+            assertKey(item, "name");
             elements.put(item.getString("id"), new Item(item.getString("name")) {
             });
         }
         for (int i = 0; i < locations.length(); i++) {
             JSONObject location = locations.getJSONObject(i);
-            elements.put(location.getString("id"), new Location(location.getString("name"), location.getString("image"), location.getString("music")) {
+            assertKey(location, "id");
+            assertKey(location, "name");
+            elements.put(location.getString("id"), new Location(
+                    location.getString("name"),
+                    location.optString("image", null),
+                    location.optString("music", null)
+            ) {
             });
         }
 
@@ -224,18 +231,22 @@ public class JSONWorld extends World {
             JSONObject location_json = locations.getJSONObject(i);
             Location location_element = (Location) getElement(location_json, "id", elements);
 
-            final JSONObject exits = location_json.getJSONObject("exits");
-            for (String direction : exits.keySet()) {
-                JSONObject locationItem = exits.getJSONObject(direction);
-                Location location = (Location) getElement(locationItem, "location", elements);
-                Item item = locationItem.has("item")
-                        ? (Item) getElement(locationItem, "item", elements)
-                        : null;
+            if (location_json.has("exits")) {
+                final JSONObject exits = location_json.getJSONObject("exits");
+                for (String direction : exits.keySet()) {
+                    JSONObject locationItem = exits.getJSONObject(direction);
+                    Location location = locationItem.has("location")
+                            ? (Location) getElement(locationItem, "location", elements)
+                            : null;
+                    Item item = locationItem.has("item")
+                            ? (Item) getElement(locationItem, "item", elements)
+                            : null;
 
-                location_element.exits.put(
-                        Word.Direction.valueOf(direction),
-                        Utils.Pair.of(location, item)
-                );
+                    location_element.exits.put(
+                            Word.Direction.valueOf(direction),
+                            Utils.Pair.of(location, item)
+                    );
+                }
             }
             if (location_json.has("description")) {
                 location_element.description = location_json.getString("description");
@@ -251,7 +262,7 @@ public class JSONWorld extends World {
         array.forEach(npc -> {
             final String id = npc.toString();
             if (!elements.containsKey(id)) {
-                throw new RuntimeException("There is no element with id '" + id + "'");
+                throw new NoSuchElementException("There is no element with id '" + id + "'");
             }
             set.add(elements.get(id));
         });
@@ -259,11 +270,17 @@ public class JSONWorld extends World {
     }
 
     private static Element getElement(JSONObject object, String key, Map<String, Element> elements) {
-        if (!object.has(key)) return null;
+        assertKey(object, key);
+
         final String id = object.getString(key);
         if (!elements.containsKey(id)) {
-            throw new RuntimeException("There is no element with id '" + id + "'");
+            throw new NoSuchElementException("There is no element with id '" + id + "'");
         }
         return elements.get(id);
+    }
+
+    private static void assertKey(JSONObject object, String property) {
+        if (!object.has(property))
+            throw new MissingResourceException("Missing property '" + property + "' in object " + object, "", "");
     }
 }

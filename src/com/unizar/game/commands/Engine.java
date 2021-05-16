@@ -233,9 +233,6 @@ public class Engine {
                 // move
                 npc.moveTo(newLocation);
 
-                // notify new npc
-                newLocation.notifyNPCs(npc, npc + " entra.");
-
                 return Result.done("Te diriges hacia " + command.direction.description);
             case FOLLOW:
                 // check if we are inside something
@@ -254,7 +251,7 @@ public class Engine {
                         "todos"
                 ).require(
                         // and be in one of the connected exits
-                        otherNPC -> ((Location) location).exits.entrySet().stream().anyMatch(l -> l.getValue().first.elements.contains(otherNPC))
+                        otherNPC -> ((Location) location).exits.entrySet().stream().anyMatch(l -> l.getValue().first != null && l.getValue().first.elements.contains(otherNPC))
                                 && !((NPC) otherNPC).isInvisible(), // and not invisible
                         "No veo a {}.",
                         "nadie a quien seguir"

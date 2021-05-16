@@ -142,8 +142,31 @@ abstract public class Element implements Serializable {
     public void moveTo(Element newParent) {
         assert newParent != this;
         final Element parent = getLocation();
-        if (parent != null) parent.elements.remove(this);
-        if (newParent != null) newParent.elements.add(this);
+        if (parent == newParent) return;
+
+        if (parent != null) {
+            // remove
+            parent.elements.remove(this);
+
+            // notify new npc
+            if (this instanceof NPC) {
+                parent.notifyNPCs((NPC) this, this + " sale.");
+            } else {
+                parent.notifyNPCs(null, this + " desaparece.");
+            }
+        }
+
+        if (newParent != null) {
+            // add
+            newParent.elements.add(this);
+
+            // notify new npc
+            if (this instanceof NPC) {
+                newParent.notifyNPCs((NPC) this, this + " entra.");
+            } else {
+                newParent.notifyNPCs(null, this + " aparece.");
+            }
+        }
     }
 
     /**

@@ -33,18 +33,23 @@ public class JSONProperties extends Properties {
     public JSONProperties(String root, JSONObject properties) {
         title = properties.optString("title", "My Game");
         imageRatio = properties.optInt("imageRatio", 1);
-        imagePath = root + properties.optString("imagePath", "/{}");
-        musicPath = root + properties.optString("musicPath", "/{}");
-        fontFile = root + properties.optString("fontFile", "/{}");
-        startScreen = properties.optString("startScreen", null);
-        winScreen = properties.optString("winScreen", null);
-        startDescription = properties.optString("startDescription", null);
-        winDescription = properties.optString("winDescription", "You won");
+        fontFile = root + properties.optString("fontFile", "{}");
         helpFile = root + properties.optString("helpFile", null);
-        winMusic = properties.optString("winMusic", null);
-        gameOverMusic = properties.optString("gameOverMusic", null);
-        gameOverScreen = properties.optString("gameOverScreen", null);
+
+        imagePath = root + properties.optString("imagePath", "{}");
+        musicPath = root + properties.optString("musicPath", "{}");
+
+        startScreen = properties.optString("startScreen", null);
+        startDescription = properties.optString("startDescription", "");
         startMusic = properties.optString("startMusic", null);
+
+        winScreen = properties.optString("winScreen", null);
+        winDescription = properties.optString("winDescription", "You won");
+        winMusic = properties.optString("winMusic", null);
+
+        gameOverScreen = properties.optString("gameOverScreen", null);
+        //TODO: add a gameOverDescription property
+        gameOverMusic = properties.optString("gameOverMusic", null);
     }
 
     @Override
@@ -58,6 +63,16 @@ public class JSONProperties extends Properties {
     }
 
     @Override
+    public String getFontFile() {
+        return fontFile;
+    }
+
+    @Override
+    public String getHelpFile() {
+        return helpFile;
+    }
+
+    @Override
     public String getImagePath(String label) {
         return imagePath.replace("{}", label);
     }
@@ -68,18 +83,8 @@ public class JSONProperties extends Properties {
     }
 
     @Override
-    public String getFontFile() {
-        return fontFile;
-    }
-
-    @Override
     public String getStartScreen() {
         return startScreen;
-    }
-
-    @Override
-    public String getWinScreen() {
-        return winScreen;
     }
 
     @Override
@@ -88,13 +93,18 @@ public class JSONProperties extends Properties {
     }
 
     @Override
-    public String getWinDescription() {
-        return winDescription;
+    public String getStartMusic() {
+        return startMusic;
     }
 
     @Override
-    public String getHelpFile() {
-        return helpFile;
+    public String getWinScreen() {
+        return winScreen;
+    }
+
+    @Override
+    public String getWinDescription() {
+        return winDescription;
     }
 
     @Override
@@ -103,17 +113,12 @@ public class JSONProperties extends Properties {
     }
 
     @Override
-    public String getGameOverMusic() {
-        return gameOverMusic;
-    }
-
-    @Override
     public String getGameOverScreen() {
         return gameOverScreen;
     }
 
     @Override
-    public String getStartMusic() {
-        return startMusic;
+    public String getGameOverMusic() {
+        return gameOverMusic;
     }
 }
