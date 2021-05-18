@@ -2,8 +2,10 @@
 
 This file contains a description of how the json files need to be in order to be played
 
-All the files need to be inside a folder in the same directory as the Engine jar. In order to load the game simple pass
-the name of the folder to the jar. If no name is configured it will default to `data`
+All the files need to be inside a folder, preferably in the same directory as the Engine jar. In order to load the game
+simple pass the path to the folder to the jar (either relative or absolute, no ending '/' char). For example "
+my_game_data" or "/users/home/my_game_data" or "C:\user\my_game_data". If no name is configured it will default
+to `data`, which will try to load a game in a folder named data in the same directory as the jar.
 
 ## Files
 
