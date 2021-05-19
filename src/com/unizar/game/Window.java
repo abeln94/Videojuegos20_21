@@ -127,8 +127,11 @@ public class Window {
                         if (amount == 0) return;
                         for (Component textview : new Component[]{commandInput, commandOutput, description}) {
                             Font font1 = textview.getFont();
-                            font1 = font1.deriveFont(font1.getSize2D() - amount);
-                            textview.setFont(font1);
+                            final float newSize = font1.getSize2D() - amount;
+                            if (newSize > 8 && newSize < 72) {
+                                font1 = font1.deriveFont(newSize);
+                                textview.setFont(font1);
+                            }
                         }
                     } else {
                         // scroll parent
