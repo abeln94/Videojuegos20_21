@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class Window {
 
         // frame
         frame = new JFrame(title);
+        frame.setIconImage(new BufferedImage(1, 1, BufferedImage.TRANSLUCENT));
         frame.setLayout(null);
         frame.addComponentListener(new ComponentAdapter() {
 
