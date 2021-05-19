@@ -146,6 +146,7 @@ public class Window {
 
         // show
         frame.setSize(640, 480);
+        frame.setMinimumSize(new Dimension(320, 240));
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        frame.setResizable(false); // noooooo
@@ -279,19 +280,26 @@ public class Window {
 
     // ------------------------- behaviour -------------------------
 
+    private int caretSavedPos = -1;
+
     /**
      * Disables user inputs
      */
     public void disableInput() {
-        commandInput.setEnabled(false);
+        commandInput.setEditable(false);
+        caretSavedPos = commandInput.getCaretPosition();
+        commandInput.getCaret().setVisible(false);
     }
 
     /**
      * Enables user inputs
      */
     public void enableInput() {
-        commandInput.setEnabled(true);
-        commandInput.setCaretPosition(commandInput.getText().length());
+        if (caretSavedPos < 0 || caretSavedPos > commandInput.getText().length())
+            caretSavedPos = commandInput.getText().length();
+        commandInput.setCaretPosition(caretSavedPos);
+        commandInput.setEditable(true);
+        commandInput.getCaret().setVisible(true);
     }
 
     /**

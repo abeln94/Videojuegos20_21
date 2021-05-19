@@ -71,7 +71,7 @@ public class Word {
 
         // spanishSpecial
         TIRAR("tirar"),
-        ;
+        PAUSE("pausar pausa parar");
 
         Action(String alias) {
             this.alias = alias;

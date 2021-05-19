@@ -43,6 +43,7 @@ public class Game extends KeyAdapter implements Runnable {
         Playing,
         GameOverScreen,
         WinScreen,
+        Pause
     }
 
     private State state;
@@ -117,6 +118,13 @@ public class Game extends KeyAdapter implements Runnable {
         );
     }
 
+    public void pause() {
+        // pause
+        state = State.Pause;
+        autoWait.cancel();
+        addOutput("Juego pausado. Pulsa cualquier tecla para continuar...");
+    }
+
     /**
      * Resets the game
      */
@@ -124,6 +132,7 @@ public class Game extends KeyAdapter implements Runnable {
         // reset utils
         autoWait.cancel();
         sound.stop();
+        window.disableInput();
 
         // recreate the data object
         try {
@@ -135,7 +144,11 @@ public class Game extends KeyAdapter implements Runnable {
         world.init();
     }
 
+    private boolean running = false;
+
     private void backgroundRun(Runnable runnable) {
+        if (running) return;
+        running = true;
         window.disableInput();
         new Thread(() -> {
             try {
@@ -144,7 +157,9 @@ public class Game extends KeyAdapter implements Runnable {
                 throwable.printStackTrace();
                 addOutput("{Internal error: " + throwable + "}");
             } finally {
-                window.enableInput();
+                if (state == State.Playing)
+                    window.enableInput();
+                running = false;
             }
         }).start();
     }
@@ -164,7 +179,26 @@ public class Game extends KeyAdapter implements Runnable {
      */
     @Override
     public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            // Press F9 to load
+            case KeyEvent.VK_F9:
+                load();
+                return;
+
+            // Press F2 to reset
+            case KeyEvent.VK_F2:
+                startScreen();
+                history.clearHistory();
+                return;
+
+            // press F1 for help
+            case KeyEvent.VK_F1:
+                backgroundRun(this::help);
+                return;
+        }
+
         switch (state) {
+            case Pause:
             case StartScreen:
                 state = State.Playing;
                 backgroundRun(() -> {
@@ -183,6 +217,11 @@ public class Game extends KeyAdapter implements Runnable {
 
         switch (e.getKeyCode()) {
 
+            // press pause to pause
+            case KeyEvent.VK_PAUSE:
+                backgroundRun(this::pause);
+                break;
+
             // press enter to perform command
             case KeyEvent.VK_ENTER:
                 backgroundRun(() -> {
@@ -196,11 +235,6 @@ public class Game extends KeyAdapter implements Runnable {
             // press F6 to save
             case KeyEvent.VK_F6:
                 save();
-                break;
-
-            // Press F9 to load
-            case KeyEvent.VK_F9:
-                load();
                 break;
 
             // Press top arrow to repeat input
@@ -217,19 +251,16 @@ public class Game extends KeyAdapter implements Runnable {
                 history.clearHistory();
                 break;
 
-            // press F1 for help
-            case KeyEvent.VK_F1:
-                help();
-                break;
-
             // press F12 for debug
             case KeyEvent.VK_F12:
-                if ((e.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) != 0) {
-                    Utils.showMessage("http://viz-js.com/", ElementSearcher.generateGraph(world.elements));
-                } else {
-                    Debug.teleportPlayer(this);
-                }
-                update();
+                backgroundRun(() -> {
+                    if ((e.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) != 0) {
+                        Utils.showMessage("http://viz-js.com/", ElementSearcher.generateGraph(world.elements));
+                    } else {
+                        Debug.teleportPlayer(this);
+                        update();
+                    }
+                });
                 break;
         }
     }
@@ -246,6 +277,11 @@ public class Game extends KeyAdapter implements Runnable {
 
         try {
             Command command = Command.parse(rawText, world.elements);
+
+            if (command.action == Word.Action.PAUSE) {
+                pause();
+                return;
+            }
 
             // execute
             Result result = engine.execute(getPlayer(), command);
