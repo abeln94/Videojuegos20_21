@@ -78,7 +78,7 @@ abstract public class Location extends Element {
      * The image of this location (from the game's data image folder)
      */
     public String getImage() {
-        if (image.contains("|")) {
+        if (image != null && image.contains("|")) {
             // different day/night
             final String[] split = image.split("\\|");
             return split[game.world.night ? 1 : 0];
@@ -91,7 +91,7 @@ abstract public class Location extends Element {
      * The music of this location (from the game's data music folder)
      */
     public String getMusic() {
-        if (music.contains("|")) {
+        if (music != null && music.contains("|")) {
             // different day/night
             final String[] split = music.split("\\|");
             return split[game.world.night ? 1 : 0];

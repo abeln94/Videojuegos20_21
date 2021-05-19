@@ -102,7 +102,9 @@ public class JSONWorld extends World {
                 element.weight = json.getInt("weight");
             }
             if (json.has("location")) {
-                getElement(json, "location", elements).elements.add(element);
+                Element parent = getElement(json, "location", elements);
+                final Set<Element> container = parent instanceof NPC && json.optBoolean("location_wear") ? ((NPC) parent).wearables : parent.elements;
+                container.add(element);
             }
 
             if (json.has("hidden")) {

@@ -82,6 +82,7 @@ abstract public class Element implements Serializable {
     public String describeContents(String ifEmpty, String prefix) {
         final String contents = elements.stream()
                 .filter(e -> e != game.getPlayer())
+                .filter(e -> !(e instanceof NPC && ((NPC) e).isInvisible()))
                 .map(Element::getDescription)
                 .map(v -> "-" + v)
                 .map(Utils::increasePadding)

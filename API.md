@@ -83,6 +83,8 @@ This fields are available in all three files:
   unmovable).
 * `location`: A string with the id of an element (see element/id). This element will be placed inside that specified
   element. Null by default (not inside anything).
+* `location_wear`: A boolean. If location is an npc this element will be weared by the npc specified in the location
+  instead. False by default.
 * `hidden`: A JSON object where the key is one of 'DIG', 'BREAK' or 'PULL' and the value is an id of an element (see
   element/id)
   . When the player uses that action on this element, the 'hidden' element is placed on the same parent. (if the action
