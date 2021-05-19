@@ -8,7 +8,7 @@ public class Main {
             new Game(args.length >= 1 ? args[0] : "data");
         } catch (Throwable e) {
             e.printStackTrace();
-            Utils.showMessage("Error", "Uh oh, can't start the game. The data wasn't found or may be corrupt (here is the error just in case):\n\n" + e);
+            Utils.showMessage("Error", "Uh oh, can't start the game. The data wasn't found or may be corrupt (here is the error just in case):\n\n" + e, true);
             System.exit(-1);
         }
     }

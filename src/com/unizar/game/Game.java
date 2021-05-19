@@ -138,7 +138,7 @@ public class Game extends KeyAdapter implements Runnable {
         try {
             world = world.getClass().getConstructor(String.class).newInstance(root);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            Utils.showMessage("Error", "Uh oh, can't reload the game. The data wasn't found or may be corrupt (here is the error just in case):\n\n" + e);
+            Utils.showMessage("Error", "Uh oh, can't reload the game. The data wasn't found or may be corrupt (here is the error just in case):\n\n" + e, true);
         }
         world.register(this);
         world.init();
@@ -199,6 +199,7 @@ public class Game extends KeyAdapter implements Runnable {
 
         switch (state) {
             case Pause:
+                window.addOutput("...el juego continúa.\n");
             case StartScreen:
                 state = State.Playing;
                 backgroundRun(() -> {
@@ -255,7 +256,7 @@ public class Game extends KeyAdapter implements Runnable {
             case KeyEvent.VK_F12:
                 backgroundRun(() -> {
                     if ((e.getModifiersEx() & KeyEvent.SHIFT_DOWN_MASK) != 0) {
-                        Utils.showMessage("http://viz-js.com/", ElementSearcher.generateGraph(world.elements));
+                        Utils.showMessage("http://viz-js.com/", ElementSearcher.generateGraph(world.elements), true);
                     } else {
                         Debug.teleportPlayer(this);
                         update();
@@ -502,6 +503,6 @@ public class Game extends KeyAdapter implements Runnable {
             gameHelp = ioException.toString();
         }
 
-        Utils.showMessage("Ayuda", (gameHelp != null ? gameHelp + "\n\n\n\n\n--------------------------------------------------\n\n\n\n\n" : "") + engineHelp);
+        Utils.showMessage("Ayuda", (gameHelp != null ? gameHelp + "\n\n\n\n\n--------------------------------------------------\n\n\n\n\n" : "") + engineHelp, false);
     }
 }

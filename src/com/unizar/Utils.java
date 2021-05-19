@@ -93,8 +93,9 @@ public class Utils {
      *
      * @param title   window title
      * @param message message text
+     * @param modal   type of window
      */
-    public static void showMessage(String title, String message) {
+    public static void showMessage(String title, String message, boolean modal) {
         // read message
 
         // create window
@@ -107,7 +108,15 @@ public class Utils {
         JScrollPane scrollPane = new JScrollPane(textArea);
 
         // show
-        JOptionPane.showMessageDialog(null, scrollPane, title, JOptionPane.INFORMATION_MESSAGE);
+        if (modal) {
+            JOptionPane.showMessageDialog(null, scrollPane, title, JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane pane = new JOptionPane(scrollPane);
+            JDialog dialog = pane.createDialog(null, title);
+            dialog.setModal(false);
+            dialog.setResizable(true);
+            dialog.setVisible(true);
+        }
     }
 
     /**
