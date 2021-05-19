@@ -4,7 +4,6 @@ import com.unizar.AlphaIcon;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.text.Caret;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -178,6 +177,7 @@ public class Window {
      */
     public void clearCommand() {
         commandInput.setText("");
+        caretSavedPos = 0;
     }
 
     /**
@@ -187,6 +187,7 @@ public class Window {
         if (command == null) return;
 
         commandInput.setText(command);
+        caretSavedPos = command.length();
     }
 
     // ------------------------- description -------------------------
@@ -281,7 +282,7 @@ public class Window {
 
     // ------------------------- behaviour -------------------------
 
-    private int caretSavedPos = -1;
+    private int caretSavedPos = 0;
 
     /**
      * Disables user inputs
@@ -300,8 +301,7 @@ public class Window {
             caretSavedPos = commandInput.getText().length();
         commandInput.setCaretPosition(caretSavedPos);
         commandInput.setEditable(true);
-        final Caret caret = commandInput.getCaret();
-        if (caret != null) caret.setVisible(true);
+        commandInput.getCaret().setVisible(true);
     }
 
     /**

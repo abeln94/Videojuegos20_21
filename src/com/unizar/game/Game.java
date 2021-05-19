@@ -157,9 +157,9 @@ public class Game extends KeyAdapter implements Runnable {
                 throwable.printStackTrace();
                 addOutput("{Internal error: " + throwable + "}");
             } finally {
+                running = false;
                 if (state == State.Playing)
                     window.enableInput();
-                running = false;
             }
         }).start();
     }

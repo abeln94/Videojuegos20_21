@@ -53,7 +53,7 @@ public class JSONWorld extends World {
         final JSONArray items = new JSONArray(Utils.readFile(path + FILE_ITEMS));
         final JSONArray locations = new JSONArray(Utils.readFile(path + FILE_LOCATIONS));
 
-        Map<String, Element> elements = new HashMap<>();
+        Map<String, Element> elements = new LinkedHashMap<>();
 
         // initialize empty elements
         for (int i = 0; i < npcs.length(); i++) {
@@ -259,7 +259,7 @@ public class JSONWorld extends World {
         }
 
 
-        return new HashSet<>(elements.values());
+        return new LinkedHashSet<>(elements.values());
     }
 
     private static Set<Element> getElements(JSONArray array, Map<String, Element> elements) {
