@@ -27,7 +27,6 @@ public class Game extends KeyAdapter implements Runnable {
 
     // ------------------------- global -------------------------
     public World world;
-    private final String root;
     public Engine engine = new Engine();
     public Sound sound = new Sound();
     public Scheduling autoWait = new Scheduling(this, 10 * 1000);
@@ -52,12 +51,9 @@ public class Game extends KeyAdapter implements Runnable {
 
     /**
      * Initializer
-     *
-     * @param root root folder of the data
      */
-    public Game(String root) throws IOException {
-        this.root = root;
-        this.world = new JSONWorld(root);
+    public Game() throws IOException {
+        this.world = new JSONWorld();
         window = new Window(world.properties.getTitle(), world.properties.getImageRatio(), world.properties.getFontFile());
         window.setKeyListener(this);
         startScreen();
@@ -136,7 +132,7 @@ public class Game extends KeyAdapter implements Runnable {
 
         // recreate the data object
         try {
-            world = world.getClass().getConstructor(String.class).newInstance(root);
+            world = world.getClass().getConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             Utils.showMessage("Error", "Uh oh, can't reload the game. The data wasn't found or may be corrupt (here is the error just in case):\n\n" + e, true);
         }
@@ -183,12 +179,20 @@ public class Game extends KeyAdapter implements Runnable {
             // Press F9 to load
             case KeyEvent.VK_F9:
                 load();
+                autoWait.schedule();
                 return;
+
+            // press F6 to save
+            case KeyEvent.VK_F6:
+                save();
+                autoWait.schedule();
+                break;
 
             // Press F2 to reset
             case KeyEvent.VK_F2:
                 startScreen();
                 history.clearHistory();
+                autoWait.schedule();
                 return;
 
             // press F1 for help
@@ -233,23 +237,12 @@ public class Game extends KeyAdapter implements Runnable {
                 });
                 break;
 
-            // press F6 to save
-            case KeyEvent.VK_F6:
-                save();
-                break;
-
             // Press top arrow to repeat input
             case KeyEvent.VK_UP:
                 window.setCommand(history.getPreviousInput(true));
                 break;
             case KeyEvent.VK_DOWN:
                 window.setCommand(history.getPreviousInput(false));
-                break;
-
-            // Press F2 to reset
-            case KeyEvent.VK_F2:
-                startScreen();
-                history.clearHistory();
                 break;
 
             // press F12 for debug

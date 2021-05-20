@@ -1,5 +1,6 @@
 package com.unizar.generic;
 
+import com.unizar.Main;
 import com.unizar.game.Properties;
 import org.json.JSONObject;
 
@@ -30,14 +31,14 @@ public class JSONProperties extends Properties {
     private final String gameOverScreen;
     private final String gameOverMusic;
 
-    public JSONProperties(String root, JSONObject properties) {
+    public JSONProperties(JSONObject properties) {
         title = properties.optString("title", "My Game");
         imageRatio = properties.optInt("imageRatio", 1);
-        fontFile = root + properties.optString("fontFile", "{}");
-        helpFile = root + properties.optString("helpFile", null);
+        fontFile = Main.root + properties.optString("fontFile", "{}");
+        helpFile = Main.root + properties.optString("helpFile", null);
 
-        imagePath = root + properties.optString("imagePath", "{}");
-        musicPath = root + properties.optString("musicPath", "{}");
+        imagePath = Main.root + properties.optString("imagePath", "{}");
+        musicPath = Main.root + properties.optString("musicPath", "{}");
 
         startScreen = properties.optString("startScreen", null);
         startDescription = properties.optString("startDescription", "");

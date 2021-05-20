@@ -1,5 +1,6 @@
 package com.unizar.generic;
 
+import com.unizar.Main;
 import com.unizar.Utils;
 import com.unizar.game.Game;
 import com.unizar.game.World;
@@ -35,23 +36,23 @@ public class JSONWorld extends World {
     // ------------------------- loading -------------------------
 
 
-    public JSONWorld(String root) throws IOException {
+    public JSONWorld() throws IOException {
         // properties
-        final JSONObject json_properties = new JSONObject(Utils.readFile(root + FILE_PROPERTIES));
-        this.properties = new JSONProperties(root, json_properties);
+        final JSONObject json_properties = new JSONObject(Utils.readFile(Main.root + FILE_PROPERTIES));
+        this.properties = new JSONProperties(json_properties);
 
         // elements
-        elements = loadElements(root);
+        elements = loadElements();
 
         // completion
         winItem = elements.stream().filter(e -> e.id.equals(json_properties.getString("winItem"))).findFirst().orElse(null);
         winLocation = elements.stream().filter(e -> e.id.equals(json_properties.getString("winLocation"))).findFirst().orElse(null);
     }
 
-    public static Set<Element> loadElements(String path) throws IOException {
-        final JSONArray npcs = new JSONArray(Utils.readFile(path + FILE_NPCS));
-        final JSONArray items = new JSONArray(Utils.readFile(path + FILE_ITEMS));
-        final JSONArray locations = new JSONArray(Utils.readFile(path + FILE_LOCATIONS));
+    public static Set<Element> loadElements() throws IOException {
+        final JSONArray npcs = new JSONArray(Utils.readFile(Main.root + FILE_NPCS));
+        final JSONArray items = new JSONArray(Utils.readFile(Main.root + FILE_ITEMS));
+        final JSONArray locations = new JSONArray(Utils.readFile(Main.root + FILE_LOCATIONS));
 
         Map<String, Element> elements = new LinkedHashMap<>();
 

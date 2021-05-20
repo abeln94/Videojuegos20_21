@@ -1,7 +1,8 @@
 package com.unizar.game;
 
+import com.unizar.Main;
+
 import java.io.*;
-import java.util.Base64;
 
 /**
  * Can save and load a Data class.
@@ -9,10 +10,9 @@ import java.util.Base64;
  */
 public class DataSaver {
 
-    /**
-     * The saved data
-     */
-    private String savedData = null;
+    private static String FILE() {
+        return Main.root + ".save";
+    }
 
     /**
      * Saves the current data. Overrides existing ones.
@@ -21,11 +21,9 @@ public class DataSaver {
      */
     public final void saveData(World world) {
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            FileOutputStream fout = new FileOutputStream(FILE());
+            ObjectOutputStream oos = new ObjectOutputStream(fout);
             oos.writeObject(world);
-            oos.close();
-            savedData = Base64.getEncoder().encodeToString(baos.toByteArray());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,14 +33,13 @@ public class DataSaver {
      * @return the saved data, or null if no data is saved
      */
     public final World loadData() {
-        if (savedData == null) return null;
         try {
-            byte[] data = Base64.getDecoder().decode(savedData);
             ObjectInputStream ois = new ObjectInputStream(
-                    new ByteArrayInputStream(data));
+                    new FileInputStream(FILE()));
             Object o = ois.readObject();
             ois.close();
             return (World) o;
+        } catch (FileNotFoundException ignored) {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
