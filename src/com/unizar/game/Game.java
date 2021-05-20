@@ -294,6 +294,10 @@ public class Game extends KeyAdapter implements Runnable {
                 throw new EngineException(result.output, result.requiresMore);
             }
 
+            if (command.action == Word.Action.GO) {
+                forceImageUpdate = true;
+            }
+
             // player end
 
             // act each npc
@@ -340,6 +344,7 @@ public class Game extends KeyAdapter implements Runnable {
     // ------------------------- game commands -------------------------
 
     private String lastImage = null;
+    private boolean forceImageUpdate = false;
 
     /**
      * Updates the ui with the new image/sound/description
@@ -351,7 +356,9 @@ public class Game extends KeyAdapter implements Runnable {
         final String image = location instanceof Location ? ((Location) location).getImage() : null;
         final String music = location instanceof Location ? ((Location) location).getMusic() : null;
 
-        if (!Objects.equals(lastImage, image)) {
+        if (!Objects.equals(lastImage, image) || forceImageUpdate) {
+            forceImageUpdate = false;
+
             // smooth update image
             Utils.smoothing(f -> {
                 window.setImageTransparency(1 - f);
