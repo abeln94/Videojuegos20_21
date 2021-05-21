@@ -68,8 +68,8 @@ public class Game extends KeyAdapter implements Runnable {
         setImage(world.properties.getStartScreen());
         setMusic(world.properties.getStartMusic());
         window.clearOutput();
-        addOutput("Escribe aquí los comandos y pulsa enter para introducirlos.");
-        addOutput("También puedes pulsar F6/F9 para guardar/cargar la partida. Y pulsar F2 para resetear. Si necesitas ayuda sobre el juego puedes pulsar F1.");
+        addOutput("Escribe aquí abajo los comandos y pulsa enter para introducirlos.");
+        addOutput("Si necesitas ayuda sobre el motor o el juego puedes introducir el comando 'ayuda' o pulsar F1.");
         window.clearDescription();
         setDescription(
                 world.properties.getStartDescription(),

@@ -10,6 +10,7 @@ En [dirección] se puede especificar una de las direcciones donde hay una salida
 - cargar (también se puede usar F9)
 - salir (también se puede cerrar la ventana)
 - ayuda (también se puede pulsar F1)
+- pausar (también se puede pulsar PAUSA)
 - puntuación
 - abrir [elemento]
 - cerrar [elemento]
