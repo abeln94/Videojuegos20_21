@@ -18,7 +18,8 @@ public class Engine2 {
 
 
     public static String execute(JSONObject npc, Command2 command, List<Action> actions, Set<JSONObject> elements) throws EngineException {
-        final Action action = actions.stream().filter(command::matches).findFirst().orElseThrow(() -> new EngineException("No se como '" + command.toCommandString()));
+
+        Action action = actions.stream().filter(command::matches).findFirst().orElseThrow(() -> new EngineException("No se como '" + command.toCommandString()));
 
         Map<String, Object> execution = new HashMap<>();
 

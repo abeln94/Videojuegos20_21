@@ -60,6 +60,7 @@ public class Data {
     }
 
     public Set<String> getModifierWords() {
+
     }
 
     public JSONObject getPlayer() {

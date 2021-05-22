@@ -12,10 +12,10 @@ public class Game2 extends KeyAdapter {
 
     // ------------------------- data -------------------------
 
-    private Data data;
+    private final Data data;
 
     public Game2(String root) {
-        this.data = new Data(root);
+        data = new Data(root);
         window = new Window("engine2", 1, null);
         window.setKeyListener(this);
     }
@@ -35,7 +35,7 @@ public class Game2 extends KeyAdapter {
             final Command2 command = Analyzer.analyze(rawText, data.getElementWords(), data.getActionWords(), data.getModifierWords());
 
             // execute
-            String result = Engine2.execute(data.getPlayer(), command);
+            String result = Engine2.execute(data.getPlayer(), command, data.getActionWords(), data.getElementWords());
 
             window.addOutput(result);
 
