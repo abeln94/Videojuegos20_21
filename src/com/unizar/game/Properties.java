@@ -82,4 +82,9 @@ abstract public class Properties implements Serializable {
      * @return the description of the win screen
      */
     public abstract String getStartMusic();
+
+    /**
+     * @return the experimental code to parse a command
+     */
+    public abstract String getCode();
 }

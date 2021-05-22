@@ -39,6 +39,9 @@ abstract public class Element implements Serializable {
      */
     public final Map<Word.Action, Element> hiddenElements = new HashMap<>();
 
+    // experimental
+    public String code = null;
+
     // ------------------------- objectives -------------------------
 
     public int totalObjectives = 0;
@@ -57,10 +60,6 @@ abstract public class Element implements Serializable {
 
     public Element(String name) {
         this.name = name;
-    }
-
-    public String getId() {
-        return id != null ? id : getClass().getSimpleName();
     }
 
     /**

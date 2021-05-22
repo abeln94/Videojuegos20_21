@@ -298,3 +298,16 @@ data/npcs.json
   }
 ]
 ```
+
+### Experimental
+
+This api is highly experimental and not ready to use, but added as a proof-of-concept. Documentation is not available.
+
+The engine uses the javascript interpreter to allow running arbitrary code. The scripts contains a variable called '
+game' with the main class, and another called 'storaged' where you can store data between executions. The following two
+additional parameters are:
+
+* In an element (either an item, location or npc) you can add a field named `code` with the javascript code, that will
+  run in each turn for that object. A variable called 'this' refers to the current object.
+* In the properties file, you can add a field named `code``with the javascript code, that will run after the user enters
+  a command. A variable called 'input' refers to the user input command.

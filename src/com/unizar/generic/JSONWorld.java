@@ -114,6 +114,10 @@ public class JSONWorld extends World {
                     element.hiddenElements.put(Word.Action.valueOf(action), getElement(hidden, action, elements));
                 }
             }
+
+            if (json.has("code")) {
+                element.code = json.getString("code");
+            }
         }
 
         // NPC

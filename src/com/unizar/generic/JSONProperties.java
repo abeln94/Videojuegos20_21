@@ -31,6 +31,9 @@ public class JSONProperties extends Properties {
     private final String gameOverScreen;
     private final String gameOverMusic;
 
+    // experimental
+    private final String code;
+
     public JSONProperties(JSONObject properties) {
         title = properties.optString("title", "My Game");
         imageRatio = properties.optInt("imageRatio", 1);
@@ -51,6 +54,8 @@ public class JSONProperties extends Properties {
         gameOverScreen = properties.optString("gameOverScreen", null);
         //TODO: add a gameOverDescription property
         gameOverMusic = properties.optString("gameOverMusic", null);
+
+        code = properties.optString("code", null);
     }
 
     @Override
@@ -121,5 +126,9 @@ public class JSONProperties extends Properties {
     @Override
     public String getGameOverMusic() {
         return gameOverMusic;
+    }
+
+    public String getCode() {
+        return code;
     }
 }

@@ -6,8 +6,10 @@ import com.unizar.game.elements.Element;
 import com.unizar.game.elements.Location;
 import com.unizar.game.elements.NPC;
 import com.unizar.game.elements.Player;
+import com.unizar.game2.ScriptEngine;
 import com.unizar.generic.JSONWorld;
 
+import javax.script.ScriptException;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -270,6 +273,21 @@ public class Game extends KeyAdapter implements Runnable {
         addOutput("\n> " + rawText);
 
         try {
+
+            // command parsing, experimental
+            String code = world.properties.getCode();
+            if (code != null) {
+                try {
+                    final Object result = ScriptEngine.execute(code, new HashMap<String, Object>() {{
+                        put("input", rawText);
+                        put("game", this);
+                    }});
+                    if (result != null) throw new EngineException();
+                } catch (ScriptException e) {
+                    e.printStackTrace();
+                }
+            }
+
             Command command = Command.parse(rawText, world.elements);
 
             if (command.action == Word.Action.PAUSE) {
@@ -316,6 +334,22 @@ public class Game extends KeyAdapter implements Runnable {
             // act each non-NPC
             world.act();
             world.elements.stream().filter(e -> !(e instanceof NPC)).forEach(Element::act);
+
+
+            // execution script (experimental)
+            world.elements.stream()
+                    .filter(e -> e.code != null)
+                    .forEach(element -> {
+                        try {
+                            ScriptEngine.execute(element.code, new HashMap<String, Object>() {{
+                                put("this", element);
+                                put("game", Game.this);
+                            }});
+                        } catch (ScriptException e) {
+                            e.printStackTrace();
+                        }
+                    });
+
 
             // update window
             update();
