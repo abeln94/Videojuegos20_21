@@ -2,10 +2,7 @@ package com.unizar.game.commands;
 
 import com.unizar.Utils;
 import com.unizar.game.ElementSearcher;
-import com.unizar.game.elements.Element;
-import com.unizar.game.elements.Item;
-import com.unizar.game.elements.Location;
-import com.unizar.game.elements.NPC;
+import com.unizar.game.elements.*;
 
 import java.util.List;
 import java.util.Map;
@@ -321,8 +318,8 @@ public class Engine {
                         "Ya tienes {}.",
                         "todo"
                 ).require(
-                        // and not be carried by another npc
-                        e -> !(location instanceof NPC),
+                        // and not be carried by another npc (player only)
+                        e -> !(npc instanceof Player && e.getLocation() instanceof NPC),
                         "No puedes coger {} de otro personaje.",
                         "nada"
                 ).require(
@@ -338,6 +335,8 @@ public class Engine {
                 ).apply("Que {} quieres coger?", "cosa", pickable -> {
 
                     // pick
+                    final Element parent = pickable.getLocation();
+                    if (parent instanceof NPC) parent.hear(npc + " te coge " + pickable);
                     pickable.moveTo(npc);
                     return Result.done("Coges " + pickable);
                 });
