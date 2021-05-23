@@ -444,17 +444,17 @@ public class Engine {
                     ((NPC) attack).lastAttackedBy = npc;
 
                     //npc ataca, attack defiende
-                    int dice = (int) Math.floor(Math.random() * 20);
+                    int dice = Utils.random.nextInt(21);
 
-                    int damage;
-                    if (dice == 20) { //critico, mata
-                        damage = 1000000;
-                    } else if (dice == 0) { //pifia, no hace daño
-                        damage = 0;
-                    } else { //normal
-                        damage = npc.strenght + dice;
-                        // TODO: add strength of the item
+                    int damage = npc.strenght;
+                    if (dice == 20) { //critico
+                        damage *= 2;
+                    } else if (dice == 0) { //pifia
+                        damage /= 2;
                     }
+                    if (damage < 0) damage = 0;
+                    // TODO: add strength of the item
+
 
                     ((NPC) attack).health = ((NPC) attack).health - damage;
 
