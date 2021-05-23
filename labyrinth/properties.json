@@ -1,0 +1,18 @@
+{
+  "imageRatio": 2,
+  "fontFile": "/other/Roman_SD.ttf",
+  "musicPath": "/music/{}.wav",
+  "imagePath": "/images/{}.PNG",
+  "helpFile": "/other/help.txt",
+  "startDescription": "Despiertas con un fuerte dolor de cabeza en un lugar totalmente desconocido para ti. Parece un, un ... ¿laberinto?\n 'Más te vale matar al minotauro y salir con vida' - dice una voz familiar.\nContigo llevas tu espada fiel, usala cuando la necesites.",
+  "winDescription": "¡Has conseguido salir del laberinto con vida! Un paso más cerca del Olimpo",
+  "startScreen": "Inicio",
+  "winScreen": "Win",
+  "title": "El laberinto",
+  "winItem": "Player_Teseo",
+  "winLocation": "Forest",
+  "winMusic": "Good_Riddance",
+  "gameOverMusic": "Good_Riddance",
+  "gameOverScreen": "GameOver",
+  "startMusic": "Good_Riddance"
+}

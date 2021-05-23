@@ -1,0 +1,360 @@
+[
+  {
+    "image": "Maze1",
+    "exits": {
+      "EAST": {
+        "location": "Maze01"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un rincon del laberinto",
+    "id": "Maze00"
+  },
+  {
+    "image": "Maze1",
+    "exits": {
+      "EAST": {
+        "location": "Maze02"
+      },
+      "WEST": {
+        "location": "Maze00"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un pasillo del laberinto",
+    "id": "Maze01"
+  },
+  {
+    "image": "Maze1",
+    "exits": {
+      "EAST": {
+        "location": "Maze03"
+      },
+      "WEST": {
+        "location": "Maze01"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un pasillo del laberinto",
+    "id": "Maze02"
+  },
+  {
+    "image": "Maze1",
+    "exits": {
+      "EAST": {
+        "location": "Maze04"
+      },
+      "WEST": {
+        "location": "Maze02"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un pasillo del laberinto",
+    "id": "Maze03"
+  },
+  {
+    "image": "Maze1",
+    "exits": {
+      "NORTH": {
+        "location": "Maze14"
+      },
+      "WEST": {
+        "location": "Maze03"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "una bifurcación del laberinto",
+    "id": "Maze04"
+  },
+  {
+    "image": "Maze2",
+    "exits": {
+      "NORTH": {
+        "location": "Maze20"
+      },
+      "EAST": {
+        "location": "Maze11"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "una bifurcación del laberinto",
+    "id": "Maze10"
+  },
+  {
+    "image": "Maze2",
+    "exits": {
+      "NORTH": {
+        "location": "Maze21"
+      },
+      "WEST": {
+        "location": "Maze10"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "una bifurcación del laberinto",
+    "id": "Maze11"
+  },
+  {
+    "image": "Maze2",
+    "exits": {
+      "NORTH": {
+        "location": "Maze22"
+      },
+      "EAST": {
+        "location": "Maze13"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "una bifurcación del laberinto",
+    "id": "Maze12"
+  },
+  {
+    "image": "Maze2",
+    "exits": {
+      "WEST": {
+        "location": "Maze12"
+      },
+      "EAST": {
+        "location": "Maze14"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un pasillo del laberinto",
+    "id": "Maze13"
+  },
+  {
+    "image": "Maze2",
+    "exits": {
+      "WEST": {
+        "location": "Maze13"
+      },
+      "SOUTH": {
+        "location": "Maze04"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "una bifurcación del laberinto",
+    "id": "Maze14"
+  },
+  {
+    "image": "Maze3",
+    "exits": {
+      "NORTH": {
+        "location": "Maze30"
+      },
+      "SOUTH": {
+        "location": "Maze10"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un pasillo del laberinto",
+    "id": "Maze20"
+  },
+  {
+    "image": "Maze3",
+    "exits": {
+      "SOUTH": {
+        "location": "Maze11"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un rincon del laberinto",
+    "id": "Maze21"
+  },
+  {
+    "image": "Maze3",
+    "exits": {
+      "NORTH": {
+        "location": "Maze32"
+      },
+      "SOUTH": {
+        "location": "Maze12"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un pasillo del laberinto",
+    "id": "Maze22"
+  },
+  {
+    "image": "Maze3",
+    "exits": {
+      "EAST": {
+        "location": "Maze24"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un rincon del laberinto",
+    "id": "Maze23"
+  },
+  {
+    "image": "Maze3",
+    "exits": {
+      "WEST": {
+        "location": "Maze23"
+      },
+      "NORTH": {
+        "location": "Maze34"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "una bifurcación del laberinto",
+    "id": "Maze24"
+  },
+  {
+    "image": "Maze4",
+    "exits": {
+      "EAST": {
+        "location": "Maze31"
+      },
+      "SOUTH": {
+        "location": "Maze20"
+      },
+      "NORTH": {
+        "location": "Maze40"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "una bifurcación del laberinto",
+    "id": "Maze30"
+  },
+  {
+    "image": "Maze4",
+    "exits": {
+      "EAST": {
+        "location": "Maze32"
+      },
+      "WEST": {
+        "location": "Maze30"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un pasillo del laberinto",
+    "id": "Maze31"
+  },
+  {
+    "image": "Maze4",
+    "exits": {
+      "EAST": {
+        "location": "Maze33"
+      },
+      "WEST": {
+        "location": "Maze31"
+      },
+      "SOUTH": {
+        "location": "Maze22"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "una explanada del laberinto",
+    "id": "Maze32"
+  },
+  {
+    "image": "Maze4",
+    "exits": {
+      "EAST": {
+        "location": "Maze34"
+      },
+      "WEST": {
+        "location": "Maze32"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un pasillo del laberinto",
+    "id": "Maze33"
+  },
+  {
+    "image": "Maze4",
+    "exits": {
+      "SOUTH": {
+        "location": "Maze24"
+      },
+      "WEST": {
+        "location": "Maze33"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "una bifurcación del laberinto",
+    "id": "Maze34"
+  },
+  {
+    "image": "Maze5",
+    "exits": {
+      "SOUTH": {
+        "location": "Maze30"
+      },
+      "EAST": {
+        "location": "Maze41"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "una bifurcación del laberinto",
+    "id": "Maze40"
+  },
+  {
+    "image": "Maze5",
+    "exits": {
+      "WEST": {
+        "location": "Maze40"
+      },
+      "EAST": {
+        "location": "Maze42"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un pasillo del laberinto",
+    "id": "Maze41"
+  },
+  {
+    "image": "Maze5",
+    "exits": {
+      "WEST": {
+        "location": "Maze41"
+      },
+      "EAST": {
+        "location": "Maze43"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un pasillo del laberinto",
+    "id": "Maze42"
+  },
+  {
+    "image": "Maze5",
+    "exits": {
+      "WEST": {
+        "location": "Maze42"
+      },
+      "EAST": {
+        "location": "Maze44"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "un pasillo del laberinto",
+    "id": "Maze43"
+  },
+  {
+    "image": "Maze5",
+    "exits": {
+      "WEST": {
+        "location": "Maze43"
+      },
+      "NORTH": {
+        "location": "Forest"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "la salida del laberinto",
+    "id": "Maze44"
+  },
+  {
+    "image": "Forest2",
+    "exits": {
+      "SOUTH": {
+        "location": "Maze44"
+      }
+    },
+    "music": "Good_Riddance",
+    "name": "el bosque fuera del laberinto",
+    "id": "Forest"
+  }
+]

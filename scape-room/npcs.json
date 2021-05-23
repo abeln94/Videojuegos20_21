@@ -1,0 +1,51 @@
+[
+  {
+    "id": "Player",
+    "name": "tú",
+    "location": "room",
+    "strenght": 20
+  },
+  {
+    "id": "shadow",
+    "name": "una sombra misteriosa",
+    "strenght": 1000,
+    "location": "room",
+    "pacificTurns": 9,
+    "talkPlayer": [
+      {
+        "turns": 1,
+        "sentence": "Tic, toc, tic, toc"
+      },
+      {
+        "turns": 29,
+        "sentence": "Se te acabó el tiempo"
+      }
+    ],
+    "moveNPCsTo": "vent",
+    "allies": [
+      "Player"
+    ]
+  },
+  {
+    "id": "mouse",
+    "name": "un ratón ordinario",
+    "location": "vent",
+    "forbiddenLocations": [
+      "death"
+    ],
+    "navigateWeight": 10
+  },
+  {
+    "id": "crocodile",
+    "strenght": 1000,
+    "name": "un cocodrilo",
+    "location": "death",
+    "attackPlayerWeight": 10
+  },
+  {
+    "id": "gas",
+    "name": "algo de polvo",
+    "strenght": 1000,
+    "code": "if(element.getLocation() != null){ game.window.addOutput('La sala se llena de gas, a lo que te das cuenta te desplomas'); game.getPlayer().kill(); }"
+  }
+]

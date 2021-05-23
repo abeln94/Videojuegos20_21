@@ -1,0 +1,14 @@
+{
+  "imageRatio": 2,
+  "fontFile": "/The Macabre.otf",
+  "musicPath": "/{}.wav",
+  "imagePath": "/{}.png",
+  "helpFile": "/help.txt",
+  "startDescription": "Te he encerrado en esta sala experimental porque me ha apetecido. ¿Serás capaz de salir con vida? Mas te vale ser rápido, no me gusta esperar...",
+  "winDescription": "Ha estado bien, pero me ha sabido a poco.",
+  "startScreen": "start",
+  "title": "Scape room",
+  "winItem": "Player",
+  "winLocation": "exit",
+  "code": "if(storage.opt('password') == null && input.toLowerCase()=='jocker'){storage.put('password',1); 'se oye un ruido'}"
+}

@@ -1,0 +1,51 @@
+[
+  {
+    "image": "room",
+    "exits": {
+      "NORTH": {
+        "location": "exit",
+        "item": "door"
+      },
+      "DOWN": {
+        "location": "death"
+      }
+    },
+    "music": "cave",
+    "name": "una habitación misteriosa",
+    "id": "room"
+  },
+  {
+    "image": "Maze1",
+    "exits": {
+    },
+    "name": "tu perdición",
+    "id": "death"
+  },
+  {
+    "image": "Maze1",
+    "exits": {
+    },
+    "name": "el exterior",
+    "id": "exit"
+  },
+  {
+    "exits": {
+      "NORTH": {
+        "location": "vent"
+      },
+      "SOUTH": {
+        "location": "vent"
+      },
+      "EAST": {
+        "location": "vent"
+      },
+      "WEST": {
+        "location": "vent"
+      },
+      "DOWN": {
+        "location": "room"
+      }
+    },
+    "id": "vent"
+  }
+]

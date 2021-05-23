@@ -1,0 +1,53 @@
+[
+  {
+    "id": "Player_Teseo",
+    "name": "Teseo",
+    "weight": 50,
+    "location": "Maze02",
+    "strength": 5,
+    "constitucion": 5,
+    "health": 50
+  },
+  {
+    "id": "Minotauro",
+    "name": "El Minotauro",
+    "weight": 100,
+    "location": "Maze21",
+    "forbiddenLocations": [
+      "Forest"
+    ],
+    "canFollowOrders": true,
+    "followNPCs": [
+      "Player_Teseo"
+    ],
+    "strength": 3,
+    "constitucion": 5,
+    "health": 70,
+    "pacificTurns": 1,
+    "talkPlayer": [
+      {
+        "turns": 1,
+        "sentence": "¡Fuera de aqui hijo de los Dioses!"
+      },
+      {
+        "turns": 3,
+        "sentence": "¡Vas a morir!"
+      },
+      {
+        "turns": 5,
+        "sentence": "¡No saldrás con vida del laberinto!"
+      },
+      {
+        "turns": 7,
+        "sentence": "¡Aun me queda mucho por hacer aqui!"
+      },
+      {
+        "turns": 9,
+        "sentence": "¡Acabarás como el resto!"
+      }
+    ],
+    "attackWeight": 9,
+    "talkWeight": 6,
+    "followWeight": 3
+  }
+]

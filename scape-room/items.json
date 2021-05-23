@@ -1,0 +1,36 @@
+[
+  {
+    "id": "door",
+    "name": "la puerta grande y misteriosa",
+    "openable": "LOCKED",
+    "lockedWith": "key"
+  },
+  {
+    "id": "key",
+    "name": "una llave",
+    "weight": 1,
+    "code": "if(storage.opt('password')!=null){storage.remove('password'); element.moveTo(game.getPlayer());}"
+  },
+  {
+    "id": "invisinator1",
+    "location": "shadow",
+    "location_wear": true,
+    "makesInvisible": true
+  },
+  {
+    "id": "note",
+    "name": "un papel arrugado",
+    "location": "mouse",
+    "description": "Te cuesta leerlo, pero dice: La contraseña es 'jocker'"
+  },
+  {
+    "id": "botella",
+    "name": "una botella sellada",
+    "openable": "LOCKED",
+    "location": "room",
+    "weight": 1,
+    "hidden": {
+      "BREAK": "gas"
+    }
+  }
+]
