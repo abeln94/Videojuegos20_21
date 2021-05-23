@@ -303,7 +303,7 @@ public class Game extends KeyAdapter implements Runnable {
                 // execute
                 result = engine.execute(getPlayer(), command);
 
-                if (command.action == Word.Action.GO) {
+                if (command.action == Word.Action.GO && result.done) {
                     forceImageUpdate = true;
                 }
             }
