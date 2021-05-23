@@ -7,6 +7,7 @@ import com.unizar.game.World;
 import com.unizar.game.commands.Word;
 import com.unizar.game.elements.*;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -50,9 +51,9 @@ public class JSONWorld extends World {
     }
 
     public static Set<Element> loadElements() throws IOException {
-        final JSONArray npcs = new JSONArray(Utils.readFile(Main.root + FILE_NPCS));
-        final JSONArray items = new JSONArray(Utils.readFile(Main.root + FILE_ITEMS));
-        final JSONArray locations = new JSONArray(Utils.readFile(Main.root + FILE_LOCATIONS));
+        final JSONArray npcs = loadJSONFromFile(FILE_NPCS);
+        final JSONArray items = loadJSONFromFile(FILE_ITEMS);
+        final JSONArray locations = loadJSONFromFile(FILE_LOCATIONS);
 
         Map<String, Element> elements = new LinkedHashMap<>();
 
@@ -265,6 +266,15 @@ public class JSONWorld extends World {
 
 
         return new LinkedHashSet<>(elements.values());
+    }
+
+    private static JSONArray loadJSONFromFile(String path) throws IOException {
+        try {
+            return new JSONArray(Utils.readFile(Main.root + path));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new IOException("Error when parsing " + path + ": " + e.getMessage());
+        }
     }
 
     private static Set<Element> getElements(JSONArray array, Map<String, Element> elements) {

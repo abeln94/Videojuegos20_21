@@ -273,30 +273,40 @@ public class Game extends KeyAdapter implements Runnable {
         addOutput("\n> " + rawText);
 
         try {
+            Result result = null;
 
             // command parsing, experimental
             String code = world.properties.getCode();
             if (code != null) {
                 try {
-                    final Object result = ScriptEngine.execute(code, new HashMap<String, Object>() {{
+                    final Object output = ScriptEngine.execute(code, new HashMap<String, Object>() {{
                         put("input", rawText);
                         put("game", this);
                     }});
-                    if (result != null) throw new EngineException();
+                    if (output != null) {
+                        result = Result.done(output.toString());
+                    }
                 } catch (ScriptException e) {
                     e.printStackTrace();
                 }
             }
 
-            Command command = Command.parse(rawText, world.elements);
+            if (result == null) {
+                // evaluate command
+                Command command = Command.parse(rawText, world.elements);
 
-            if (command.action == Word.Action.PAUSE) {
-                pause();
-                return;
+                if (command.action == Word.Action.PAUSE) {
+                    pause();
+                    return;
+                }
+
+                // execute
+                result = engine.execute(getPlayer(), command);
+
+                if (command.action == Word.Action.GO) {
+                    forceImageUpdate = true;
+                }
             }
-
-            // execute
-            Result result = engine.execute(getPlayer(), command);
 
             // add output
             if (result.done) {
@@ -305,11 +315,21 @@ public class Game extends KeyAdapter implements Runnable {
                 throw new EngineException(result.output, result.requiresMore);
             }
 
-            if (command.action == Word.Action.GO) {
-                forceImageUpdate = true;
-            }
-
             // player end
+
+            // execution script (experimental)
+            world.elements.stream()
+                    .filter(e -> e.code != null)
+                    .forEach(element -> {
+                        try {
+                            ScriptEngine.execute(element.code, new HashMap<String, Object>() {{
+                                put("element", element);
+                                put("game", Game.this);
+                            }});
+                        } catch (ScriptException e) {
+                            e.printStackTrace();
+                        }
+                    });
 
             // act each npc
             world.elements.stream().filter(e -> e instanceof NPC).forEach(Element::act);
@@ -334,22 +354,6 @@ public class Game extends KeyAdapter implements Runnable {
             // act each non-NPC
             world.act();
             world.elements.stream().filter(e -> !(e instanceof NPC)).forEach(Element::act);
-
-
-            // execution script (experimental)
-            world.elements.stream()
-                    .filter(e -> e.code != null)
-                    .forEach(element -> {
-                        try {
-                            ScriptEngine.execute(element.code, new HashMap<String, Object>() {{
-                                put("this", element);
-                                put("game", Game.this);
-                            }});
-                        } catch (ScriptException e) {
-                            e.printStackTrace();
-                        }
-                    });
-
 
             // update window
             update();
@@ -395,6 +399,8 @@ public class Game extends KeyAdapter implements Runnable {
             setImage(image);
 
             Utils.smoothing(window::setImageTransparency);
+        } else {
+            setMusic(music);
         }
 
         // describe current room
